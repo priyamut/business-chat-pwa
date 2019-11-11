@@ -10,10 +10,11 @@
 
 .app-main-header {
   //z-index: 1302 !important;
-  background-color: $app-primary !important;
+  background-color: $white !important;
   color: $white !important;
 
   .ellipse-shape {
+    background: $white;
     position: absolute;
     right: 0;
     top: 0;

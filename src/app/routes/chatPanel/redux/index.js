@@ -66,11 +66,15 @@ class ChatPanelWithRedux extends Component {
   Communication = () => {
     const {message, selectedUser, conversation} = this.props;
     const {conversationData} = conversation;
+    if(document.getElementById('selectedUser')){
+      var div = document.getElementById('selectedUser');
+        div.innerHTML = selectedUser.name;
+    }
     return <div className="chat-main">
-      <div className="chat-main-header">
+
+      {/* <div className="chat-main-header">
         <IconButton className="d-block d-xl-none chat-btn" aria-label="Menu"
                     onClick={this.onChatToggleDrawer.bind(this)}>
-          {/* <i className="zmdi zmdi-comment-text"/> */}
           <MenuIcon />
         </IconButton>
         <div className="chat-main-header-info">
@@ -80,7 +84,7 @@ class ChatPanelWithRedux extends Component {
           </div>
         </div>
 
-      </div>
+      </div> */}
 
       <CustomScrollbars className="chat-list-scroll scrollbar"
                         style={{height: 'calc(100vh - 222px)'}}>
@@ -181,10 +185,10 @@ class ChatPanelWithRedux extends Component {
           </div> */}
           <div className="module-user-info d-flex flex-column justify-content-center">
             <div className="module-title">
-              <h5 className="mb-0">Robert Johnson</h5>
+              <h5 className="mb-0">Agentz</h5>
             </div>
             <div className="module-user-detail">
-              <span className="text-grey">robert@example.com</span>
+              <span className="text-grey">Agentz@Agentz.ai</span>
             </div>
           </div>
         </div>
@@ -199,9 +203,9 @@ class ChatPanelWithRedux extends Component {
       </div>
 
       <div className="cyan chat-sidenav-content">
-        <AppBar position="static" className="no-shadow chat-tabs-header">
+        <AppBar position="static" className="cyan no-shadow chat-tabs-header">
           <Tabs
-            className="chat-tabs"
+            className="cyan chat-tabs"
             value={this.state.selectedTabIndex}
             onChange={this.handleChange}
             indicatorColor="primary"
@@ -296,7 +300,7 @@ class ChatPanelWithRedux extends Component {
         <div className="app-module chat-module animated slideInUpTiny animation-duration-3">
           <div className="chat-module-box">
             <div className="d-block d-xl-none">
-              <Drawer open={drawerState} anchor={"right"}
+              <Drawer open={drawerState} anchor={"left"}
                       onClose={this.onChatToggleDrawer.bind(this)}>
                 {userState === 1 ? this.ChatUsers() : this.AppUsersInfo()}
               </Drawer>

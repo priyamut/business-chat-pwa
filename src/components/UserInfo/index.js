@@ -22,13 +22,13 @@ class UserInfo extends React.Component {
   render() {
     return (
       <div className="user-profile d-flex flex-row align-items-center">
-        <Avatar
+        {/* <Avatar
           alt='...'
           src={'https://via.placeholder.com/150x150'}
           className="user-avatar "
-        />
+        /> */}
         <div className="user-detail">
-          <h4 className="user-name" onClick={this.handleClick}>Robert Johnson <i
+          <h4 className="user-name" onClick={this.handleClick}>Agentz<i
             className="zmdi zmdi-caret-down zmdi-hc-fw align-middle"/>
           </h4>
         </div>

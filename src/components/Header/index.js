@@ -22,8 +22,13 @@ import IntlMessages from 'util/IntlMessages';
 import LanguageSwitcher from 'components/LanguageSwitcher/index';
 import Menu from 'components/TopNav/Menu';
 import UserInfoPopup from 'components/UserInfo/UserInfoPopup';
+import HomeIcon from '@material-ui/icons/Home';
+import MenuIcon from '@material-ui/icons/Menu';
 
-class Header extends React.Component {
+import {
+  onChatToggleDrawer
+} from 'actions/Chat';
+class Header extends React.Component { 
 
   onAppNotificationSelect = () => {
     this.setState({
@@ -136,6 +141,11 @@ class Header extends React.Component {
       </ul>)
   };
 
+  onChatToggleDrawer = () =>{
+    this.props.onChatToggleDrawer();
+  }
+  
+
   render() {
     const {drawerType, locale, navigationStyle, horizontalNavPosition} = this.props;
     const drawerStyle = drawerType.includes(FIXED_DRAWER) ? 'd-block d-xl-none' : drawerType.includes(COLLAPSED_DRAWER) ? 'd-block' : 'd-none';
@@ -151,162 +161,34 @@ class Header extends React.Component {
                             </span>
             </div>
             :
+            <div className="list-inline-item app-tou">
             <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
-                        onClick={this.onToggleCollapsedNav}>
-              <span className="menu-icon"/>
+                        onClick={this.onChatToggleDrawer}>
+                      <MenuIcon />
             </IconButton>
+            </div>
           }
+      
 
           <Link className="app-logo mr-2 d-none d-sm-block" to="/">
-            <img src={require("assets/images/logo.png")} alt="Jambo" title="Jambo"/>
+            <img src={require("assets/images/agentz.png")} alt="Jambo" title="Jambo"/>
           </Link>
+          
+          <div id="selectedUser" className="chat-contact-name" style={{"color" : "black"}}></div>
 
-
-          {/* <SearchBox styleName="d-none d-lg-block" placeholder=""
-                     onChange={this.updateSearchText.bind(this)}
-                     value={this.state.searchText}/> */}
-          {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
-          <Menu/>}
+          {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
+          <Menu/>} */}
 
           <ul className="header-notifications list-inline ml-auto">
-            <li className="list-inline-item">
-              {/* <Dropdown
-                className="quick-menu app-notification"
-                isOpen={this.state.apps}
-                toggle={this.onAppsSelect.bind(this)}>
-
-                <DropdownToggle
-                  className="d-inline-block"
-                  tag="span"
-                  data-toggle="dropdown">
-                  <span className="app-notification-menu">
-                    <i className="zmdi zmdi-apps zmdi-hc-fw zmdi-hc-lg"/>
-                    <span>Apps</span>
-                  </span>
-                </DropdownToggle>
-
-                <DropdownMenu>
-                  {this.Apps()}
-                </DropdownMenu>
-              </Dropdown> */}
-            </li>
-            <li className="d-inline-block d-lg-none list-inline-item">
-              {/* <Dropdown
-                className="quick-menu nav-searchbox"
-                isOpen={this.state.searchBox}
-                toggle={this.onSearchBoxSelect.bind(this)}>
-
-                <DropdownToggle
-                  className="d-inline-block"
-                  tag="span"
-                  data-toggle="dropdown">
-                  <IconButton className="icon-btn">
-                    <i className="zmdi zmdi-search zmdi-hc-fw"/>
-                  </IconButton>
-                </DropdownToggle>
-
-                <DropdownMenu right className="p-0">
-                  <SearchBox styleName="search-dropdown" placeholder=""
-                             onChange={this.updateSearchText.bind(this)}
-                             value={this.state.searchText}/>
-                </DropdownMenu>
-              </Dropdown> */}
-            </li>
-            <li className="list-inline-item">
-              {/* <Dropdown
-                className="quick-menu"
-                isOpen={this.state.langSwitcher}
-                toggle={this.onLangSwitcherSelect.bind(this)}>
-
-                <DropdownToggle
-                  className="d-inline-block"
-                  tag="span"
-                  data-toggle="dropdown">
-                  <IconButton className="icon-btn">
-                    <i className={`flag flag-24 flag-${locale.icon}`}/>
-                  </IconButton>
-                </DropdownToggle>
-
-                <DropdownMenu right className="w-50">
-                  <LanguageSwitcher switchLanguage={this.props.switchLanguage}
-                                    handleRequestClose={this.handleRequestClose}/>
-                </DropdownMenu>
-              </Dropdown> */}
-
-
-            </li>
+            
             <li className="list-inline-item app-tour">
-              <Dropdown
-                className="quick-menu"
-                isOpen={this.state.appNotification}
-                toggle={this.onAppNotificationSelect.bind(this)}>
+               <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
+                        onClick={this.onToggleCollapsedNav}>
+                                 <HomeIcon />
 
-                <DropdownToggle
-                  className="d-inline-block"
-                  tag="span"
-                  data-toggle="dropdown">
-                  <IconButton className="icon-btn">
-                    <i className="zmdi zmdi-notifications-none icon-alert animated infinite wobble"/>
-                  </IconButton>
-                </DropdownToggle>
-
-                <DropdownMenu right>
-                  <CardHeader styleName="align-items-center"
-                              heading={<IntlMessages id="appNotification.title"/>}/>
-                  <AppNotification/>
-                </DropdownMenu>
-              </Dropdown>
+            </IconButton>
             </li>
-            <li className="list-inline-item mail-tour">
-              {/* <Dropdown
-                className="quick-menu"
-                isOpen={this.state.mailNotification}
-                toggle={this.onMailNotificationSelect.bind(this)}
-              >
-                <DropdownToggle
-                  className="d-inline-block"
-                  tag="span"
-                  data-toggle="dropdown">
-
-                  <IconButton className="icon-btn">
-                    <i className="zmdi zmdi-comment-alt-text zmdi-hc-fw"/>
-                  </IconButton>
-                </DropdownToggle>
-
-
-                <DropdownMenu right>
-                  <CardHeader styleName="align-items-center"
-                              heading={<IntlMessages id="mailNotification.title"/>}/>
-                  <MailNotification/>
-                </DropdownMenu>
-              </Dropdown> */}
-            </li>
-
-            {navigationStyle === HORIZONTAL_NAVIGATION &&
-            <li className="list-inline-item user-nav">
-              {/* <Dropdown
-                className="quick-menu"
-                isOpen={this.state.userInfo}
-                toggle={this.onUserInfoSelect.bind(this)}>
-
-                <DropdownToggle
-                  className="d-inline-block"
-                  tag="span"
-                  data-toggle="dropdown">
-                  <IconButton className="icon-btn size-30">
-                    <Avatar
-                      alt='...'
-                      src={'https://via.placeholder.com/150x150'}
-                      className="size-30"
-                    />
-                  </IconButton>
-                </DropdownToggle>
-
-                <DropdownMenu right>
-                  <UserInfoPopup/>
-                </DropdownMenu>
-              </Dropdown> */}
-            </li>}
+           
           </ul>
           
           <div className="ellipse-shape"></div>
@@ -318,9 +200,10 @@ class Header extends React.Component {
 }
 
 
-const mapStateToProps = ({settings}) => {
+const mapStateToProps = ({chatData,settings}) => {
   const {drawerType, locale, navigationStyle, horizontalNavPosition} = settings;
-  return {drawerType, locale, navigationStyle, horizontalNavPosition}
+  const{onChatToggleDrawer} = chatData;
+  return {drawerType, locale, navigationStyle, horizontalNavPosition,onChatToggleDrawer}
 };
 
-export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage})(Header));
+export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage,onChatToggleDrawer})(Header));

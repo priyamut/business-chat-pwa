@@ -35,9 +35,9 @@ class App extends React.Component {
         <Tour/>
 
         <Sidebar/>
-        <div className="cyan app-main-container">
+        <div className="app-main-container">
           <div
-            className={`cyan app-header ${navigationStyle === HORIZONTAL_NAVIGATION ? 'app-header-horizontal' : ''}`}>
+            className={`app-header ${navigationStyle === HORIZONTAL_NAVIGATION ? 'app-header-horizontal' : ''}`}>
             {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === ABOVE_THE_HEADER) &&
             <TopNav styleName="cyan app-top-header"/>}
             <Header/>
