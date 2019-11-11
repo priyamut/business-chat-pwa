@@ -171,7 +171,7 @@ class Header extends React.Component {
       
 
           <Link className="app-logo mr-2 d-none d-sm-block" to="/">
-            <img src={require("assets/images/agentz.png")} alt="Jambo" title="Jambo"/>
+            <img src={require("assets/images/agentz.png")} alt="Agentz" title="Agentz"/>
           </Link>
           
           <div id="selectedUser" className="chat-contact-name" style={{"color" : "black"}}></div>

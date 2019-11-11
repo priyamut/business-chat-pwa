@@ -6,6 +6,7 @@ import SidenavContent from './SidenavContent';
 import UserInfo from 'components/UserInfo';
 import {COLLAPSED_DRAWER, FIXED_DRAWER, HORIZONTAL_NAVIGATION} from 'constants/ActionTypes';
 import {toggleCollapsedNav, updateWindowWidth} from 'actions/Setting';
+import {isIOS, isMobile} from 'react-device-detect';
 
 class SideNav extends React.PureComponent {
 
@@ -36,6 +37,7 @@ class SideNav extends React.PureComponent {
       <div className={`cyan app-sidebar d-none ${drawerStyle}`}>
         <Drawer className="cyan app-sidebar-content"
                 variant={type}
+                anchor={isMobile ? 'right' : 'left'}
                 open={type.includes('temporary') ? navCollapsed : true}
                 onClose={this.onToggleCollapsedNav}
                 classes={{
