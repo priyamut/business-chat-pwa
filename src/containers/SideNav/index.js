@@ -34,7 +34,7 @@ class SideNav extends React.PureComponent {
     }
     return (
       <div className={`cyan app-sidebar d-none ${drawerStyle}`}>
-        <Drawer className="app-sidebar-content"
+        <Drawer className="cyan app-sidebar-content"
                 variant={type}
                 open={type.includes('temporary') ? navCollapsed : true}
                 onClose={this.onToggleCollapsedNav}
