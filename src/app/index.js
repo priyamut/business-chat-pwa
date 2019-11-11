@@ -49,7 +49,7 @@ class App extends React.Component {
             <div className="app-main-content">
               <Switch>
                   <Route path={`${match.url}/chat`}
-                         component={asyncComponent(() => import('./routes/chatPanel/basic/index'))}/>
+                         component={asyncComponent(() => import('./routes/chatPanel/redux/index'))}/>
                 <Route component={asyncComponent(() => import('components/Error404'))}/>
               </Switch>
             </div>

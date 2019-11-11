@@ -73,7 +73,7 @@ class ChatPanelWithRedux extends Component {
         </IconButton>
         <div className="chat-main-header-info">
 
-          <div className="chat-avatar mr-2">
+          {/* <div className="chat-avatar mr-2">
             <div className="chat-avatar-mode">
               <img src={selectedUser.thumb}
                    className="rounded-circle size-60"
@@ -81,7 +81,7 @@ class ChatPanelWithRedux extends Component {
 
               <span className={`chat-mode ${selectedUser.status}`}/>
             </div>
-          </div>
+          </div> */}
 
           <div className="chat-contact-name">
             {selectedUser.name}
@@ -177,7 +177,7 @@ class ChatPanelWithRedux extends Component {
 
         <div className="chat-user-hd">
 
-          <div className="chat-avatar mr-3" onClick={() => {
+          {/* <div className="chat-avatar mr-3" onClick={() => {
             this.props.userInfoState(2);
           }}>
             <div className="chat-avatar-mode">
@@ -186,7 +186,7 @@ class ChatPanelWithRedux extends Component {
                    alt=""/>
               <span className="chat-mode online"/>
             </div>
-          </div>
+          </div> */}
           <div className="module-user-info d-flex flex-column justify-content-center">
             <div className="module-title">
               <h5 className="mb-0">Robert Johnson</h5>
