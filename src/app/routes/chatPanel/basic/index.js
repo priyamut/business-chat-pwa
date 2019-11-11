@@ -325,7 +325,7 @@ class ChatPanel extends Component {
         <div className="app-module chat-module animated slideInUpTiny animation-duration-3">
           <div className="chat-module-box">
             <div className="d-block d-xl-none">
-              <Drawer open={drawerState}
+              <Drawer open={drawerState} 
                       onClose={this.onToggleDrawer.bind(this)}>
                 {userState === 1 ? this.ChatUsers() : this.AppUsersInfo()}
               </Drawer>

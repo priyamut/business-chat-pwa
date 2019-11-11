@@ -14,6 +14,7 @@ import Conversation from 'components/chatPanel/Conversation/index';
 import ContactList from 'components/chatPanel/ContactList/index';
 import SearchBox from 'components/SearchBox';
 import IntlMessages from 'util/IntlMessages';
+import MenuIcon from '@material-ui/icons/Menu';
 import {
   fetchChatUser,
   fetchChatUserConversation,
@@ -69,7 +70,8 @@ class ChatPanelWithRedux extends Component {
       <div className="chat-main-header">
         <IconButton className="d-block d-xl-none chat-btn" aria-label="Menu"
                     onClick={this.onChatToggleDrawer.bind(this)}>
-          <i className="zmdi zmdi-comment-text"/>
+          {/* <i className="zmdi zmdi-comment-text"/> */}
+          <MenuIcon />
         </IconButton>
         <div className="chat-main-header-info">
 
@@ -304,7 +306,7 @@ class ChatPanelWithRedux extends Component {
         <div className="app-module chat-module animated slideInUpTiny animation-duration-3">
           <div className="chat-module-box">
             <div className="d-block d-xl-none">
-              <Drawer open={drawerState}
+              <Drawer open={drawerState} anchor={"right"}
                       onClose={this.onChatToggleDrawer.bind(this)}>
                 {userState === 1 ? this.ChatUsers() : this.AppUsersInfo()}
               </Drawer>
