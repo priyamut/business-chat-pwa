@@ -35,18 +35,18 @@ class App extends React.Component {
         <Tour/>
 
         <Sidebar/>
-        <div className="app-main-container">
+        <div className="cyan app-main-container">
           <div
-            className={`app-header ${navigationStyle === HORIZONTAL_NAVIGATION ? 'app-header-horizontal' : ''}`}>
+            className={`cyan app-header ${navigationStyle === HORIZONTAL_NAVIGATION ? 'app-header-horizontal' : ''}`}>
             {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === ABOVE_THE_HEADER) &&
-            <TopNav styleName="app-top-header"/>}
+            <TopNav styleName="cyan app-top-header"/>}
             <Header/>
             {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === BELOW_THE_HEADER) &&
             <TopNav/>}
           </div>
 
-          <main className="app-main-content-wrapper">
-            <div className="app-main-content">
+          <main className="cyan app-main-content-wrapper">
+            <div className="cyan app-main-content">
               <Switch>
                   <Route path={`${match.url}/chat`}
                          component={asyncComponent(() => import('./routes/chatPanel/redux/index'))}/>

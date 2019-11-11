@@ -75,16 +75,6 @@ class ChatPanelWithRedux extends Component {
         </IconButton>
         <div className="chat-main-header-info">
 
-          {/* <div className="chat-avatar mr-2">
-            <div className="chat-avatar-mode">
-              <img src={selectedUser.thumb}
-                   className="rounded-circle size-60"
-                   alt=""/>
-
-              <span className={`chat-mode ${selectedUser.status}`}/>
-            </div>
-          </div> */}
-
           <div className="chat-contact-name">
             {selectedUser.name}
           </div>
@@ -147,7 +137,7 @@ class ChatPanelWithRedux extends Component {
 
         </div>
       </div>
-      <div className="chat-sidenav-content">
+      <div className="cyan chat-sidenav-content">
 
         <CustomScrollbars className="chat-sidenav-scroll scrollbar"
                           style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 162px)'}}>
@@ -208,7 +198,7 @@ class ChatPanelWithRedux extends Component {
         </div>
       </div>
 
-      <div className="chat-sidenav-content">
+      <div className="cyan chat-sidenav-content">
         <AppBar position="static" className="no-shadow chat-tabs-header">
           <Tabs
             className="chat-tabs"
