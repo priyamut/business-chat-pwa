@@ -5,7 +5,7 @@
 # docker run --name partner-ui -d -p 9000:9000 partner-ui // to run on port 8090
 # docker ps -a // get the container runninng status
 
-FROM node:8.9.4
+FROM node:8.10.0
 
 ARG profiles
 ARG branch
