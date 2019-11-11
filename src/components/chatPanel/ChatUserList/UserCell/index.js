@@ -6,12 +6,12 @@ const UserCell = ({chat, selectedSectionId, onSelectUser}) => {
       onSelectUser(chat);
     }}>
       <div className="chat-user-row row">
-        <div className="chat-avatar col-xl-2 col-3">
+        {/* <div className="chat-avatar col-xl-2 col-3">
           <div className="chat-avatar-mode">
             <img src={chat.thumb} className="rounded-circle size-40" alt={chat.name}/>
             <span className={`chat-mode small ${chat.status}`}/>
           </div>
-        </div>
+        </div> */}
 
         <div className="chat-info col-xl-8 col-6">
           <span className="name h4">{chat.name}</span>

@@ -341,6 +341,8 @@ const mapStateToProps = ({chatData, settings}) => {
     conversationList,
     conversation
   } = chatData;
+
+  console.log({chatData})
   return {
     width,
     loader,

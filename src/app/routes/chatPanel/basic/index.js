@@ -47,7 +47,7 @@ class ChatPanel extends Component {
         </IconButton>
         <div className="chat-main-header-info">
 
-          <div className="chat-avatar mr-2">
+          {/* <div className="chat-avatar mr-2">
             <div className="chat-avatar-mode">
               <img src={selectedUser.thumb}
                    className="rounded-circle size-60"
@@ -55,7 +55,7 @@ class ChatPanel extends Component {
 
               <span className={`chat-mode ${selectedUser.status}`}/>
             </div>
-          </div>
+          </div> */}
 
           <div className="chat-contact-name">
             {selectedUser.name}
@@ -151,20 +151,6 @@ class ChatPanel extends Component {
       <div className="chat-sidenav-header">
 
         <div className="chat-user-hd">
-
-          <div className="chat-avatar mr-3" onClick={() => {
-            this.setState({
-              userState: 2
-            });
-          }}>
-            <div className="chat-avatar-mode">
-              <img id="user-avatar-button" src='https://via.placeholder.com/150x150'
-                   className="rounded-circle size-50"
-                   alt=""/>
-              <span className="chat-mode online"/>
-            </div>
-          </div>
-
           <div className="module-user-info d-flex flex-column justify-content-center">
             <div className="module-title">
               <h5 className="mb-0">Robert Johnson</h5>
