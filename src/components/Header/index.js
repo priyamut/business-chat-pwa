@@ -162,19 +162,23 @@ class Header extends React.Component {
             </div>
             :
             <div className="list-inline-item app-tou">
-            <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
+              <div className="header-notifications list-inline ml-auto">
+
+              <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.onChatToggleDrawer}>
                       <MenuIcon />
             </IconButton>
+              </div>
             </div>
           }
       
-
+{/* 
           <Link className="app-logo mr-2 d-none d-sm-block" to="/">
             <img src={require("assets/images/agentz.png")} alt="Agentz" title="Agentz"/>
-          </Link>
+          </Link> */}
           
-          <div id="selectedUser" className="chat-contact-name" style={{"color" : "black"}}></div>
+          <div id="selectedUser" className="chat-contact-name" style={{color: "white"
+    ,fontWeight: "500",fontSize: "20px"}}></div>
 
           {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
           <Menu/>} */}
@@ -184,7 +188,7 @@ class Header extends React.Component {
             <li className="list-inline-item app-tour">
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.onToggleCollapsedNav}>
-                                 <HomeIcon />
+                                 <HomeIcon color={'white'} />
 
             </IconButton>
             </li>

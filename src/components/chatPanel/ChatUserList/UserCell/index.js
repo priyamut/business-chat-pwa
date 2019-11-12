@@ -14,13 +14,13 @@ const UserCell = ({chat, selectedSectionId, onSelectUser}) => {
         </div> */}
 
         <div className="chat-info col-xl-8 col-6">
-          <span className="name h4">{chat.name}</span>
-          <div className="chat-info-des">{chat.lastMessage.substring(0, 25) + "..."}</div>
+          <span className="name h4" style={{"font-weight":"500"}}>{chat.name}</span>
+          {/* <div className="chat-info-des">{chat.lastMessage.substring(0, 25) + "..."}</div> */}
           <div className="last-message-time">{chat.lastMessageTime}</div>
         </div>
 
         <div className="chat-date col-xl-2 col-3">
-          <div className="bg-primary rounded-circle badge text-white">{chat.unreadMessage}</div>
+          <div className="bg-primary rounded-circle badge text-white" style={{margin: "-45px"}}>{chat.unreadMessage}</div>
         </div>
       </div>
     </div>
