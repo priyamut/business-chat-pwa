@@ -1,0 +1,24 @@
+{
+  "family": "business-chat-pwa-%environment%",
+  "containerDefinitions": [
+    {
+      "image": "%REPOSITORY_URI%:%environment%",
+      "name": "business-chat-pwa",
+      "cpu": 250,
+      "memoryReservation": 128,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 0
+        }
+      ],
+      "environment": [
+        {
+          "name": "NODE_ENV",
+          "value": "%environment%"
+        }
+      ]
+    }
+  ]
+}
