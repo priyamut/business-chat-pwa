@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "image": "%REPOSITORY_URI%:%environment%",
-      "name": "business-chat-pwa",
+      "name": "business-pwa-chat",
       "cpu": 250,
       "memoryReservation": 128,
       "essential": true,
