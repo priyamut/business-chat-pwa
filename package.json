@@ -1,6 +1,6 @@
 {
-  "name": "jumbo-react",
-  "version": "3.0.2",
+  "name": "business-chat-pwa",
+  "version": "1.0",
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.4.5",

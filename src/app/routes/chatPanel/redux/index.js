@@ -173,23 +173,11 @@ class ChatPanelWithRedux extends Component {
 
         <div className="chat-user-hd">
 
-          {/* <div className="chat-avatar mr-3" onClick={() => {
-            this.props.userInfoState(2);
-          }}>
-            <div className="chat-avatar-mode">
-              <img id="user-avatar-button" src='https://via.placeholder.com/150x150'
-                   className="rounded-circle size-50"
-                   alt=""/>
-              <span className="chat-mode online"/>
-            </div>
-          </div> */}
           <div className="module-user-info d-flex flex-column justify-content-center">
             <div className="module-title">
-              <h5 className="mb-0">Agentz</h5>
+              <h2 className="mb-0" style={{color : '#fff',fontWeight : '500'}}>AGENTZ</h2>
             </div>
-            <div className="module-user-detail">
-              <span className="text-grey">Agentz@Agentz.ai</span>
-            </div>
+
           </div>
         </div>
 
@@ -202,10 +190,10 @@ class ChatPanelWithRedux extends Component {
         </div>
       </div>
 
-      <div className="cyan chat-sidenav-content">
-        <AppBar position="static" className="cyan no-shadow chat-tabs-header">
+      <div className="chat-sidenav-content">
+        <AppBar position="static" className="no-shadow chat-tabs-header">
           <Tabs
-            className="cyan chat-tabs"
+            className="chat-tabs"
             value={this.state.selectedTabIndex}
             onChange={this.handleChange}
             indicatorColor="primary"
