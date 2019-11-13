@@ -197,9 +197,6 @@
   @include display-flex(flex, column, nowrap);
   @include justify-content(center);
   height: 100%;
-  .loader-view{
-    margin-top: 200px;
-  }
 }
 
 .module-default {
