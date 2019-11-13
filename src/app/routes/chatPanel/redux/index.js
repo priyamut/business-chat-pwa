@@ -87,7 +87,7 @@ class ChatPanelWithRedux extends Component {
       </div> */}
 
       <CustomScrollbars className="chat-list-scroll scrollbar"
-                        style={{height: 'calc(100vh - 222px)'}}>
+                        style={{height: 'calc(100vh - 150px)'}}>
         <Conversation conversationData={conversationData}
                       selectedUser={selectedUser}/>
       </CustomScrollbars>
