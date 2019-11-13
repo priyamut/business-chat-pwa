@@ -248,7 +248,7 @@ class ChatPanelWithRedux extends Component {
       <div className="chat-box">
         <div className="chat-box-main">{
           this.props.selectedUser === null ?
-            <div className="loader-view" style={{"margin-top" : isIOS ? '200px' : '0px'}}>
+            <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px'}}>
               <i className="zmdi zmdi-comment s-128 text-muted"/>
               <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1>
               <Button className="d-block d-xl-none" color="primary"
