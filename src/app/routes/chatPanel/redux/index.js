@@ -29,6 +29,7 @@ import {
   userInfoState
 } from 'actions/Chat'
 import CustomScrollbars from 'util/CustomScrollbars';
+import { isIOS } from 'react-device-detect';
 
 class ChatPanelWithRedux extends Component {
   filterContacts = (userName) => {
@@ -247,7 +248,7 @@ class ChatPanelWithRedux extends Component {
       <div className="chat-box">
         <div className="chat-box-main">{
           this.props.selectedUser === null ?
-            <div className="loader-view">
+            <div className="loader-view" style={{"margin-top" : isIOS ? '200px' : '0px'}}>
               <i className="zmdi zmdi-comment s-128 text-muted"/>
               <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1>
               <Button className="d-block d-xl-none" color="primary"
