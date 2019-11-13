@@ -183,7 +183,7 @@ class Header extends React.Component {
           {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
           <Menu/>} */}
 
-          {/* <ul className="header-notifications list-inline ml-auto">
+          <ul className="header-notifications list-inline ml-auto">
             
             <li className="list-inline-item app-tour">
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
@@ -193,7 +193,7 @@ class Header extends React.Component {
             </IconButton>
             </li>
            
-          </ul> */}
+          </ul>
           
           <div className="ellipse-shape"></div>
         </Toolbar>
