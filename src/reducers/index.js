@@ -1,11 +1,15 @@
 import {combineReducers} from 'redux';
 import {connectRouter} from 'connected-react-router'
 import Settings from './Settings';
-import Chat from './Chat';
+import ChatData from './Chat';
+import Auth from './Auth';
+import Common from './Common';
 
 
 export default (history) => combineReducers({
   router: connectRouter(history),
   settings: Settings,
-  chatData:Chat
+  chatData: ChatData,
+  auth: Auth,
+  commonData: Common,
 });

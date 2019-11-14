@@ -2,36 +2,21 @@ import React from 'react';
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
 import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
 import IntlMessages from 'util/IntlMessages';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {
-  hideMessage,
-  showAuthLoader,
-  userFacebookSignIn,
-  userGithubSignIn,
-  userGoogleSignIn,
-  userSignIn,
-  userTwitterSignIn
-} from 'actions/Auth';
+import InfoView from 'components/InfoView';
+import {userSignIn} from 'actions/Auth';
 
 class SignIn extends React.Component {
   constructor() {
     super();
     this.state = {
-      email: 'demo@example.com',
-      password: 'demo#123'
+      email: '',
+      password: ''
     }
   }
 
   componentDidUpdate() {
-    if (this.props.showMessage) {
-      setTimeout(() => {
-        this.props.hideMessage();
-      }, 100);
-    }
     if (this.props.authUser !== null) {
       this.props.history.push('/');
     }
@@ -42,7 +27,7 @@ class SignIn extends React.Component {
       email,
       password
     } = this.state;
-    const {showMessage, loader, alertMessage} = this.props;
+    console.log(this.props)
     return (
       <div
         className="app-login-container d-flex justify-content-center align-items-center animated slideInUpTiny animation-duration-3">
@@ -50,7 +35,7 @@ class SignIn extends React.Component {
 
           <div className="app-logo-content d-flex align-items-center justify-content-center">
             <Link className="logo-lg" to="/" title="Jambo">
-              <img src={require("assets/images/logo.png")} alt="jambo" title="jambo"/>
+              <img src={"https://s3.amazonaws.com/agentz-ui-assets/v1-snapshot/logo.png"} alt="jambo" title="jambo"/>
             </Link>
           </div>
 
@@ -82,7 +67,6 @@ class SignIn extends React.Component {
 
                   <div className="mb-3 d-flex align-items-center justify-content-between">
                     <Button onClick={() => {
-                      this.props.showAuthLoader();
                       this.props.userSignIn({email, password});
                     }} variant="contained" color="primary">
                       <IntlMessages id="appModule.signIn"/>
@@ -93,83 +77,21 @@ class SignIn extends React.Component {
                     </Link>
                   </div>
 
-                  <div className="app-social-block my-1 my-sm-3">
-                    <IntlMessages
-                      id="signIn.connectWith"/>
-                    <ul className="social-link">
-                      <li>
-                        <IconButton className="icon"
-                                    onClick={() => {
-                                      this.props.showAuthLoader();
-                                      this.props.userFacebookSignIn();
-                                    }}>
-                          <i className="zmdi zmdi-facebook"/>
-                        </IconButton>
-                      </li>
-
-                      <li>
-                        <IconButton className="icon"
-                                    onClick={() => {
-                                      this.props.showAuthLoader();
-                                      this.props.userTwitterSignIn();
-                                    }}>
-                          <i className="zmdi zmdi-twitter"/>
-                        </IconButton>
-                      </li>
-
-                      <li>
-                        <IconButton className="icon"
-                                    onClick={() => {
-                                      this.props.showAuthLoader();
-                                      this.props.userGoogleSignIn();
-
-                                    }}>
-                          <i className="zmdi zmdi-google-plus"/>
-                        </IconButton>
-                      </li>
-
-                      <li>
-                        <IconButton className="icon"
-                                    onClick={() => {
-                                      this.props.showAuthLoader();
-                                      this.props.userGithubSignIn();
-                                    }}>
-                          <i className="zmdi zmdi-github"/>
-                        </IconButton>
-                      </li>
-                    </ul>
-                  </div>
-
                 </fieldset>
               </form>
             </div>
           </div>
 
         </div>
-        {
-          loader &&
-          <div className="loader-view">
-            <CircularProgress/>
-          </div>
-        }
-        {showMessage && NotificationManager.error(alertMessage)}
-        <NotificationContainer/>
+        <InfoView/>
       </div>
     );
   }
 }
 
 const mapStateToProps = ({auth}) => {
-  const {loader, alertMessage, showMessage, authUser} = auth;
-  return {loader, alertMessage, showMessage, authUser}
+  const {authUser} = auth;
+  return {authUser}
 };
 
-export default connect(mapStateToProps, {
-  userSignIn,
-  hideMessage,
-  showAuthLoader,
-  userFacebookSignIn,
-  userGoogleSignIn,
-  userGithubSignIn,
-  userTwitterSignIn
-})(SignIn);
+export default connect(mapStateToProps, {userSignIn})(SignIn);

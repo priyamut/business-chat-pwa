@@ -10,14 +10,37 @@ import defaultTheme from './themes/defaultTheme';
 import AppLocale from '../lngProvider';
 
 import MainApp from 'app/index';
-import RTL from 'util/RTL';
 import asyncComponent from 'util/asyncComponent';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import {getUser, setInitUrl} from '../actions/Auth';
+import RTL from 'util/RTL';
+import axios from 'util/Api';
 import AddToHomescreen from 'react-add-to-homescreen';
+
+
+const RestrictedRoute = ({component: Component, token, ...rest}) =>
+  <Route
+    {...rest}
+    render={props =>
+      token
+        ? <Component {...props} />
+        : <Redirect
+          to={{
+            pathname: '/signin',
+            state: {from: props.location}
+          }}
+        />}
+  />;
 
 class App extends Component {
 
+  
   componentWillMount() {
     window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
+    if (this.props.initURL === '') {
+      this.props.setInitUrl(this.props.history.location.pathname);
+    }
   }
 
   handleAddToHomescreen = () => {
@@ -25,10 +48,26 @@ class App extends Component {
     alert('1. Open Share menu\n2. Tap on "Add to Home Screen" button');
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.token) {
+      //axios.defaults.headers.common['Authorization'] = nextProps.token;
+    }
+    if (nextProps.token && !nextProps.authUser) {
+      this.props.getUser()
+
+    }
+  }
+
   render() {
-    const {match, location, locale, isDirectionRTL} = this.props;
+    const {match, location, locale, token, initURL, isDirectionRTL} = this.props;
     if (location.pathname === '/') {
-      return ( <Redirect to={'/app/chat'}/> );
+      if (token === null) {
+        return ( <Redirect to={'/signin'}/> );
+      } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
+        return ( <Redirect to={'/app/chat'}/> );
+      } else {
+        return ( <Redirect to={initURL}/> );
+      }
     }
     const applyTheme = createMuiTheme(defaultTheme);
 
@@ -50,14 +89,14 @@ class App extends Component {
             <RTL>
               <div className="app-main">
                 <Switch>
-                  <Route path={`${match.url}app`} component={MainApp}/>
+                <RestrictedRoute path={`${match.url}app`} token={token}
+                                   component={MainApp}/>
+                  <Route path='/signin' component={SignIn}/>
+                  <Route path='/signup' component={SignUp}/>
                   <Route
                     component={asyncComponent(() => import('components/Error404'))}/>
                 </Switch>
               </div>
-              <AddToHomescreen
-          onAddToHomescreenClick={this.handleAddToHomescreen}
-        />
             </RTL>
           </IntlProvider>
         </MuiPickersUtilsProvider>
@@ -66,10 +105,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({settings}) => {
+const mapStateToProps = ({settings, auth}) => {
   const {sideNavColor, locale, isDirectionRTL} = settings;
-  return {sideNavColor, locale, isDirectionRTL}
+  const {authUser, token, initURL} = auth;
+  return {sideNavColor, token, locale, isDirectionRTL, authUser, initURL}
 };
 
-export default connect(mapStateToProps)(App);
-
+export default connect(mapStateToProps, {setInitUrl, getUser})(App);
