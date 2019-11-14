@@ -154,6 +154,12 @@
   }
 }
 
+.chat-main-content > div:first-child{
+  padding-top:16px;
+}
+.chat-main-content > div:last-child{
+  padding-bottom:16px;
+}
 .chat-user-item {
   border-bottom: solid 1px $gray-200;
   padding: 16px;
@@ -281,10 +287,10 @@
 }
 
 .chat-item {
-  padding: 16px;
+  padding: 8px 16px;
 
   & .bubble {
-    padding: 20px 16px;
+    padding: 16px 16px;
     background-color: lighten($app-primary, 45%);
     @include box-shadow(0 0 2px rgba(0, 0, 0, .13));
     @include border-radius(20px 20px 20px 0px);
@@ -292,6 +298,7 @@
     max-width: 600px;
     margin-left: 16px;
     margin-right: 16px;
+    
 
     /* &:before,
      &:after {
@@ -324,9 +331,12 @@
 
   &.flex-row-reverse {
     & .bubble {
-      margin-left: 16px;
-      margin-right: 16px;
+      // margin-left: 16px;
+      // margin-right: 16px;
       background-color: #6574C4;
+      margin-left: 88px;
+      margin-right: 24px;
+    
       @include border-radius(20px 20px 0 20px);
 
       /*&:before {
