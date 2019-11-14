@@ -30,7 +30,6 @@ import {
 } from 'actions/Chat'
 import CustomScrollbars from 'util/CustomScrollbars';
 import { isIOS } from 'react-device-detect';
-import {Scrollbars} from 'react-custom-scrollbars';
 
 class ChatPanelWithRedux extends Component {
   filterContacts = (userName) => {
@@ -96,11 +95,11 @@ class ChatPanelWithRedux extends Component {
 
       </div> */}
 
-      <Scrollbars className="chat-list-scroll scrollbar"
+      <CustomScrollbars className="chat-list-scroll scrollbar"
                         style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
         <Conversation conversationData={conversationData}
                       selectedUser={selectedUser} />
-      </Scrollbars>
+      </CustomScrollbars>
 
       <div className="chat-main-footer">
         <div className="d-flex flex-row align-items-center" style={{maxHeight: 51}}>
