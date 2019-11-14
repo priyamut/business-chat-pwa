@@ -120,6 +120,13 @@
 
 .chat-sidenav-content {
   background-color: $white;
+      & .MuiButtonBase-root.MuiTab-root{
+        width: 100%;
+        max-width: unset;
+      }
+      & .PrivateTabIndicator-root-105{
+        width: 100%;
+      }
 }
 
 .chat-sidenav-title {
@@ -319,7 +326,7 @@
     & .bubble {
       margin-left: 16px;
       margin-right: 16px;
-      background-color: #0078FF;
+      background-color: #6574C4;
       @include border-radius(20px 20px 0 20px);
 
       /*&:before {
