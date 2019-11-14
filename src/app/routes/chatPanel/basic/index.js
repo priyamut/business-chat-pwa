@@ -180,7 +180,7 @@ class ChatPanel extends Component {
             textColor="primary"
             variant="fullWidth">
             <Tab label={<IntlMessages id="chat.chatUser"/>}/>
-            <Tab label={<IntlMessages id="chat.contacts"/>}/>
+            {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
         </AppBar>
         <SwipeableViews

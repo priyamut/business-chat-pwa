@@ -30,6 +30,7 @@ import {
 } from 'actions/Chat'
 import CustomScrollbars from 'util/CustomScrollbars';
 import { isIOS } from 'react-device-detect';
+import {Scrollbars} from 'react-custom-scrollbars';
 
 class ChatPanelWithRedux extends Component {
   filterContacts = (userName) => {
@@ -57,8 +58,16 @@ class ChatPanelWithRedux extends Component {
     if (this.props.message !== '') {
       this.props.submitComment();
     }
+    this.scrollToBottom();
   };
 
+  scrollToBottom = () =>{ 
+    var scroll = document.getElementsByClassName('chat-list-scroll', 'chat-box-main');
+    if(scroll && scroll[0] instanceof Element){
+      scroll = scroll[0].children[0];
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+  }
   updateMessageValue = (evt) => {
     this.props.updateMessageValue(evt.target.value);
 
@@ -87,11 +96,11 @@ class ChatPanelWithRedux extends Component {
 
       </div> */}
 
-      <CustomScrollbars className="chat-list-scroll scrollbar"
-                        style={{height: 'calc(100vh - 222px)'}}>
+      <Scrollbars className="chat-list-scroll scrollbar"
+                        style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
         <Conversation conversationData={conversationData}
-                      selectedUser={selectedUser}/>
-      </CustomScrollbars>
+                      selectedUser={selectedUser} />
+      </Scrollbars>
 
       <div className="chat-main-footer">
         <div className="d-flex flex-row align-items-center" style={{maxHeight: 51}}>
@@ -202,7 +211,7 @@ class ChatPanelWithRedux extends Component {
             fullWidth
           >
             <Tab label={<IntlMessages id="chat.chatUser"/>}/>
-            <Tab label={<IntlMessages id="chat.contacts"/>}/>
+            {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -265,6 +274,7 @@ class ChatPanelWithRedux extends Component {
     this.state = {
       selectedTabIndex: 0,
     }
+    this.scrollComponent = React.createRef();
   }
 
   componentWillMount() {
@@ -283,6 +293,7 @@ class ChatPanelWithRedux extends Component {
   }
 
   render() {
+    console.log('props',this)
     const {loader, userState, drawerState} = this.props;
     return (
       <div className="app-wrapper app-wrapper-module">
