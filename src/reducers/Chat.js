@@ -175,23 +175,26 @@ export default (state = INIT_STATE, action) => {
     }
 
     case SUBMIT_COMMENT: {
-      const updatedConversation = state.conversation.conversationData.concat({
+      const updatedConversation = state.conversation.Sms.concat({
         'messageType': "OUTGOING_SMS",
-        'message': state.message,
-        'time': Moment().format('hh:mm:ss A'),
+        'outGoingSms': {
+          'message': state.message,
+          'smsReceipients': [{'toNum': "+15107562524"}]
+        },
+        'time': Moment().format('ddd DD, YYYY, hh:mm:ss A'),
       });
 
       return {
         ...state,
         conversation: {
-          ...state.conversation, conversationData: updatedConversation
+          ...state.conversation, Sms: updatedConversation
         },
         message: '',
-        conversationList: state.conversationList.map(conversationData => {
-          if (conversationData.id === state.conversation.id) {
-            return {...state.conversation, conversationData: updatedConversation};
+        conversationList: state.conversationList.map(Sms => {
+          if (Sms.id === state.conversation.id) {
+            return {...state.conversation, Sms: updatedConversation};
           } else {
-            return conversationData;
+            return Sms;
           }
         })
 
