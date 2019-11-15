@@ -47,14 +47,14 @@ class ChatPanelWithRedux extends Component {
 
   onSelectUser = (user) => {
     const {subScribeUSerData} = this.props;
-    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id);
+    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
     }
-    setTimeout(() => {
-      this.props.hideLoader();
-    }, 1500);
+    // setTimeout(() => {
+    //   this.props.hideLoader();
+    // }, 1500);
   };
 
 
@@ -79,10 +79,10 @@ class ChatPanelWithRedux extends Component {
 
   Communication = () => {
     if(!this.props.conversation || this.props.conversation.length == 0){
-      setTimeout(() => {
-        this.props.hideLoader();
+      // setTimeout(() => {
+      //   this.props.hideLoader();
         
-      }, 1500);
+      // }, 1500);
       return;
     }
     const {message, conversation} = this.props;
@@ -194,7 +194,7 @@ class ChatPanelWithRedux extends Component {
 
           <div className="module-user-info d-flex flex-column justify-content-center">
             <div className="module-title">
-              <h2 className="mb-0" style={{color : '#fff',fontWeight : '500'}}>AGENTZ</h2>
+              <h2 className="mb-0" style={{color : '#fff',fontWeight : '500'}}>{localStorage.getItem('name').toUpperCase()}</h2>
             </div>
 
           </div>
@@ -238,7 +238,7 @@ class ChatPanelWithRedux extends Component {
             }
           </CustomScrollbars>
 
-          <CustomScrollbars className="chat-sidenav-scroll scrollbar"
+          {/* <CustomScrollbars className="chat-sidenav-scroll scrollbar"
                             style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)'}}>
             {
               this.props.contactList.length === 0 ?
@@ -248,7 +248,7 @@ class ChatPanelWithRedux extends Component {
                              selectedSectionId={this.props.selectedSectionId}
                              onSelectUser={this.onSelectUser.bind(this)}/>
             }
-          </CustomScrollbars>
+          </CustomScrollbars> */}
         </SwipeableViews>
 
       </div>
