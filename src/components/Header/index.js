@@ -24,6 +24,9 @@ import Menu from 'components/TopNav/Menu';
 import UserInfoPopup from 'components/UserInfo/UserInfoPopup';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {userSignOut} from 'actions/Auth';
+
 
 import {
   onChatToggleDrawer
@@ -71,8 +74,9 @@ class Header extends React.Component {
     });
   };
   onToggleCollapsedNav = (e) => {
-    const val = !this.props.navCollapsed;
-    this.props.toggleCollapsedNav(val);
+    // const val = !this.props.navCollapsed;
+    // this.props.toggleCollapsedNav(val);
+    this.props.userSignOut();
   };
 
   constructor() {
@@ -183,17 +187,17 @@ class Header extends React.Component {
           {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
           <Menu/>} */}
 
-          {/* <ul className="header-notifications list-inline ml-auto">
+           <ul className="header-notifications list-inline ml-auto">
             
             <li className="list-inline-item app-tour">
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.onToggleCollapsedNav}>
-                                 <HomeIcon color={'white'} />
+                                 <ExitToAppIcon color={'white'} />
 
             </IconButton>
             </li>
            
-        </ul>*/}
+        </ul>
           
           <div className="ellipse-shape"></div>
         </Toolbar>
@@ -203,11 +207,11 @@ class Header extends React.Component {
 
 }
 
-
-const mapStateToProps = ({chatData,settings}) => {
+const mapStateToProps = ({chatData,settings, auth}) => {
   const {drawerType, locale, navigationStyle, horizontalNavPosition} = settings;
   const{onChatToggleDrawer} = chatData;
-  return {drawerType, locale, navigationStyle, horizontalNavPosition,onChatToggleDrawer}
+  const {authUser} = auth;
+  return {drawerType, locale, navigationStyle, horizontalNavPosition,onChatToggleDrawer,authUser}
 };
 
-export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage,onChatToggleDrawer})(Header));
+export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage,onChatToggleDrawer,userSignOut})(Header));
