@@ -26,6 +26,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {userSignOut} from 'actions/Auth';
+import SweetAlert from 'react-bootstrap-sweetalert'
 
 
 import {
@@ -89,6 +90,7 @@ class Header extends React.Component {
       userInfo: false,
       langSwitcher: false,
       appNotification: false,
+      showDialog: false
     }
   }
 
@@ -148,7 +150,25 @@ class Header extends React.Component {
   onChatToggleDrawer = () =>{
     this.props.onChatToggleDrawer();
   }
+
+  onConfirm = () => {
+    this.setState({
+      showDialog: false
+    });
+    this.props.userSignOut();
+  };
+
+  onCancel =() =>{
+    this.setState({
+      showDialog: false
+    })
+  }
   
+  showPopup =() =>{
+    this.setState({
+      showDialog: true
+    });
+  }
 
   render() {
     const {drawerType, locale, navigationStyle, horizontalNavPosition} = this.props;
@@ -157,6 +177,19 @@ class Header extends React.Component {
     return (
       <AppBar
         className={`app-main-header ${(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === BELOW_THE_HEADER) ? 'app-main-header-top' : ''}`}>
+          <SweetAlert
+          {...this.props}
+          show={this.state.showDialog}
+          title={'Are you sure want to Logout?'}
+          onConfirm={this.onConfirm}
+          onCancel={this.onCancel}
+          warning
+          showCancel
+          confirmBtnText={'Yes'}
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          cancelBtnText="No"
+        />
         <Toolbar className="app-toolbar" disableGutters={false}>
           {navigationStyle === HORIZONTAL_NAVIGATION ?
             <div className="d-block d-md-none pointer mr-3" onClick={this.onToggleCollapsedNav}>
@@ -191,7 +224,7 @@ class Header extends React.Component {
             
             <li className="list-inline-item app-tour">
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
-                        onClick={this.onToggleCollapsedNav}>
+                        onClick={this.showPopup}>
                                  <ExitToAppIcon color={'white'} />
 
             </IconButton>
@@ -200,7 +233,9 @@ class Header extends React.Component {
         </ul>
           
           <div className="ellipse-shape"></div>
+          
         </Toolbar>
+        
       </AppBar>
     );
   }
