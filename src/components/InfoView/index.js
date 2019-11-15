@@ -22,8 +22,6 @@ class InfoView extends React.Component {
       showMessage = error;
     }
 
-    console.log("showMessage, open", showMessage, open);
-
     return (
       <Auxiliary>
         {loading && <div className="loader-view">

@@ -15,6 +15,7 @@ import ContactList from 'components/chatPanel/ContactList/index';
 import SearchBox from 'components/SearchBox';
 import IntlMessages from 'util/IntlMessages';
 import MenuIcon from '@material-ui/icons/Menu';
+
 import {
   fetchChatUser,
   fetchChatUserConversation,
@@ -45,8 +46,12 @@ class ChatPanelWithRedux extends Component {
   };
 
   onSelectUser = (user) => {
-    this.props.onSelectUser(user);
-
+    const {subScribeUSerData} = this.props;
+    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id);
+    if(document.getElementById('selectedUser')){
+      var div = document.getElementById('selectedUser');
+        div.innerHTML = user.name || user.emailId || user.contactNo;
+    }
     setTimeout(() => {
       this.props.hideLoader();
     }, 1500);
@@ -73,12 +78,17 @@ class ChatPanelWithRedux extends Component {
   };
 
   Communication = () => {
-    const {message, selectedUser, conversation} = this.props;
-    const {conversationData} = conversation;
-    if(document.getElementById('selectedUser')){
-      var div = document.getElementById('selectedUser');
-        div.innerHTML = selectedUser.name || selectedUser.emailId || selectedUser.contactNo;
+    if(!this.props.conversation || this.props.conversation.length == 0){
+      setTimeout(() => {
+        this.props.hideLoader();
+        
+      }, 1500);
+      return;
     }
+    const {message, conversation} = this.props;
+    const {Sms} = conversation;
+    let selectedUser = conversation.user;
+    
     return <div className="chat-main">
 
       {/* <div className="chat-main-header">
@@ -97,7 +107,7 @@ class ChatPanelWithRedux extends Component {
 
       <CustomScrollbars className="chat-list-scroll scrollbar"
                         style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
-        <Conversation conversationData={conversationData}
+        <Conversation conversationData={Sms}
                       selectedUser={selectedUser} />
       </CustomScrollbars>
 
@@ -281,7 +291,7 @@ class ChatPanelWithRedux extends Component {
     if(subScribeUSerData != null){
       this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id)
     }
-    this.props.fetchChatUserConversation()
+    //this.props.fetchChatUserConversation()
   }
 
   componentWillReceiveProps(nextProps){
@@ -301,7 +311,6 @@ class ChatPanelWithRedux extends Component {
   }
 
   render() {
-    console.log(this.props);
     const {loader, userState, drawerState} = this.props;
     return (
       <div className="app-wrapper app-wrapper-module">

@@ -1,6 +1,7 @@
 import React from 'react';
 
 const ReceivedMessageCell = ({conversation, user}) => {
+  console.log('conversation', conversation);
   return (
     <div className="d-flex flex-nowrap chat-item">
 
@@ -8,7 +9,7 @@ const ReceivedMessageCell = ({conversation, user}) => {
            alt=""/> */}
 
       <div className="bubble jambo-card">
-          <div className="message" >{conversation.message}</div>
+          <div className="message" >{conversation.incomingSms.message}</div>
         {/* <div className="time text-muted text-right mt-2">{conversation.sentAt}</div> */}
       </div>
 

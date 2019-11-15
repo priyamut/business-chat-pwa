@@ -8,7 +8,7 @@ const SentMessageCell = ({conversation}) => {
            alt={conversation.name}/> */}
 
       <div className="bubble">
-        <div className="message" style={{color : '#fff'}}>{conversation.message}</div>
+        <div className="message" style={{color : '#fff'}}>{conversation.outGoingSms.message}</div>
         {/* <div className="time text-muted text-right mt-2">{conversation.sentAt}</div> */}
       </div>
 

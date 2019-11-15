@@ -27,7 +27,6 @@ class SignIn extends React.Component {
       email,
       password
     } = this.state;
-    console.log(this.props)
     return (
       <div
         className="app-login-container d-flex justify-content-center align-items-center animated slideInUpTiny animation-duration-3">
