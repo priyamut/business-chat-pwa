@@ -43,10 +43,12 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
     dispatch({type: ON_SELECT_USER});
     axios.get(`consumer/v1/${user.id}/sms?businessId=${businessAgentMappingId}`,{headers: {
       "idToken": JSON.parse(localStorage.getItem("idToken")),
-      "authorization":JSON.parse(localStorage.getItem("accessToken"))}
+      "authorization":JSON.parse(localStorage.getItem("accessToken")),
+      "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name}
   }).then(({data}) => {
       if (data) {
         data.user = user;
+        data.Sms = data.Sms.reverse();
         dispatch({type: ON_SELECT_USER, payload: data});
         hideLoader();
       } else {
@@ -60,6 +62,30 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
 };
 
 
+export const submitComment = (subScribeUSerData) => {
+  const paramData = {businessId: localStorage.getItem('businessId'),
+    contactMasterId: subScribeUSerData.conversation.user.id,
+    message: subScribeUSerData.message,
+   toNumber: subScribeUSerData.conversation.user.contactNo
+    };
+  return (dispatch) => {
+    dispatch({type: SUBMIT_COMMENT});
+    axios.post(`consumer/v1/sendsms`,paramData,{headers: {
+      "idToken": JSON.parse(localStorage.getItem("idToken")),
+      "authorization":JSON.parse(localStorage.getItem("accessToken"))}
+  }).then(({data}) => {
+      if (data) {
+        dispatch({type: SUBMIT_COMMENT, payload: data});
+        hideLoader();
+      } else {
+        dispatch({type: FETCH_ERROR, payload: data.error});
+      }
+    }).catch(function (error) {
+      dispatch({type: FETCH_ERROR, payload: error.message});
+      console.log("Error****:", {error});
+    });
+  }
+};
 
 export const fetchChatUserConversation = () => {
   return {
@@ -96,11 +122,7 @@ export const filterUsers = (userName) => {
   };
 };
 
-export const submitComment = () => {
-  return {
-    type: SUBMIT_COMMENT,
-  };
-};
+
 
 export const hideLoader = () => {
   return {

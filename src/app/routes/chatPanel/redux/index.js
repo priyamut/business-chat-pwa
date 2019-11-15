@@ -60,7 +60,7 @@ class ChatPanelWithRedux extends Component {
 
   submitComment = () => {
     if (this.props.message !== '') {
-      this.props.submitComment();
+        this.props.submitComment(this.props);
     }
     this.scrollToBottom();
   };
@@ -107,8 +107,20 @@ class ChatPanelWithRedux extends Component {
 
       <CustomScrollbars className="chat-list-scroll scrollbar"
                         style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
-        <Conversation conversationData={Sms}
-                      selectedUser={selectedUser} />
+            {/* {Sms.length == 0 ?
+            <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px'}}>
+              <i className="zmdi zmdi-comment s-128 text-muted"/>
+              <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1>
+              <Button className="d-block d-xl-none" color="primary"
+                      onClick={this.onChatToggleDrawer.bind(this)}>
+                        {<IntlMessages id="chat.selectContactChat"/>}</Button>
+            </div>
+            : <Conversation conversationData={Sms}
+            selectedUser={selectedUser} />} */}
+
+<Conversation conversationData={Sms}
+            selectedUser={selectedUser} />
+        
       </CustomScrollbars>
 
       <div className="chat-main-footer">
