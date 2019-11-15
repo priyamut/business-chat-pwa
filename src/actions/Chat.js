@@ -22,12 +22,12 @@ import axios from 'util/Api'
 export const fetchChatUser = (businessAgentMappingId) => {
   return (dispatch) => {
     dispatch({type: FETCH_ALL_CHAT_USER});
-    axios.get(`consumer/v1/contacts?businessAgentMappingId=${businessAgentMappingId}&businessId=' + localStorage.getItem('businessId')`,{headers: {
+    axios.get(`consumer/v1/contacts?businessAgentMappingId=${businessAgentMappingId}&businessId=` + localStorage.getItem('businessId'),{headers: {
       "idToken": JSON.parse(localStorage.getItem("idToken")),
       "authorization":JSON.parse(localStorage.getItem("accessToken"))}
   }).then(({data}) => {
       if (data) {
-        dispatch({type: FETCH_ALL_CHAT_USER_SUCCESS, payload: data.contacts});
+        dispatch({type: FETCH_ALL_CHAT_USER_SUCCESS, payload: data});
       } else {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
