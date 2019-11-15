@@ -6,7 +6,7 @@ import {
   SIGNOUT_USER_SUCCESS,
   USER_DATA,
   USER_TOKEN_SET,
-  
+  SUBSCRIBE_USER_DATA,
 } from "../constants/ActionTypes";
 import axios from 'util/Api'
 
@@ -18,7 +18,6 @@ export const setInitUrl = (url) => {
 };
 
 export const userSignUp = ({name, email, password}) => {
-  console.log(name, email, password);
   return (dispatch) => {
     dispatch({type: FETCH_START});
     axios.post('auth/register', {
@@ -27,7 +26,6 @@ export const userSignUp = ({name, email, password}) => {
         name: name
       }
     ).then(({data}) => {
-      console.log("data:", data);
       if (data) {
         localStorage.setItem("token", JSON.stringify(data.accessToken));
         localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
@@ -81,6 +79,29 @@ export const userSignIn = ({email, password}) => {
   }
 };
 
+
+function subScribeUser(dispatch,businessId){
+  console.log(JSON.parse(localStorage.getItem('businessMap'))["0"].name)
+    dispatch({type: FETCH_START});
+    axios.get('/business/v1/subscriptions?businessId=' + businessId,{
+      headers: {
+      "idToken": JSON.parse(localStorage.getItem("idToken")),
+      "authorization":JSON.parse(localStorage.getItem("accessToken")),
+      "agentdomain" : JSON.parse(localStorage.getItem('businessMap'))["0"].name
+      }}).then(({data}) => {
+      if (data) {
+          console.log({data})
+        dispatch({type: FETCH_SUCCESS});
+        dispatch({type: SUBSCRIBE_USER_DATA, payload: data});
+      } else {
+        dispatch({type: FETCH_ERROR, payload: data.error});
+      }
+    }).catch(function (error) {
+      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      console.log("Error****:", error.message);
+    });
+}
+
 export const getUser = () => {
   return (dispatch) => {
     dispatch({type: FETCH_START});
@@ -97,6 +118,7 @@ export const getUser = () => {
         localStorage.setItem("businessMap", JSON.stringify(data.businesses));
         dispatch({type: FETCH_SUCCESS});
         dispatch({type: USER_DATA, payload: data.name});
+        subScribeUser(dispatch,data.businesses[0].id);
       } else {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }

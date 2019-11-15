@@ -12,7 +12,9 @@ import {
   SHOW_MESSAGE,
   SUBMIT_COMMENT,
   UPDATE_MESSAGE_VALUE,
-  UPDATE_SEARCH_CHAT_USER
+  UPDATE_SEARCH_CHAT_USER,
+  FETCH_ALL_CHAT_USER,
+  FETCH_ALL_CHAT_USER_UNREAD_COUNT
 } from 'constants/ActionTypes';
 import {USER_INFO_STATE} from '../constants/ActionTypes';
 
@@ -24,16 +26,100 @@ const INIT_STATE = {
   selectedSectionId: '',
   userState: 1,
   searchChatUser: '',
-  // contactList: [], onlt for production
-  contactList: users.filter((user) => !user.recent),
+  contactList: [],
   selectedUser: null,
   message: '',
-  // chatUsers: [],
-  // conversationList: [], //ony for prod
-  chatUsers: users.filter((user) => user.recent),
+  chatUsers: [],
   conversationList: conversationList,
-  conversation: null
+  conversation: null,
+  chatUnreadCount  : {}
 };
+
+
+function constructJson (contactInfo) {
+  let tempJSON = {};
+  if (contactInfo.createdDate !== undefined) {
+    tempJSON.createdDate = contactInfo.createdDate;
+  }
+  if (contactInfo.source !== undefined) {
+    tempJSON.source = getSourceType(contactInfo.source)
+  }
+  tempJSON.id = contactInfo.id;
+  tempJSON.conversationId = contactInfo.conversationId;
+  tempJSON.businessAgentMappingId = contactInfo.businessAgentMappingId;
+  tempJSON.recentActivityDate = contactInfo.recentActivityDate;
+
+  {
+    contactInfo && contactInfo.contactData.map((profileDetails, i) => {
+      if (profileDetails.name === 'contactNo') {
+        if (profileDetails.value.length > 1) {
+          let tempContactNo = '';
+          profileDetails.value.forEach(function (item, index) {
+            if (index === 0) {
+              tempContactNo = item;
+            } else {
+              tempContactNo += `, ${item}`;
+            }
+          })
+          tempJSON[`${profileDetails.name}`] = tempContactNo;
+        } else {
+          tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+        }
+      } else if (profileDetails.name === 'emailId') {
+        if (profileDetails.value.length > 1) {
+          let tempEmailId = '';
+          profileDetails.value.forEach(function (item, index) {
+            if (index === 0) {
+              tempEmailId = item;
+            } else {
+              tempEmailId += `, ${item}`;
+            }
+          })
+          tempJSON[`${profileDetails.name}`] = tempEmailId;
+        } else {
+          tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+        }
+      } else {
+        tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+        if (profileDetails.name === 'name' && profileDetails.value.length > 1) {
+          let otherName = null;
+          tempJSON.otherName = profileDetails.value.forEach(function (item, index) {
+            if (index !== 0) {
+              if (otherName != null) {
+                otherName += `, ${item}`;
+              } else {
+                otherName = item;
+              }
+            }
+          });
+          tempJSON.otherName = otherName;
+        }
+      }
+
+    })
+  };
+  return tempJSON;
+}
+
+
+function getSourceType(type){
+  let source = '';
+  switch(type) {
+    case 'WEBSITE':
+        source = 'Agentz Contact Center'
+      break;
+    case 'DIGITAL_SMS':
+        source = 'Agentz Digital Receptionist - SMS'
+      break;
+    case 'DIGITAL_PHONE':
+        source = 'Agentz Digital Receptionist - Phone'
+      break;
+    default:
+        source = 'Agentz Digital Receptionist'
+  }
+  return source;
+}
+
 
 
 export default (state = INIT_STATE, action) => {
@@ -74,7 +160,7 @@ export default (state = INIT_STATE, action) => {
         drawerState: false,
         selectedSectionId: action.payload.id,
         selectedUser: action.payload,
-        conversation: state.conversationList.find((data) => data.id === action.payload.id)
+        conversation: state.conversationList.find((data) => data.id === 1)
       }
     }
     case ON_TOGGLE_DRAWER: {
@@ -110,6 +196,12 @@ export default (state = INIT_STATE, action) => {
 
       }
     }
+    case FETCH_ALL_CHAT_USER : {
+      return {
+        ...state,
+        loader: true
+      }
+    }
 
     case UPDATE_MESSAGE_VALUE: {
       return {...state, message: action.payload}
@@ -120,10 +212,17 @@ export default (state = INIT_STATE, action) => {
     }
 
     case FETCH_ALL_CHAT_USER_SUCCESS: {
+      let userData = action.payload;
+      let newUserData =[];
+      if(userData.length > 0){
+        newUserData = userData.map(element => constructJson(element)).sort(function (a, b) {
+          return new Date(b.recentActivityDate) - new Date(a.recentActivityDate);
+        });
+      }
       return {
         ...state,
-        contactList: action.payload.filter((user) => !user.recent),
-        chatUsers: action.payload.filter((user) => user.recent),
+        contactList: newUserData,
+        chatUsers: newUserData,
         loader: false,
       }
     }

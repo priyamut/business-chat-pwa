@@ -77,7 +77,7 @@ class ChatPanelWithRedux extends Component {
     const {conversationData} = conversation;
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
-        div.innerHTML = selectedUser.name;
+        div.innerHTML = selectedUser.name || selectedUser.emailId || selectedUser.contactNo;
     }
     return <div className="chat-main">
 
@@ -276,8 +276,13 @@ class ChatPanelWithRedux extends Component {
     this.scrollComponent = React.createRef();
   }
 
-  componentWillMount() {
-    this.props.fetchChatUser();
+  componentDidMount() {
+    const {subScribeUSerData} = this.props
+    if(subScribeUSerData != null){
+      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id)
+    }
+    
+    
     this.props.fetchChatUserConversation()
   }
 
@@ -292,7 +297,7 @@ class ChatPanelWithRedux extends Component {
   }
 
   render() {
-    console.log('props',this)
+    console.log(this.props);
     const {loader, userState, drawerState} = this.props;
     return (
       <div className="app-wrapper app-wrapper-module">
@@ -320,8 +325,9 @@ class ChatPanelWithRedux extends Component {
   }
 }
 
-const mapStateToProps = ({chatData, settings}) => {
+const mapStateToProps = ({chatData, settings,auth}) => {
   const {width} = settings;
+  const {subScribeUSerData} = auth;
   const {
     loader,
     userNotFound,
@@ -337,7 +343,6 @@ const mapStateToProps = ({chatData, settings}) => {
     conversation
   } = chatData;
 
-  console.log({chatData})
   return {
     width,
     loader,
@@ -351,7 +356,8 @@ const mapStateToProps = ({chatData, settings}) => {
     message,
     chatUsers,
     conversationList,
-    conversation
+    conversation,
+    subScribeUSerData
   }
 };
 
