@@ -76,10 +76,18 @@
     "save": "^2.4.0",
     "slick-carousel": "^1.8.1",
     "typeface-roboto": "^0.0.54",
-    "url-search-params": "^1.1.0"
+    "url-search-params": "^1.1.0",
+    "axios": "^0.19.0",
+    "jwt-decode": "^2.2.0",
+    "redux-thunk": "^2.3.0",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "redial": "^0.5.0",
+    "redux-persist": "^5.3.4",
+    "localforage": "^1.4.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start node ./bin/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

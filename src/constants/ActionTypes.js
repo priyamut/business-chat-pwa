@@ -21,8 +21,13 @@ export const BELOW_THE_HEADER = 'below_the_header';
 
 //Contact Module const
 
+export const FETCH_START = 'fetch_start';
+export const FETCH_SUCCESS = 'fetch_success';
+export const FETCH_ERROR = 'fetch_error';
 export const SHOW_MESSAGE = 'show_message';
 export const HIDE_MESSAGE = 'hide_message';
+export const USER_DATA = 'user_data';
+export const USER_TOKEN_SET = 'user_token_set';
 
 export const FETCH_ALL_CONTACT = 'fetch_all_contact';
 export const FETCH_ALL_CONTACT_SUCCESS = 'fetch_all_contact_success';
