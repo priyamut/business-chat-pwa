@@ -262,11 +262,11 @@
   width: 100%;
   flex-basis: 100%;
 }
-@media screen and (max-width: 576px){
-  .chat-main-footer {
-    margin-bottom: 10px !important;
-  }
-}
+// @media screen and (max-width: 576px){
+//   .chat-main-footer {
+//     margin-bottom: 10px !important;
+//   }
+// }
 
 .chat-main-footer {
   @include display-flex(flex, column, nowrap);
@@ -288,7 +288,7 @@
 
 
 .chat-item {
-  padding: 8px 16px;
+  padding: 8px;
 
   & .bubble {
     padding: 16px 16px;
@@ -298,7 +298,7 @@
     position: relative;
     max-width: 600px;
     margin-left: 16px;
-    margin-right: 16px;
+    margin-right: 88px;
     
 
     /* &:before,
@@ -384,7 +384,7 @@
 
 @media screen and (max-width: 1199px) {
   .chat-module {
-    margin: -29px;
+    // margin: -29px;
     padding-top: 0;
   }
 
