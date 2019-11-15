@@ -38,6 +38,25 @@ export const fetchChatUser = (businessAgentMappingId) => {
   }
 };
 
+export const onSelectUser = (user, businessAgentMappingId) => {
+  return (dispatch) => {
+    dispatch({type: ON_SELECT_USER});
+    axios.get(`consumer/v1/${user.id}/sms?businessId=${businessAgentMappingId}`,{headers: {
+      "idToken": JSON.parse(localStorage.getItem("idToken")),
+      "authorization":JSON.parse(localStorage.getItem("accessToken"))}
+  }).then(({data}) => {
+      if (data) {
+        data.user = user;
+        dispatch({type: ON_SELECT_USER, payload: data});
+      } else {
+        dispatch({type: FETCH_ERROR, payload: data.error});
+      }
+    }).catch(function (error) {
+      dispatch({type: FETCH_ERROR, payload: error.message});
+      console.log("Error****:", {error});
+    });
+  }
+};
 
 
 export const fetchChatUserConversation = () => {
@@ -72,14 +91,6 @@ export const filterUsers = (userName) => {
   return {
     type: FILTER_USERS,
     payload: userName
-  };
-};
-
-
-export const onSelectUser = (user) => {
-  return {
-    type: ON_SELECT_USER,
-    payload: user
   };
 };
 

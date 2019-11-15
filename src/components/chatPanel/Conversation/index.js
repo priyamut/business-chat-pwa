@@ -6,7 +6,7 @@ const Conversation = ({conversationData, selectedUser}) => {
 
   return (
     <div className="chat-main-content">
-      {conversationData.map((conversation, index) => conversation.type === 'sent' ?
+      {conversationData.map((conversation, index) => conversation.messageType === 'OUTGOING_SMS' ?
         <SentMessageCell key={index} conversation={conversation}/> :
         <ReceivedMessageCell key={index} conversation={conversation} user={selectedUser}/>
       )}

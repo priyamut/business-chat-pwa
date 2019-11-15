@@ -158,9 +158,9 @@ export default (state = INIT_STATE, action) => {
         ...state,
         loader: true,
         drawerState: false,
-        selectedSectionId: action.payload.id,
-        selectedUser: action.payload,
-        conversation: state.conversationList.find((data) => data.id === 1)
+        selectedSectionId: 1,
+        selectedUser: 'priya',
+        conversation: action.payload
       }
     }
     case ON_TOGGLE_DRAWER: {
@@ -175,9 +175,9 @@ export default (state = INIT_STATE, action) => {
 
     case SUBMIT_COMMENT: {
       const updatedConversation = state.conversation.conversationData.concat({
-        'type': 'sent',
+        'messageType': "OUTGOING_SMS",
         'message': state.message,
-        'sentAt': Moment().format('hh:mm:ss A'),
+        'time': Moment().format('hh:mm:ss A'),
       });
 
       return {
