@@ -84,7 +84,8 @@
     "express-session": "^1.15.5",
     "redial": "^0.5.0",
     "redux-persist": "^5.3.4",
-    "localforage": "^1.4.3"
+    "localforage": "^1.4.3",
+    "react-timeago": "^4.4.0",
   },
   "scripts": {
     "start": "react-scripts start node ./bin/server.js",
