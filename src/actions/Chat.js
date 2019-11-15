@@ -38,7 +38,7 @@ export const fetchChatUser = (businessAgentMappingId) => {
   }
 };
 
-export const onSelectUser = (user, businessAgentMappingId) => {
+export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
   return (dispatch) => {
     dispatch({type: ON_SELECT_USER});
     axios.get(`consumer/v1/${user.id}/sms?businessId=${businessAgentMappingId}`,{headers: {
@@ -48,6 +48,7 @@ export const onSelectUser = (user, businessAgentMappingId) => {
       if (data) {
         data.user = user;
         dispatch({type: ON_SELECT_USER, payload: data});
+        hideLoader();
       } else {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
@@ -57,6 +58,7 @@ export const onSelectUser = (user, businessAgentMappingId) => {
     });
   }
 };
+
 
 
 export const fetchChatUserConversation = () => {

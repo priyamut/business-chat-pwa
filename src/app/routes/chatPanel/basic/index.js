@@ -235,9 +235,9 @@ class ChatPanel extends Component {
       selectedUser: user,
       conversation: this.state.conversationList.find((data) => data.id === user.id)
     });
-    setTimeout(() => {
-      this.setState({loader: false});
-    }, 1500);
+    // setTimeout(() => {
+    //   this.setState({loader: false});
+    // }, 1500);
   };
   showCommunication = () => {
     return (

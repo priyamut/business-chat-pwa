@@ -52,7 +52,7 @@ class SignIn extends React.Component {
                     onChange={(event) => this.setState({email: event.target.value})}
                     defaultValue={email}
                     margin="normal"
-                    className="mt-1 my-sm-3"
+                    className="mt-0 mb-3 my-sm-3"
                   />
                   <TextField
                     type="password"
@@ -61,19 +61,19 @@ class SignIn extends React.Component {
                     onChange={(event) => this.setState({password: event.target.value})}
                     defaultValue={password}
                     margin="normal"
-                    className="mt-1 my-sm-3"
+                    className="mt-0 mb-3 my-sm-3"
                   />
 
-                  <div className="mb-3 d-flex align-items-center justify-content-between">
+                  <div className="mb-3 mt-2 d-flex align-items-center justify-content-between">
                     <Button onClick={() => {
                       this.props.userSignIn({email, password});
                     }} variant="contained" color="primary">
                       <IntlMessages id="appModule.signIn"/>
                     </Button>
 
-                    <Link to="/signup">
+                    {/* <Link to="/signup">
                       <IntlMessages id="signIn.signUp"/>
-                    </Link>
+                    </Link> */}
                   </div>
 
                 </fieldset>
