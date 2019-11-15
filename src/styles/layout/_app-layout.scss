@@ -25,8 +25,14 @@
   overflow: hidden;
 }
 
+
 .app-header {
   min-height: $app-bar-height;
+  & .header-notifications{
+    & .MuiIconButton-root{
+      margin: unset !important;
+    }      
+  }
 }
 
 .app-main-content-wrapper {
