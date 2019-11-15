@@ -301,7 +301,6 @@ class ChatPanelWithRedux extends Component {
   }
 
   render() {
-    console.log(this.props);
     const {loader, userState, drawerState} = this.props;
     return (
       <div className="app-wrapper app-wrapper-module">

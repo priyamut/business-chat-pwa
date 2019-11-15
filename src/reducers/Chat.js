@@ -36,7 +36,7 @@ const INIT_STATE = {
 };
 
 
-function constructJson (contactInfo) {
+function constructJson (contactInfo,chatUnreadCount) {
   let tempJSON = {};
   if (contactInfo.createdDate !== undefined) {
     tempJSON.createdDate = contactInfo.createdDate;
@@ -48,6 +48,7 @@ function constructJson (contactInfo) {
   tempJSON.conversationId = contactInfo.conversationId;
   tempJSON.businessAgentMappingId = contactInfo.businessAgentMappingId;
   tempJSON.recentActivityDate = contactInfo.recentActivityDate;
+  tempJSON.unreadMessage = chatUnreadCount[contactInfo.id] ? chatUnreadCount[contactInfo.id] : 0;
 
   {
     contactInfo && contactInfo.contactData.map((profileDetails, i) => {
@@ -214,8 +215,8 @@ export default (state = INIT_STATE, action) => {
     case FETCH_ALL_CHAT_USER_SUCCESS: {
       let userData = action.payload;
       let newUserData =[];
-      if(userData.length > 0){
-        newUserData = userData.map(element => constructJson(element)).sort(function (a, b) {
+      if(userData.contacts.length > 0){
+        newUserData = userData.contacts.map(element => constructJson(element,userData.unreadCount)).sort(function (a, b) {
           return new Date(b.recentActivityDate) - new Date(a.recentActivityDate);
         });
       }
