@@ -47,7 +47,7 @@ class ChatPanelWithRedux extends Component {
 
   onSelectUser = (user) => {
     const {subScribeUSerData} = this.props;
-    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader);
+    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
@@ -63,9 +63,9 @@ class ChatPanelWithRedux extends Component {
 
   submitComment = () => {
     if (this.props.message !== '') {
-        this.props.submitComment(this.props);
+        this.props.submitComment(this.props, this.scrollToBottom);
     }
-    this.scrollToBottom();
+    // this.scrollToBottom();
   };
 
   scrollToBottom = () =>{ 
