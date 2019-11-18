@@ -52,9 +52,12 @@ class ChatPanelWithRedux extends Component {
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
     }
-    // setTimeout(() => {
-    //   this.props.hideLoader();
-    // }, 1500);
+    if(document.getElementById('phone')){
+      var anchor = document.getElementById('phone-anchor');
+      anchor.href = `tel:${user.contactNo}`;
+      document.getElementById("phone").style.display = "block";
+
+    }
   };
 
 
