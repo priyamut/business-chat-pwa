@@ -51,6 +51,7 @@
             }).catch(function (err) {
               console.log(err)
             });
+            onload='ontouchmove()="return(function(event) { event.preventDefault(); event.stopPropagation(); return(false); } );"'
           });
         } else {
           console.log('service worker is not supported');

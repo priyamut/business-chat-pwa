@@ -175,7 +175,7 @@ class Header extends React.Component {
           </Link> */}
           
           <div id="selectedUser" className="chat-contact-name" style={{color: "white"
-    ,fontWeight: "500",fontSize: "20px"}}></div>
+    ,fontWeight: "500",fontSize: "1rem"}}></div>
 
           {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
           <Menu/>} */}
