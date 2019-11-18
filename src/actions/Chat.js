@@ -15,7 +15,8 @@ import {
   USER_INFO_STATE,
   FETCH_ERROR,
   FETCH_ALL_CHAT_USER_UNREAD_COUNT,
-  FETCH_START
+  FETCH_START,
+  ON_READ_ALL_MESSAGE
 } from 'constants/ActionTypes';
 import axios from 'util/Api'
 
@@ -157,4 +158,24 @@ export const onChatToggleDrawer = () => {
   return {
     type: ON_TOGGLE_DRAWER
   };
+};
+
+export const readAlltheChatMessages = (contactMasterId) => {
+
+  const config = {
+    headers: {
+      "idToken": JSON.parse(localStorage.getItem("idToken")),
+      "authorization":JSON.parse(localStorage.getItem("accessToken")),
+      "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
+    }
+  }
+  return (dispatch) => {
+    dispatch({type: ON_READ_ALL_MESSAGE});
+    axios.put(`notification/v1/businesses/${localStorage.getItem('businessId')}/notificationcenter/${contactMasterId}/readAll`,{},config).then(({data}) => {
+        console.log({data})
+    }).catch(function (error) {
+      dispatch({type: FETCH_ERROR, payload: error.message});
+      console.log("Error****:", {error});
+    });
+  }
 };

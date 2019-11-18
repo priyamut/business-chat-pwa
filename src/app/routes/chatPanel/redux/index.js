@@ -27,7 +27,8 @@ import {
   submitComment,
   updateMessageValue,
   updateSearchChatUser,
-  userInfoState
+  userInfoState,
+  readAlltheChatMessages
 } from 'actions/Chat'
 import CustomScrollbars from 'util/CustomScrollbars';
 import { isIOS } from 'react-device-detect';
@@ -57,6 +58,10 @@ class ChatPanelWithRedux extends Component {
       anchor.href = `tel:${user.contactNo}`;
       document.getElementById("phone").style.display = "block";
 
+    }
+    if(user.unreadMessage > 0){
+      this.props.readAlltheChatMessages(user.id);
+      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
     }
   };
 
@@ -400,5 +405,6 @@ export default connect(mapStateToProps, {
   submitComment,
   updateMessageValue,
   updateSearchChatUser,
-  onChatToggleDrawer
+  onChatToggleDrawer,
+  readAlltheChatMessages
 })(ChatPanelWithRedux);

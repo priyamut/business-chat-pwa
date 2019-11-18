@@ -14,7 +14,7 @@ import {
   UPDATE_MESSAGE_VALUE,
   UPDATE_SEARCH_CHAT_USER,
   FETCH_ALL_CHAT_USER,
-  FETCH_ALL_CHAT_USER_UNREAD_COUNT
+  ON_READ_ALL_MESSAGE
 } from 'constants/ActionTypes';
 import {USER_INFO_STATE} from '../constants/ActionTypes';
 
@@ -201,6 +201,12 @@ export default (state = INIT_STATE, action) => {
       }
     }
     case FETCH_ALL_CHAT_USER : {
+      return {
+        ...state,
+        loader: true
+      }
+    }
+    case ON_READ_ALL_MESSAGE : {
       return {
         ...state,
         loader: true
