@@ -134,7 +134,7 @@ export default (state = INIT_STATE, action) => {
       } else {
         return {
           ...state, contactList: users.filter((user) =>
-            !user.recent && user.name.toLowerCase().indexOf(action.payload.toLowerCase()) > -1
+             user.name.toLowerCase().indexOf(action.payload.toLowerCase()) > -1
           )
         }
       }
@@ -143,12 +143,12 @@ export default (state = INIT_STATE, action) => {
     case FILTER_USERS: {
       if (action.payload === '') {
         return {
-          ...state, chatUsers: users.filter(user => !user.recent)
+          ...state, chatUsers: state.contactList
         }
       } else {
         return {
-          ...state, chatUsers: users.filter((user) =>
-            !user.recent && user.name.toLowerCase().indexOf(action.payload.toLowerCase()) > -1
+          ...state, chatUsers: state.chatUsers.filter((user) =>
+          (user.name || user.emailId || user.contactNo).toLowerCase().indexOf(action.payload.toLowerCase()) > -1
           )
         }
       }
@@ -160,7 +160,7 @@ export default (state = INIT_STATE, action) => {
         loader: true,
         drawerState: false,
         selectedSectionId: 1,
-        selectedUser: 'priya',
+        selectedUser: '',
         conversation: action.payload
       }
     }
@@ -227,6 +227,7 @@ export default (state = INIT_STATE, action) => {
         ...state,
         contactList: newUserData,
         chatUsers: newUserData,
+        chatUnreadCount:userData.unreadCount,
         loader: false,
       }
     }

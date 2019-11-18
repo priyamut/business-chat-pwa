@@ -26,12 +26,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {userSignOut} from 'actions/Auth';
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Slide from "@material-ui/core/Slide";
-
+import SweetAlert from 'react-bootstrap-sweetalert'
+import PhoneIcon from '@material-ui/icons/Phone';
 
 import {
   onChatToggleDrawer
@@ -104,52 +100,6 @@ class Header extends React.Component {
     });
   }
 
-  Apps = () => {
-    return (
-      <ul className="jr-list jr-list-half">
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/app/calendar/basic">
-                <i className="zmdi zmdi-calendar zmdi-hc-fw"/>
-                <span className="jr-list-text"><IntlMessages id="sidebar.calendar.basic"/></span>
-            </Link>
-        </li>
-
-        <li className="jr-list-item">
-          <Link className="jr-list-link" to="/app/to-do">
-            <i className="zmdi zmdi-check-square zmdi-hc-fw"/>
-            <span className="jr-list-text"><IntlMessages id="sidebar.appModule.toDo"/></span>
-          </Link>
-        </li>
-
-        <li className="jr-list-item">
-          <Link className="jr-list-link" to="/app/mail">
-            <i className="zmdi zmdi-email zmdi-hc-fw"/>
-            <span className="jr-list-text"><IntlMessages id="sidebar.appModule.mail"/></span>
-          </Link>
-        </li>
-
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/app/chat">
-                <i className="zmdi zmdi-comment zmdi-hc-fw"/>
-                <span className="jr-list-text"><IntlMessages id="sidebar.appModule.chat"/></span>
-            </Link>
-        </li>
-
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/app/contact">
-                <i className="zmdi zmdi-account-box zmdi-hc-fw"/>
-                <span className="jr-list-text"><IntlMessages id="sidebar.appModule.contact"/></span>
-            </Link>
-        </li>
-
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/">
-                <i className="zmdi zmdi-plus-circle-o zmdi-hc-fw"/>
-                <span className="jr-list-text">Add New</span>
-            </Link>
-        </li>
-      </ul>)
-  };
 
   onChatToggleDrawer = () =>{
     this.props.onChatToggleDrawer();
@@ -181,23 +131,19 @@ class Header extends React.Component {
     return (
       <AppBar
         className={`app-main-header ${(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === BELOW_THE_HEADER) ? 'app-main-header-top' : ''}`}>
-         
-
-        <Dialog
-          open={this.state.showDialog}
-          TransitionComponent={Slide}
-          onClose={this.onCancel}
-        >
-          <DialogTitle>{"Do you want to logout?"}</DialogTitle>
-          <DialogActions>
-            <Button onClick={this.onCancel} color="primary">
-              NO
-            </Button>
-            <Button onClick={this.onConfirm} color="secondary">
-              Yes
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <SweetAlert
+          {...this.props}
+          show={this.state.showDialog}
+          title={'Are you sure want to Logout?'}
+          onConfirm={this.onConfirm}
+          onCancel={this.onCancel}
+          warning
+          showCancel
+          confirmBtnText={'Yes'}
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          cancelBtnText="No"
+        />
         <Toolbar className="app-toolbar" disableGutters={false}>
           {navigationStyle === HORIZONTAL_NAVIGATION ?
             <div className="d-block d-md-none pointer mr-3" onClick={this.onToggleCollapsedNav}>
@@ -230,6 +176,15 @@ class Header extends React.Component {
 
            <ul className="header-notifications list-inline ml-auto">
             
+            <li className="list-inline-item app-tour">
+               <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
+                        >
+                                 <div id="phone" style={{display:"none"}}>
+               <a id="phone-anchor"  itemprop="telephone" dir="ltr" style={{"color": "white"}}>{<PhoneIcon color={"white"} />}</a>
+                                 </div>
+
+            </IconButton>
+            </li>
             <li className="list-inline-item app-tour">
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.showPopup}>

@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ReceivedMessageCell = ({conversation, user}) => {
-  console.log('conversation', conversation);
   return (
     <div className="d-flex flex-nowrap chat-item">
 

@@ -52,9 +52,12 @@ class ChatPanelWithRedux extends Component {
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
     }
-    // setTimeout(() => {
-    //   this.props.hideLoader();
-    // }, 1500);
+    if(document.getElementById('phone')){
+      var anchor = document.getElementById('phone-anchor');
+      anchor.href = `tel:${user.contactNo}`;
+      document.getElementById("phone").style.display = "block";
+
+    }
   };
 
 
@@ -315,7 +318,7 @@ class ChatPanelWithRedux extends Component {
 
   updateSearchChatUser(evt) {
     this.props.updateSearchChatUser(evt.target.value);
-    this.props.filterContacts(evt.target.value);
+    //this.props.filterContacts(evt.target.value);
     this.props.filterUsers(evt.target.value);
   }
 
