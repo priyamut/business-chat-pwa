@@ -160,6 +160,31 @@
 .chat-main-content > div:last-child{
   padding-bottom:16px;
 }
+.chat-main-content{
+  & .chat-item{
+    flex-direction: column !important;
+    }
+}
+.chat-main-content{
+  & .chat-item.flex-row-reverse{
+    & .bubble-time{
+        margin-left: 220px;
+    }
+  }
+}
+.chat-main-content{
+  & .chat-item{
+    & .bubble-time{
+      margin-left: 32px;
+      width: -moz-fit-content;
+      width: fit-content;
+      font-size: 10px;
+      padding-top: 4px;
+      font-weight: 400;
+    }
+  }
+}
+
 .chat-user-item {
   border-bottom: solid 1px $gray-200;
   padding: 16px;
@@ -294,6 +319,7 @@
     margin-bottom: 0;
   }
 }
+
 
 .todo-main-footer {
   padding: 6px 16px;
