@@ -51,6 +51,7 @@
 
 .module-user-info {
   @include display-flex(flex, column, nowrap);
+  overflow: hidden;
 }
 
 .module-user-detail {

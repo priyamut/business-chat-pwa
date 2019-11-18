@@ -177,6 +177,13 @@
 .chat-user-row {
   margin: 0 -5px;
   @include align-items(center);
+   & .chat-info{
+     & .name{
+       overflow: hidden;
+       white-space: nowrap;
+       text-overflow: ellipsis;
+     }
+   }
 }
 
 .chat-info {
@@ -198,7 +205,7 @@
 }
 
 .chat-date {
-  padding: 0 5px;
+  // padding: 0 5px;
   text-align: right;
 }
 
@@ -251,6 +258,9 @@
 .chat-contact-name {
   font-size: 20px;
   font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .chat-list-scroll{
@@ -268,6 +278,9 @@
 //   }
 // }
 
+.MuiDrawer-paper{
+  width : 268px;
+}
 .chat-main-footer {
   @include display-flex(flex, column, nowrap);
   border-top: solid 1px $gray-200;
