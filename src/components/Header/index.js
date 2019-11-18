@@ -32,6 +32,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
   onChatToggleDrawer
@@ -94,7 +95,8 @@ class Header extends React.Component {
       userInfo: false,
       langSwitcher: false,
       appNotification: false,
-      showDialog: false
+      showDialog: false, 
+      loader: false
     }
   }
 
@@ -111,7 +113,7 @@ class Header extends React.Component {
 
   onConfirm = () => {
     this.setState({
-      showDialog: false
+      loader: true
     });
     this.props.userSignOut();
   };
@@ -150,6 +152,9 @@ class Header extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        {/* {this.state.loader ?
+               <CircularProgress/> : ''
+            } */}
         <Toolbar className="app-toolbar" disableGutters={false}>
           {navigationStyle === HORIZONTAL_NAVIGATION ?
             <div className="d-block d-md-none pointer mr-3" onClick={this.onToggleCollapsedNav}>

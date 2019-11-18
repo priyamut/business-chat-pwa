@@ -39,7 +39,7 @@ export const userSignUp = ({name, email, password}) => {
         dispatch({type: FETCH_ERROR, payload: "Network Error"});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
+      dispatch({type: FETCH_ERROR, payload: error.message || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
@@ -73,7 +73,7 @@ export const userSignIn = ({email, password}) => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
@@ -97,7 +97,7 @@ function subScribeUser(dispatch,businessId){
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
 }
@@ -123,7 +123,7 @@ export const getUser = () => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
@@ -133,12 +133,8 @@ export const getUser = () => {
 export const userSignOut = () => {
   return (dispatch) => {
     dispatch({type: FETCH_START});
-    axios.post('iam/v1/logout',{}, {headers: {
-      "idToken": JSON.parse(localStorage.getItem("idToken")),
-      "authorization":JSON.parse(localStorage.getItem("accessToken"))}
-  }
-    ).then(({data}) => {
-        dispatch({type: FETCH_SUCCESS});
+    let idToken = localStorage.getItem("idToken");
+    let accessToken = localStorage.getItem("accessToken");
         localStorage.removeItem("token");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("idToken");
@@ -147,10 +143,15 @@ export const userSignOut = () => {
         localStorage.removeItem("userId");
         localStorage.removeItem("name");
         localStorage.removeItem("businessMap");
+    axios.post('iam/v1/logout',{}, {headers: {
+      "idToken": JSON.parse(idToken),
+      "authorization":JSON.parse(accessToken)}
+  }
+    ).then(({data}) => {
         dispatch({type: FETCH_SUCCESS});
         dispatch({type: SIGNOUT_USER_SUCCESS});
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
