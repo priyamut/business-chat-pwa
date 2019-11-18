@@ -110,19 +110,18 @@ class ChatPanelWithRedux extends Component {
 
       <CustomScrollbars className="chat-list-scroll scrollbar"
                         style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
-            {/* {Sms.length == 0 ?
-            <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px'}}>
+            {Sms.length == 0 ?
+            <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px',
+            display: 'flex', flexDirection: 'column', flexWrap:'nowrap',
+            justifyContent:'center',height:'100%'}}>
               <i className="zmdi zmdi-comment s-128 text-muted"/>
-              <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1>
-              <Button className="d-block d-xl-none" color="primary"
-                      onClick={this.onChatToggleDrawer.bind(this)}>
-                        {<IntlMessages id="chat.selectContactChat"/>}</Button>
+              <h3 className="text-muted"> {<IntlMessages id="chat.noMessageToShow"/>}</h3>
             </div>
             : <Conversation conversationData={Sms}
-            selectedUser={selectedUser} />} */}
+            selectedUser={selectedUser} />}
 
-<Conversation conversationData={Sms}
-            selectedUser={selectedUser} />
+{/* <Conversation conversationData={Sms}
+            selectedUser={selectedUser} /> */}
         
       </CustomScrollbars>
 
