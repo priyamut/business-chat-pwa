@@ -26,12 +26,9 @@ import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {userSignOut} from 'actions/Auth';
-import SweetAlert from 'react-bootstrap-sweetalert';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 
@@ -184,19 +181,7 @@ class Header extends React.Component {
     return (
       <AppBar
         className={`app-main-header ${(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === BELOW_THE_HEADER) ? 'app-main-header-top' : ''}`}>
-          {/* <SweetAlert
-          {...this.props}
-          show={this.state.showDialog}
-          title={'Are you sure want to Logout?'}
-          onConfirm={this.onConfirm}
-          onCancel={this.onCancel}
-          warning
-          showCancel
-          confirmBtnText={'Yes'}
-          confirmBtnBsStyle="danger"
-          cancelBtnBsStyle="default"
-          cancelBtnText="No"
-        /> */}
+         
 
         <Dialog
           open={this.state.showDialog}
@@ -204,11 +189,6 @@ class Header extends React.Component {
           onClose={this.onCancel}
         >
           <DialogTitle>{"Do you want to logout?"}</DialogTitle>
-          {/* <DialogContent>
-            <DialogContentText>
-              Do you want to logout?
-            </DialogContentText>
-          </DialogContent> */}
           <DialogActions>
             <Button onClick={this.onCancel} color="primary">
               NO
