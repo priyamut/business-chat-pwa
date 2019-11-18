@@ -39,9 +39,7 @@ class SignIn extends React.Component {
           </div>
 
           <div className="app-login-content">
-            <div className="app-login-header mb-4">
-              <h1><IntlMessages id="appModule.email"/></h1>
-            </div>
+            
 
             <div className="app-login-form">
               <form>
