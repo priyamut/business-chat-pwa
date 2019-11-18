@@ -38,7 +38,7 @@ export const fetchChatUser = (businessAgentMappingId) => {
   }
 };
 
-export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
+export const onSelectUser = (user, businessAgentMappingId, hideLoader,scrollToBottom) => {
   return (dispatch) => {
     dispatch({type: ON_SELECT_USER});
     axios.get(`consumer/v1/${user.id}/sms?businessId=${businessAgentMappingId}`,{headers: {
@@ -51,6 +51,7 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
         data.Sms = data.Sms.reverse();
         dispatch({type: ON_SELECT_USER, payload: data});
         hideLoader();
+        scrollToBottom();
       } else {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
@@ -62,7 +63,7 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
 };
 
 
-export const submitComment = (subScribeUSerData) => {
+export const submitComment = (subScribeUSerData,scrollToBottom) => {
   const paramData = {businessId: localStorage.getItem('businessId'),
     contactMasterId: subScribeUSerData.conversation.user.id,
     message: subScribeUSerData.message,
@@ -74,9 +75,10 @@ export const submitComment = (subScribeUSerData) => {
       "idToken": JSON.parse(localStorage.getItem("idToken")),
       "authorization":JSON.parse(localStorage.getItem("accessToken"))}
   }).then(({data}) => {
-      if (data) {
-        dispatch({type: SUBMIT_COMMENT, payload: data});
+      if (data == "") {
+        // dispatch({type: SUBMIT_COMMENT, payload: data});
         hideLoader();
+        scrollToBottom();
       } else {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
