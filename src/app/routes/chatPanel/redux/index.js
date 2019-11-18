@@ -114,7 +114,7 @@ class ChatPanelWithRedux extends Component {
             <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px',
             display: 'flex', flexDirection: 'column', flexWrap:'nowrap',
             justifyContent:'center',height:'100%'}}>
-              <i className="zmdi zmdi-comment s-128 text-muted"/>
+              <i className="zmdi zmdi-comments s-128 text-muted"/>
               <h3 className="text-muted"> {<IntlMessages id="chat.noMessageToShow"/>}</h3>
             </div>
             : <Conversation conversationData={Sms}
@@ -283,7 +283,7 @@ class ChatPanelWithRedux extends Component {
           this.props.selectedUser === null ?
             <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px'}}>
               <i className="zmdi zmdi-comment s-128 text-muted"/>
-              <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1>
+              {/* <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1> */}
               <Button className="d-block d-xl-none" color="primary"
                       onClick={this.onChatToggleDrawer.bind(this)}>{<IntlMessages
                 id="chat.selectContactChat"/>}</Button>

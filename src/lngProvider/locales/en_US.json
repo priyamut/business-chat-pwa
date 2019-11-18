@@ -172,7 +172,7 @@
   "chart.scatter": "Scatter Graph",
   "chart.tree": "Tree Graph",
   "chat.selectUserChat": "Select User to start Chat",
-  "chat.noMessageToShow": "There are no messages in this chat yet",
+  "chat.noMessageToShow": "No messages",
   "chat.selectContactChat": "Select contact to start Chat",
   "chat.chatUser": "Chats",
   "chat.contacts": "Contacts",
