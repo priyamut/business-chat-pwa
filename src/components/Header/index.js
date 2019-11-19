@@ -163,7 +163,10 @@ class Header extends React.Component {
 
               <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.onChatToggleDrawer}>
-                      <MenuIcon />
+                                        <span className="menu-icon"/>
+                                        <span class="button__badge"></span>
+
+                      {/* <MenuIcon /> */}
             </IconButton>
               </div>
             </div>
@@ -175,7 +178,7 @@ class Header extends React.Component {
           </Link> */}
           
           <div id="selectedUser" className="chat-contact-name" style={{color: "white"
-    ,fontWeight: "500",fontSize: "1rem"}}></div>
+    ,fontWeight: "500",fontSize: "1rem" , marginLeft: "10px"}}></div>
 
           {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
           <Menu/>} */}
