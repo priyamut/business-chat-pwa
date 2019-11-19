@@ -138,6 +138,7 @@ class ChatPanelWithRedux extends Component {
                               onKeyUp={this._handleKeyPress.bind(this)}
                               onChange={this.updateMessageValue.bind(this)}
                               value={message}
+                              rows={1}
                               placeholder="Type and hit enter to send message"
                             />
             </div>
@@ -238,7 +239,7 @@ class ChatPanelWithRedux extends Component {
             textColor="primary"
             fullWidth
           >
-            <Tab label={<IntlMessages id="chat.chatUser"/>}/>
+            <Tab label={<IntlMessages id="chat.contacts"/>}/>
             {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
         </AppBar>

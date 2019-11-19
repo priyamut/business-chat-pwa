@@ -63,7 +63,7 @@ class SignIn extends React.Component {
                     className="mt-0 mb-3 my-sm-3"
                   />
 
-                  <div className="mb-3 mt-2 d-flex align-items-center justify-content-between">
+                  <div className="mb-3 mt-2 d-flex align-items-center justify-content-center">
                     <Button onClick={() => {
                       this.props.userSignIn({email, password});
                     }} variant="contained" color="primary" disabled={this.props.disabled}>

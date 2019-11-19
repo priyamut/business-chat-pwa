@@ -312,9 +312,18 @@
   padding: 16px;
   background-color: $white;
   width: 100%;
-  height:68px;
-  line-height:68px;
+  height:50px;
+  line-height:50px;
+  border-radius: 75px;
+  border: 1px solid #cecaca;
 
+  & .d-flex{
+    max-height: 36px !important;
+    line-height: 36px;
+     & .col{
+       padding: unset !important;
+     }
+  }
   & .form-group {
     margin-bottom: 0;
   }
@@ -402,6 +411,7 @@
 }
 
 .chat-textarea {
+  padding: unset !important;
   height: 40px;
   @include box-shadow(none);
   @include border-radius(0);

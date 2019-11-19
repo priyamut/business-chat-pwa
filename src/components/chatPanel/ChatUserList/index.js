@@ -11,7 +11,6 @@ const ChatUserList = ({chatUsers, selectedSectionId, onSelectUser}) => {
   }else{
     document.getElementById("button__badge").style.display = "none";
   }
-  console.log({chatUsers})
   return (
     <div className="chat-user">
       {chatUsers.map((chat, index) =>

@@ -109,7 +109,6 @@ class App extends Component {
   render() {
     const {sessionDetails, globalVariables} = this.state;
     const {match, location, locale, token, initURL, isDirectionRTL,subScribeUSerData} = this.props;
-console.log('subScribeUSerData', this.props)
     if (location.pathname === '/') {
       if (token === null) {
         return ( <Redirect to={'/signin'}/> );
@@ -149,9 +148,9 @@ console.log('subScribeUSerData', this.props)
                   <Route
                     component={asyncComponent(() => import('components/Error404'))}/>
                 </Switch>
-                {sessionDetails.id && globalVariables.websocketUrl && (  
+                {sessionDetails.id  && (  
             <StompClient
-              url={`${globalVariables.websocketUrl}?auth=${sessionDetails.id}`}
+              url={`wss://dev-websocket.agentz.ai/websocket?auth=${sessionDetails.id}`}
               heartbeat={1000 * 30}
               topics={[`${SocketConfig.subscribeTopicPrefix}/${sessionDetails.businessId}`,
               `${SocketConfig.subscribeTopicPrefix}/BUSINESS-${sessionDetails.businessId}`,
