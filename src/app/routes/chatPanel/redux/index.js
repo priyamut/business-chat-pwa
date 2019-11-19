@@ -61,7 +61,6 @@ class ChatPanelWithRedux extends Component {
     }
     if(user.unreadMessage > 0){
       this.props.readAlltheChatMessages(user.id);
-      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
     }
   };
 

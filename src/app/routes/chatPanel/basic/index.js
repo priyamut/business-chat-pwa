@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Moment from 'moment';
 import ChatUserList from 'components/chatPanel/ChatUserList';
-import conversationList from '../data/conversationList';
 import Conversation from 'components/chatPanel/Conversation/index';
 import users from '../data/chatUsers';
 import ContactList from 'components/chatPanel/ContactList/index';
@@ -270,7 +269,7 @@ class ChatPanel extends Component {
       selectedUser: null,
       message: '',
       chatUsers: users.filter((user) => user.recent),
-      conversationList: conversationList,
+      conversationList: [],
       conversation: null
     }
   }

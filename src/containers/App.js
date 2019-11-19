@@ -17,8 +17,16 @@ import {getUser, setInitUrl} from '../actions/Auth';
 import RTL from 'util/RTL';
 import axios from 'util/Api';
 import AddToHomescreen from 'react-add-to-homescreen';
+import StompClient from './../custom-plugins/react-stomp-client';
 
+import {SocketConfig} 
+from './../helpers/AppConstant';
+import Conversation from 'components/chatPanel/Conversation/index';
+import Moment from 'moment';
 
+import {
+  updateConversation
+} from 'actions/Chat'
 const RestrictedRoute = ({component: Component, token, ...rest}) =>
   <Route
     {...rest}
@@ -33,14 +41,54 @@ const RestrictedRoute = ({component: Component, token, ...rest}) =>
         />}
   />;
 
+  
+
+
 class App extends Component {
 
-  
+  constructor(){
+    super();
+    this.state= {
+      sessionDetails : {},
+      globalVariables: {},
+      conversation: {}
+    }
+  }
+
   componentWillMount() {
     window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
     if (this.props.initURL === '') {
       this.props.setInitUrl(this.props.history.location.pathname);
     }
+    let businessId = localStorage.getItem('businessId');
+   
+        const config = {
+          headers: {
+            'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
+            "Content-Type":"application/json",
+            "Access-Control-Allow-Origin": "*",
+            "mode": "no-cors"
+          }
+        }
+        axios.get('https://dev-business.agentz.ai/envInfo',{}, config).then(({data}) => {
+            this.setState({
+              globalVariables : data
+            })
+          }).catch(function (error) {
+            console.log("Error****:", {error});
+          });
+        
+        
+          axios.post('business/v1/sessions',{'businessId': 
+          localStorage.getItem('businessId')}, config).then(({data}) => {
+            this.setState({
+              sessionDetails : data
+            })
+          }).catch(function (error) {
+           
+            console.log("Error****:", {error});
+          });
+        //}
   }
 
   handleAddToHomescreen = () => {
@@ -59,7 +107,9 @@ class App extends Component {
   }
 
   render() {
-    const {match, location, locale, token, initURL, isDirectionRTL} = this.props;
+    const {sessionDetails, globalVariables} = this.state;
+    const {match, location, locale, token, initURL, isDirectionRTL,subScribeUSerData} = this.props;
+console.log('subScribeUSerData', this.props)
     if (location.pathname === '/') {
       if (token === null) {
         return ( <Redirect to={'/signin'}/> );
@@ -81,6 +131,9 @@ class App extends Component {
 
     const currentAppLocale = AppLocale[locale.locale];
     return (
+      // <React.Fragment>
+        
+     
       <MuiThemeProvider theme={applyTheme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <IntlProvider
@@ -96,19 +149,56 @@ class App extends Component {
                   <Route
                     component={asyncComponent(() => import('components/Error404'))}/>
                 </Switch>
+                {sessionDetails.id && globalVariables.websocketUrl && (  
+            <StompClient
+              url={`${globalVariables.websocketUrl}?auth=${sessionDetails.id}`}
+              heartbeat={1000 * 30}
+              topics={[`${SocketConfig.subscribeTopicPrefix}/${sessionDetails.businessId}`,
+              `${SocketConfig.subscribeTopicPrefix}/BUSINESS-${sessionDetails.businessId}`,
+              `${SocketConfig.subscribeTopicPrefix}/businessChat-${subScribeUSerData && subScribeUSerData.businessAgents["0"].id}`]} //${sessionInfo.businessId}
+              ref={client => {
+                this.clientRef = client;
+              }}
+              onMessage={(message) => this.onMessageReceive(message)}
+              debug={false}
+            />
+          )};
+         
               </div>
             </RTL>
           </IntlProvider>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
+      // </React.Fragment>
     );
   }
+
+  
+  onMessageReceive = response => {
+    if(this.props.conversation && 
+        response.contactMasterId == this.props.conversation.user.id){
+      let conversation = JSON.parse(JSON.stringify(this.props.conversation));
+      const updatedConversation = conversation.Sms.concat({
+        'messageType': response.type,
+        'incomingSms': {message: JSON.parse(response.text).message,
+          fromNumber: JSON.parse(response.text).fromNumber},
+        'sentAt': response.createDate,
+      });
+      conversation.Sms = updatedConversation;
+      this.props.updateConversation(conversation);
+
+      console.log('this.props',this.props)
+    }
+
+  };
+
 }
 
-const mapStateToProps = ({settings, auth}) => {
+const mapStateToProps = ({settings, auth, chatData}) => {
   const {sideNavColor, locale, isDirectionRTL} = settings;
-  const {authUser, token, initURL} = auth;
-  return {sideNavColor, token, locale, isDirectionRTL, authUser, initURL}
+  const {authUser, token, initURL,subScribeUSerData} = auth;
+  const {conversation} = chatData;
+  return {sideNavColor, token, locale, isDirectionRTL, authUser, initURL,subScribeUSerData,conversation}
 };
 
-export default connect(mapStateToProps, {setInitUrl, getUser})(App);
+export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation})(App);

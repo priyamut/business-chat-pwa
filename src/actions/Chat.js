@@ -16,76 +16,84 @@ import {
   FETCH_ERROR,
   FETCH_ALL_CHAT_USER_UNREAD_COUNT,
   FETCH_START,
-  ON_READ_ALL_MESSAGE
+  ON_READ_ALL_MESSAGE,
+  UPDATE_SEARCH_CONVERSTAION
 } from 'constants/ActionTypes';
 import axios from 'util/Api'
 
 export const fetchChatUser = (businessAgentMappingId) => {
   return (dispatch) => {
-    dispatch({type: FETCH_ALL_CHAT_USER});
-    axios.get(`consumer/v1/contacts?businessAgentMappingId=${businessAgentMappingId}&businessId=` + localStorage.getItem('businessId'),{headers: {
-      "idToken": JSON.parse(localStorage.getItem("idToken")),
-      "authorization":JSON.parse(localStorage.getItem("accessToken"))}
-  }).then(({data}) => {
+    dispatch({ type: FETCH_ALL_CHAT_USER });
+    axios.get(`consumer/v1/contacts?businessAgentMappingId=${businessAgentMappingId}&businessId=` + localStorage.getItem('businessId'), {
+      headers: {
+        "idToken": JSON.parse(localStorage.getItem("idToken")),
+        "authorization": JSON.parse(localStorage.getItem("accessToken"))
+      }
+    }).then(({ data }) => {
       if (data) {
-        dispatch({type: FETCH_ALL_CHAT_USER_SUCCESS, payload: data});
+        dispatch({ type: FETCH_ALL_CHAT_USER_SUCCESS, payload: data });
       } else {
-        dispatch({type: FETCH_ERROR, payload: data.error});
+        dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
-      console.log("Error****:", {error});
+      dispatch({ type: FETCH_ERROR, payload: error.message });
+      console.log("Error****:", { error });
     });
   }
 };
 
-export const onSelectUser = (user, businessAgentMappingId, hideLoader,scrollToBottom) => {
+export const onSelectUser = (user, businessAgentMappingId, hideLoader, scrollToBottom) => {
   return (dispatch) => {
-    dispatch({type: ON_SELECT_USER});
-    axios.get(`consumer/v1/${user.id}/sms?businessId=${businessAgentMappingId}`,{headers: {
-      "idToken": JSON.parse(localStorage.getItem("idToken")),
-      "authorization":JSON.parse(localStorage.getItem("accessToken")),
-      "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name}
-  }).then(({data}) => {
+    dispatch({ type: ON_SELECT_USER });
+    axios.get(`consumer/v1/${user.id}/sms?businessId=${businessAgentMappingId}`, {
+      headers: {
+        "idToken": JSON.parse(localStorage.getItem("idToken")),
+        "authorization": JSON.parse(localStorage.getItem("accessToken")),
+        "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
+      }
+    }).then(({ data }) => {
       if (data) {
         data.user = user;
         data.Sms = data.Sms.reverse();
-        dispatch({type: ON_SELECT_USER, payload: data});
+        dispatch({ type: ON_SELECT_USER, payload: data });
         hideLoader();
         scrollToBottom();
       } else {
-        dispatch({type: FETCH_ERROR, payload: data.error});
+        dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
-      console.log("Error****:", {error});
+      dispatch({ type: FETCH_ERROR, payload: error.message });
+      console.log("Error****:", { error });
     });
   }
 };
 
 
-export const submitComment = (subScribeUSerData,scrollToBottom) => {
-  const paramData = {businessId: localStorage.getItem('businessId'),
+export const submitComment = (subScribeUSerData, scrollToBottom) => {
+  const paramData = {
+    businessId: localStorage.getItem('businessId'),
     contactMasterId: subScribeUSerData.conversation.user.id,
     message: subScribeUSerData.message,
-   toNumber: subScribeUSerData.conversation.user.contactNo
-    };
+    toNumber: subScribeUSerData.conversation.user.contactNo
+  };
   return (dispatch) => {
-    dispatch({type: SUBMIT_COMMENT});
-    axios.post(`consumer/v1/sendsms`,paramData,{headers: {
-      "idToken": JSON.parse(localStorage.getItem("idToken")),
-      "authorization":JSON.parse(localStorage.getItem("accessToken"))}
-  }).then(({data}) => {
+    dispatch({ type: SUBMIT_COMMENT });
+    axios.post(`consumer/v1/sendsms`, paramData, {
+      headers: {
+        "idToken": JSON.parse(localStorage.getItem("idToken")),
+        "authorization": JSON.parse(localStorage.getItem("accessToken"))
+      }
+    }).then(({ data }) => {
       if (data == "") {
         // dispatch({type: SUBMIT_COMMENT, payload: data});
         hideLoader();
         scrollToBottom();
       } else {
-        dispatch({type: FETCH_ERROR, payload: data.error});
+        dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
-      console.log("Error****:", {error});
+      dispatch({ type: FETCH_ERROR, payload: error.message });
+      console.log("Error****:", { error });
     });
   }
 };
@@ -154,6 +162,14 @@ export const updateSearchChatUser = (userName) => {
     payload: userName
   };
 };
+
+
+export const updateConversation = (updatedConversationList) => {
+  return {
+    type: UPDATE_SEARCH_CONVERSTAION,
+    payload: updatedConversationList
+  };
+};
 export const onChatToggleDrawer = () => {
   return {
     type: ON_TOGGLE_DRAWER
@@ -165,17 +181,17 @@ export const readAlltheChatMessages = (contactMasterId) => {
   const config = {
     headers: {
       "idToken": JSON.parse(localStorage.getItem("idToken")),
-      "authorization":JSON.parse(localStorage.getItem("accessToken")),
+      "authorization": JSON.parse(localStorage.getItem("accessToken")),
       "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
     }
   }
   return (dispatch) => {
-    dispatch({type: ON_READ_ALL_MESSAGE});
-    axios.put(`notification/v1/businesses/${localStorage.getItem('businessId')}/notificationcenter/${contactMasterId}/readAll`,{},config).then(({data}) => {
-        console.log({data})
+    dispatch({ type: ON_READ_ALL_MESSAGE });
+    axios.put(`notification/v1/businesses/${localStorage.getItem('businessId')}/notificationcenter/${contactMasterId}/readAll`, {}, config).then(({ data }) => {
+
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message});
-      console.log("Error****:", {error});
+      dispatch({ type: FETCH_ERROR, payload: error.message });
+      console.log("Error****:", { error });
     });
   }
 };

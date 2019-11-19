@@ -12,7 +12,8 @@ class SignIn extends React.Component {
     super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      disabled: true
     }
   }
 
@@ -65,7 +66,7 @@ class SignIn extends React.Component {
                   <div className="mb-3 mt-2 d-flex align-items-center justify-content-between">
                     <Button onClick={() => {
                       this.props.userSignIn({email, password});
-                    }} variant="contained" color="primary">
+                    }} variant="contained" color="primary" disabled={this.props.disabled}>
                       <IntlMessages id="appModule.signIn"/>
                     </Button>
 
