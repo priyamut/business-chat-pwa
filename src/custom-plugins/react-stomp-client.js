@@ -148,7 +148,8 @@ class StompClient extends React.Component {
   };
 
   subscribe = (topic, headers) => {
-    if (!this.subscriptions.has(topic)) {
+    if (!this.subscriptions.has(topic) && this.client.ws
+    && this.client.ws.readyState != WebSocket.CONNECTING) {
       let sub = this.client.subscribe(
         topic,
         msg => {
