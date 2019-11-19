@@ -33,13 +33,13 @@
 
 .chat-sidenav-header {
   @include display-flex(flex, column, nowrap);
-  padding: 16px;
+  padding: 12px;
   background-color:#3f51b5;
 }
 
 .chat-user-hd {
   @include display-flex();
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .chat-sidenav-header .search-wrapper {
@@ -187,7 +187,7 @@
 
 .chat-user-item {
   border-bottom: solid 1px $gray-200;
-  padding: 16px;
+  padding: 8px 12px;
   @include display-flex(flex, column, nowrap);
   @include justify-content(center);
   cursor: pointer;
@@ -336,10 +336,10 @@
 
 
 .chat-item {
-  padding: 8px;
+  padding: 4px 8px;
 
   & .bubble {
-    padding: 16px 16px;
+    padding: 10px;
     background-color: lighten($app-primary, 45%);
     @include box-shadow(0 0 2px rgba(0, 0, 0, .13));
     @include border-radius(20px 20px 20px 0px);
