@@ -311,7 +311,6 @@ class ChatPanelWithRedux extends Component {
     if(subScribeUSerData != null){
       this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id)
     }
-    //this.props.fetchChatUserConversation()
   }
 
   componentWillReceiveProps(nextProps){
@@ -322,7 +321,6 @@ class ChatPanelWithRedux extends Component {
 
   updateSearchChatUser(evt) {
     this.props.updateSearchChatUser(evt.target.value);
-    //this.props.filterContacts(evt.target.value);
     this.props.filterUsers(evt.target.value);
   }
 

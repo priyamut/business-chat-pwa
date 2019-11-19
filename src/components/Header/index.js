@@ -164,9 +164,8 @@ class Header extends React.Component {
               <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.onChatToggleDrawer}>
                                         <span className="menu-icon"/>
-                                        <span class="button__badge"></span>
+                                        <span class="button__badge" style={{display: "none"}} id="button__badge"></span>
 
-                      {/* <MenuIcon /> */}
             </IconButton>
               </div>
             </div>
