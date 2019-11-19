@@ -85,7 +85,8 @@
     "redial": "^0.5.0",
     "redux-persist": "^5.3.4",
     "localforage": "^1.4.3",
-    "react-timeago": "^4.4.0"
+    "react-timeago": "^4.4.0",
+    "@stomp/stompjs": "4.0.7"
   },
   "scripts": {
     "start": "react-scripts start node ./bin/server.js",
