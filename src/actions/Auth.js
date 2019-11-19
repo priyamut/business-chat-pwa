@@ -61,7 +61,6 @@ export const userSignIn = ({email, password}) => {
         password: password,
       }), config,
     ).then(({data}) => {
-      console.log("userSignIn: ", data);
       if (data) {
         localStorage.setItem("token", JSON.stringify(data.accessToken));
         localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
@@ -110,7 +109,6 @@ export const getUser = () => {
       "authorization":JSON.parse(localStorage.getItem("accessToken"))}
   }
     ).then(({data}) => {
-      console.log("userSignIn: ", data);
       if (data) {
         localStorage.setItem("businessId", data.businesses[0].id);
         localStorage.setItem("userId", data.userId);

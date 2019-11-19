@@ -14,7 +14,8 @@ import {
   UPDATE_MESSAGE_VALUE,
   UPDATE_SEARCH_CHAT_USER,
   FETCH_ALL_CHAT_USER,
-  ON_READ_ALL_MESSAGE
+  ON_READ_ALL_MESSAGE,
+  UPDATE_SEARCH_CONVERSTAION
 } from 'constants/ActionTypes';
 import {USER_INFO_STATE} from '../constants/ActionTypes';
 
@@ -99,6 +100,7 @@ function constructJson (contactInfo,chatUnreadCount) {
 
     })
   };
+
   return tempJSON;
 }
 
@@ -155,11 +157,12 @@ export default (state = INIT_STATE, action) => {
     }
 
     case ON_SELECT_USER: {
+      console.log(action.payload)
       return {
         ...state,
         loader: true,
         drawerState: false,
-        selectedSectionId: 1,
+        selectedSectionId: action.payload && action.payload.user ? action.payload.user.id : '', 
         selectedUser: '',
         conversation: action.payload
       }
@@ -210,6 +213,14 @@ export default (state = INIT_STATE, action) => {
       return {
         ...state,
         loader: true
+      }
+    }
+
+    case UPDATE_SEARCH_CONVERSTAION : {
+      return {
+        ...state,
+        loader: false,
+        conversation:action.payload
       }
     }
 
