@@ -13,7 +13,7 @@ const UserCell = ({chat, selectedSectionId, onSelectUser}) => {
         <div className="chat-info  col-9">
           <span className="name h4" style={{"font-weight":"500"}}>{chat.name || chat.emailId || chat.contactNo}</span>
           {/* <div className="chat-info-des">{chat.lastMessage.substring(0, 25) + "..."}</div> */}
-          <div className="last-message-time"> {<TimeAgo date={moment(chat.recentActivityDate).format('MM/DD/YYYY')} />}</div>
+          <div className="last-message-time"> {<TimeAgo date={moment(chat.recentActivityDate).format('llll')} />}</div>
         </div>
 {chat.unreadMessage !== 0 && (chat.id !== selectedSectionId) &&
         <div className="chat-date">
