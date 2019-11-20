@@ -184,7 +184,11 @@
     }
   }
 }
-
+.loader-view{
+  & .text-muted{
+    text-align: center;
+  }
+}
 .chat-user-item {
   border-bottom: solid 1px $gray-200;
   padding: 8px 12px;
