@@ -7,6 +7,7 @@ import {
   USER_DATA,
   USER_TOKEN_SET,
   SUBSCRIBE_USER_DATA,
+  SIGNOUT_USER
 } from "../constants/ActionTypes";
 import axios from 'util/Api'
 
@@ -130,7 +131,7 @@ export const getUser = () => {
 
 export const userSignOut = () => {
   return (dispatch) => {
-    dispatch({type: FETCH_START});
+    dispatch({type: SIGNOUT_USER});
     let idToken = localStorage.getItem("idToken");
     let accessToken = localStorage.getItem("accessToken");
         localStorage.removeItem("token");
@@ -141,13 +142,13 @@ export const userSignOut = () => {
         localStorage.removeItem("userId");
         localStorage.removeItem("name");
         localStorage.removeItem("businessMap");
+        dispatch({type: SIGNOUT_USER_SUCCESS});
     axios.post('iam/v1/logout',{}, {headers: {
       "idToken": JSON.parse(idToken),
       "authorization":JSON.parse(accessToken)}
   }
     ).then(({data}) => {
         dispatch({type: FETCH_SUCCESS});
-        dispatch({type: SIGNOUT_USER_SUCCESS});
     }).catch(function (error) {
       dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
