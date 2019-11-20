@@ -90,7 +90,6 @@ function subScribeUser(dispatch,businessId){
       "agentdomain" : JSON.parse(localStorage.getItem('businessMap'))["0"].name
       }}).then(({data}) => {
       if (data) {
-          console.log({data})
         dispatch({type: FETCH_SUCCESS});
         dispatch({type: SUBSCRIBE_USER_DATA, payload: data});
       } else {

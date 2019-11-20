@@ -308,8 +308,7 @@ class ChatPanelWithRedux extends PureComponent {
            const user = nextProps.chatUsers.find((item) => item.contactHashCode === 
            location.pathname.replace('/app/chat/',''))
            if(user && document.getElementById('selectedUser').innerText !== user.name){
-            this.onSelectUser(user); 
-            //nextProps.onSelectUser(user ,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
+             this.onSelectUser(user); 
            }
     }
   }
@@ -322,14 +321,6 @@ class ChatPanelWithRedux extends PureComponent {
     this.scrollComponent = React.createRef();
   }
 
-  componentDidMount() {
-    // const {subScribeUSerData} = this.props
-    // if(subScribeUSerData != null){
-    //   this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
-    // }
-    console.log('componentDidMount', this.props);
-   // this.loadSmsLink();
-  }
 
   componentWillReceiveProps(nextProps){
    if(this.props.chatUsers != nextProps.chatUsers){

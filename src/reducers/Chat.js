@@ -208,7 +208,7 @@ export default (state = INIT_STATE, action) => {
     case FETCH_ALL_CHAT_USER : {
       return {
         ...state,
-        loader: true
+        loader: false
       }
     }
     case ON_READ_ALL_MESSAGE : {
