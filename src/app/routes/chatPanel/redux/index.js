@@ -249,7 +249,7 @@ class ChatPanelWithRedux extends Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <CustomScrollbars className="chat-sidenav-scroll scrollbar"
-                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)'}}>
+                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 146px)'}}>
             {this.props.chatUsers.length === 0 ?
               <div className="p-5">{this.props.userNotFound}</div>
               :

@@ -311,11 +311,13 @@
   border-top: solid 1px $gray-200;
   padding: 16px;
   background-color: $white;
-  width: 100%;
+  width: calc(100% - 2px);
   height:50px;
   line-height:50px;
   border-radius: 75px;
   border: 1px solid #cecaca;
+  margin:0px 0px 2px 2px;
+
 
   & .d-flex{
     max-height: 36px !important;
