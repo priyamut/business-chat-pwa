@@ -138,7 +138,7 @@ class ChatPanelWithRedux extends Component {
                               onKeyUp={this._handleKeyPress.bind(this)}
                               onChange={this.updateMessageValue.bind(this)}
                               value={message}
-                              rows={1}
+                              
                               placeholder="Type and hit enter to send message"
                             />
             </div>

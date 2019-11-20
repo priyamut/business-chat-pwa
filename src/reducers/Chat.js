@@ -184,7 +184,7 @@ export default (state = INIT_STATE, action) => {
           'message': state.message,
           'smsReceipients': [{'toNum': "+15107562524"}]
         },
-        'time': Moment().format('ddd DD, YYYY, hh:mm:ss A'),
+        'time': Moment().format('YYYY-MM-DDTHH:mm:ss'),
       });
 
       return {
