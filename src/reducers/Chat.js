@@ -46,6 +46,7 @@ function constructJson (contactInfo,chatUnreadCount) {
     tempJSON.source = getSourceType(contactInfo.source)
   }
   tempJSON.id = contactInfo.id;
+  tempJSON.contactHashCode = contactInfo.contactHashCode;
   tempJSON.conversationId = contactInfo.conversationId;
   tempJSON.businessAgentMappingId = contactInfo.businessAgentMappingId;
   tempJSON.recentActivityDate = contactInfo.recentActivityDate;
@@ -157,7 +158,6 @@ export default (state = INIT_STATE, action) => {
     }
 
     case ON_SELECT_USER: {
-      console.log(action.payload)
       return {
         ...state,
         loader: true,
@@ -193,6 +193,7 @@ export default (state = INIT_STATE, action) => {
           ...state.conversation, Sms: updatedConversation
         },
         message: '',
+        loader: false,
         conversationList: state.conversationList.map(Sms => {
           if (Sms.id === state.conversation.id) {
             return {...state.conversation, Sms: updatedConversation};
@@ -206,7 +207,7 @@ export default (state = INIT_STATE, action) => {
     case FETCH_ALL_CHAT_USER : {
       return {
         ...state,
-        loader: true
+        loader: false
       }
     }
     case ON_READ_ALL_MESSAGE : {

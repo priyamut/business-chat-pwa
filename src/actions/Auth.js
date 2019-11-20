@@ -81,7 +81,6 @@ export const userSignIn = ({email, password}) => {
 
 
 function subScribeUser(dispatch,businessId){
-  console.log(JSON.parse(localStorage.getItem('businessMap'))["0"].name)
     dispatch({type: FETCH_START});
     axios.get('/business/v1/subscriptions?businessId=' + businessId,{
       headers: {
@@ -90,7 +89,6 @@ function subScribeUser(dispatch,businessId){
       "agentdomain" : JSON.parse(localStorage.getItem('businessMap'))["0"].name
       }}).then(({data}) => {
       if (data) {
-          console.log({data})
         dispatch({type: FETCH_SUCCESS});
         dispatch({type: SUBSCRIBE_USER_DATA, payload: data});
       } else {
