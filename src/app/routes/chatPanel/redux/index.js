@@ -347,7 +347,6 @@ class ChatPanelWithRedux extends PureComponent {
               <Drawer open={drawerState} anchor={"left"}
                       onClose={this.onChatToggleDrawer.bind(this)}>
                 {userState === 1 ? this.ChatUsers() : this.AppUsersInfo()}
-                this.loadSmsLink();
               </Drawer>
             </div>
             <div className="chat-sidenav d-none d-xl-flex">
