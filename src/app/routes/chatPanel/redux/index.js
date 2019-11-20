@@ -113,7 +113,7 @@ class ChatPanelWithRedux extends PureComponent {
               <h3 className="text-muted"> {<IntlMessages id="chat.noMessageToShow"/>}</h3>
             </div>
             : <Conversation conversationData={Sms}
-            selectedUser={selectedUser} />}
+            selectedUser={selectedUser}  />}
 
         
       </CustomScrollbars>
@@ -298,7 +298,6 @@ class ChatPanelWithRedux extends PureComponent {
     this.scrollComponent = React.createRef();
   }
 
-
   
 
   componentWillReceiveProps(nextProps){
@@ -317,7 +316,6 @@ class ChatPanelWithRedux extends PureComponent {
   }
 
   
-
   render() {
     const {loader, userState, drawerState} = this.props;
     return (
