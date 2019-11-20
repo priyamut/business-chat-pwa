@@ -299,6 +299,8 @@ class ChatPanelWithRedux extends PureComponent {
   }
 
 
+  
+
   componentWillReceiveProps(nextProps){
    if(this.props.chatUsers != nextProps.chatUsers){
      this.loadSmsLink(nextProps);
@@ -314,11 +316,7 @@ class ChatPanelWithRedux extends PureComponent {
     this.props.onChatToggleDrawer();
   }
 
-  componentDidMount(){
-    if(this.props.chatUsers != null){
-      //this.props.updateConversation({Sms:[],user:{}})
-    }
-  }
+  
 
   render() {
     const {loader, userState, drawerState} = this.props;
