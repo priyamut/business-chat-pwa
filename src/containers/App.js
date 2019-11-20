@@ -181,7 +181,7 @@ class App extends Component {
         'messageType': response.type,
         'incomingSms': {message: JSON.parse(response.text).message,
           fromNumber: JSON.parse(response.text).fromNumber},
-        'sentAt': response.createDate,
+        'time': response.createdDate,
       });
       conversation.Sms = updatedConversation;
       this.props.updateConversation(conversation);
