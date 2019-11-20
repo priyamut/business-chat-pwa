@@ -113,7 +113,7 @@ class ChatPanelWithRedux extends PureComponent {
               <h3 className="text-muted"> {<IntlMessages id="chat.noMessageToShow"/>}</h3>
             </div>
             : <Conversation conversationData={Sms}
-            selectedUser={selectedUser} />}
+            selectedUser={selectedUser}  />}
 
         
       </CustomScrollbars>
@@ -298,6 +298,7 @@ class ChatPanelWithRedux extends PureComponent {
     this.scrollComponent = React.createRef();
   }
 
+  
 
   componentWillReceiveProps(nextProps){
    if(this.props.chatUsers != nextProps.chatUsers){
@@ -314,12 +315,7 @@ class ChatPanelWithRedux extends PureComponent {
     this.props.onChatToggleDrawer();
   }
 
-  componentDidMount(){
-    if(this.props.chatUsers != null){
-      //this.props.updateConversation({Sms:[],user:{}})
-    }
-  }
-
+  
   render() {
     const {loader, userState, drawerState} = this.props;
     return (

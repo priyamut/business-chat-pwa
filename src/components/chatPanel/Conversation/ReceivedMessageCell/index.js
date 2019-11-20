@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 const ReceivedMessageCell = ({conversation, user}) => {
   let date  = new Date(conversation.time); 
@@ -18,6 +19,10 @@ const ReceivedMessageCell = ({conversation, user}) => {
     } 
     return  dd + '/' + mm + '/' + yyyy;
   }
+
+  
+var date1 = moment(conversation.time);
+var dateComponent = date1.utc().format('llll');
   
   return (
     <div className="d-flex flex-nowrap chat-item">
@@ -30,7 +35,7 @@ const ReceivedMessageCell = ({conversation, user}) => {
         {/* <div className="time text-muted text-right mt-2">{conversation.sentAt}</div> */}
       </div>
       <div className="bubble-time">
-          <div className="time">{bubbleTime}</div>
+          <div className="time">{dateComponent}</div>
            </div>
     </div>
   )

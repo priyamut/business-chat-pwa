@@ -1,10 +1,11 @@
 import React from 'react';
-
+import moment from 'moment';
 const SentMessageCell = ({conversation}) => {
   let date  = new Date(conversation.time); 
   const bubbleTime = date.toDateString() + ', '+
   date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
   
+  // console.log({conversation})
   function formatDate(date){
     var dd = date.getDate();
     var mm = date.getMonth() + 1; //January is 0!
@@ -19,19 +20,18 @@ const SentMessageCell = ({conversation}) => {
     return  dd + '/' + mm + '/' + yyyy;
   }
 
+var date1 = moment(conversation.time);
+var dateComponent = date1.utc().format('llll');
+console.log(dateComponent);
+
   return (
     <div className="d-flex flex-nowrap chat-item flex-row-reverse">
-
-      {/* <img className="rounded-circle avatar size-40 align-self-end" src="https://via.placeholder.com/150x150"
-           alt={conversation.name}/> */}
-
       <div className="bubble">
         <div className="message" style={{color : '#fff'}}>{conversation.outGoingSms.message}</div>
-        {/* <div className="time text-muted text-right mt-2">{conversation.sentAt}</div> */}
+          {/* <div className="no-connection">{`Tap here to retry`}</div> */}
       </div>
-
            <div className="bubble-time">
-          <div className="time">{bubbleTime}</div>
+          <div className="time">{dateComponent}</div>
            </div>
     </div>
   )
