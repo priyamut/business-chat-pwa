@@ -7,7 +7,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Drawer from '@material-ui/core/Drawer';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton'
+import IconButton from '@material-ui/core/IconButton';
+import AnnouncementIcon from '@material-ui/icons/Announcement';
 import Input from '@material-ui/core/Input'
 import ChatUserList from 'components/chatPanel/ChatUserList/index';
 import Conversation from 'components/chatPanel/Conversation/index';
@@ -50,6 +51,7 @@ class ChatPanelWithRedux extends PureComponent {
 
   onSelectUser = (user) => {
     const {subScribeUSerData} = this.props;
+    this.props.updateMessageValue('');
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
     this.ChangeUrl('/app/chat/'+user['contactHashCode']);
     if(document.getElementById('selectedUser')){
@@ -104,7 +106,6 @@ class ChatPanelWithRedux extends PureComponent {
   }
   updateMessageValue = (evt) => {
     this.props.updateMessageValue(evt.target.value);
-
   };
 
   Communication = () => {
@@ -122,8 +123,11 @@ class ChatPanelWithRedux extends PureComponent {
             <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px',
             display: 'flex', flexDirection: 'column', flexWrap:'nowrap',
             justifyContent:'center',height:'100%'}}>
-              <i className="zmdi zmdi-comments s-128 text-muted"/>
-              <h3 className="text-muted"> {<IntlMessages id="chat.noMessageToShow"/>}</h3>
+              {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
+              <AnnouncementIcon className="s-128 text-muted"/>
+              <h3 className="text-muted">
+            {selectedUser.contactNo !== null && selectedUser.contactNo !== "" ? <IntlMessages id="chat.noMessageToShow"/>
+            : <IntlMessages id="chat.noContactNoForthisUser"/>} </h3>
             </div>
             : <Conversation conversationData={Sms}
             selectedUser={selectedUser}  />}
