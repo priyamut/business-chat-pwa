@@ -29,7 +29,8 @@ import {
   updateMessageValue,
   updateSearchChatUser,
   userInfoState,
-  readAlltheChatMessages
+  readAlltheChatMessages,
+  updateConversation
 } from 'actions/Chat'
 import CustomScrollbars from 'util/CustomScrollbars';
 import { isIOS } from 'react-device-detect';
@@ -50,7 +51,7 @@ class ChatPanelWithRedux extends PureComponent {
   onSelectUser = (user) => {
     const {subScribeUSerData} = this.props;
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
-    this.ChangeUrl(user['contactHashCode']);
+    this.ChangeUrl('/app/chat/'+user['contactHashCode']);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
@@ -79,7 +80,6 @@ class ChatPanelWithRedux extends PureComponent {
     if (this.props.message !== '') {
         this.props.submitComment(this.props, this.scrollToBottom);
     }
-    // this.scrollToBottom();
   };
 
   scrollToBottom = () =>{ 
@@ -96,10 +96,6 @@ class ChatPanelWithRedux extends PureComponent {
 
   Communication = () => {
     if(!this.props.conversation || this.props.conversation.length == 0){
-      // setTimeout(() => {
-      //   this.props.hideLoader();
-        
-      // }, 1500);
       return;
     }
     const {message, conversation} = this.props;
@@ -107,21 +103,6 @@ class ChatPanelWithRedux extends PureComponent {
     let selectedUser = conversation.user;
     
     return <div className="chat-main">
-
-      {/* <div className="chat-main-header">
-        <IconButton className="d-block d-xl-none chat-btn" aria-label="Menu"
-                    onClick={this.onChatToggleDrawer.bind(this)}>
-          <MenuIcon />
-        </IconButton>
-        <div className="chat-main-header-info">
-
-          <div className="chat-contact-name">
-            {selectedUser.name}
-          </div>
-        </div>
-
-      </div> */}
-
       <CustomScrollbars className="chat-list-scroll scrollbar"
                         style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
             {Sms.length == 0 ?
@@ -134,8 +115,6 @@ class ChatPanelWithRedux extends PureComponent {
             : <Conversation conversationData={Sms}
             selectedUser={selectedUser} />}
 
-{/* <Conversation conversationData={Sms}
-            selectedUser={selectedUser} /> */}
         
       </CustomScrollbars>
 
@@ -269,17 +248,6 @@ class ChatPanelWithRedux extends PureComponent {
             }
           </CustomScrollbars>
 
-          {/* <CustomScrollbars className="chat-sidenav-scroll scrollbar"
-                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)'}}>
-            {
-              this.props.contactList.length === 0 ?
-                <div className="p-5">{this.props.userNotFound}</div>
-                :
-                <ContactList contactList={this.props.contactList}
-                             selectedSectionId={this.props.selectedSectionId}
-                             onSelectUser={this.onSelectUser.bind(this)}/>
-            }
-          </CustomScrollbars> */}
         </SwipeableViews>
 
       </div>
@@ -299,7 +267,7 @@ class ChatPanelWithRedux extends PureComponent {
           this.props.selectedUser === null ?
             <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px'}}>
               <i className="zmdi zmdi-comment s-128 text-muted"/>
-              {/* <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1> */}
+              
               <Button className="d-block d-xl-none" color="primary"
                       onClick={this.onChatToggleDrawer.bind(this)}>{<IntlMessages
                 id="chat.selectContactChat"/>}</Button>
@@ -344,6 +312,12 @@ class ChatPanelWithRedux extends PureComponent {
 
   onChatToggleDrawer() {
     this.props.onChatToggleDrawer();
+  }
+
+  componentDidMount(){
+    if(this.props.chatUsers != null){
+      //this.props.updateConversation({Sms:[],user:{}})
+    }
   }
 
   render() {
@@ -422,5 +396,6 @@ export default connect(mapStateToProps, {
   updateMessageValue,
   updateSearchChatUser,
   onChatToggleDrawer,
-  readAlltheChatMessages,setInitUrl
+  readAlltheChatMessages,setInitUrl,
+  updateConversation
 })(ChatPanelWithRedux);

@@ -140,6 +140,7 @@ export const userSignOut = () => {
         localStorage.removeItem("userId");
         localStorage.removeItem("name");
         localStorage.removeItem("businessMap");
+        window.location.reload(); // refresh the page
         dispatch({type: SIGNOUT_USER_SUCCESS});
     axios.post('iam/v1/logout',{}, {headers: {
       "idToken": JSON.parse(idToken),
