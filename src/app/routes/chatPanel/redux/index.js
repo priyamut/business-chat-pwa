@@ -214,7 +214,8 @@ class ChatPanelWithRedux extends Component {
           <div className="module-user-info d-flex flex-column justify-content-center">
             <div className="module-title">
               <h2 className="mb-0" style={{color : '#fff',fontWeight : '500',overflow: 'hidden',
-          whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{localStorage.getItem('name').toUpperCase()}</h2>
+          whiteSpace: 'nowrap', textOverflow: 'ellipsis',    textTransform: "uppercase"
+        }}>{localStorage.getItem('name')}</h2>
             </div>
 
           </div>
