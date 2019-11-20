@@ -237,9 +237,9 @@ export default (state = INIT_STATE, action) => {
       let userData = action.payload;
       let newUserData =[];
       if(userData.contacts.length > 0){
-        newUserData = userData.contacts.map(element => constructJson(element,userData.unreadCount)).sort(function (a, b) {
-          return new Date(b.recentActivityDate) - new Date(a.recentActivityDate);
-        });
+        newUserData = userData.contacts.map(element => constructJson(element,userData.unreadCount)).sort(function(a, b) {
+          return (b.recentActivityDate < a.recentActivityDate) ? -1 : ((b.recentActivityDate > a.recentActivityDate) ? 1 : 0);
+      });      
       }
       return {
         ...state,
