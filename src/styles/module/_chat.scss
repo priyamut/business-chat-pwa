@@ -168,7 +168,7 @@
 .chat-main-content{
   & .chat-item.flex-row-reverse{
     & .bubble-time{
-        margin-left: 220px;
+        margin-right: 32px;
     }
   }
 }
@@ -347,10 +347,10 @@
     @include box-shadow(0 0 2px rgba(0, 0, 0, .13));
     @include border-radius(20px 20px 20px 0px);
     position: relative;
-    max-width: 600px;
+    max-width: 266px;
     margin-left: 16px;
     margin-right: 88px;
-    
+    width: fit-content;
 
     /* &:before,
      &:after {
@@ -382,12 +382,14 @@
   
 
   &.flex-row-reverse {
+    align-items:flex-end;
     & .bubble {
       // margin-left: 16px;
       // margin-right: 16px;
-      background-color: #6574C4;
-      margin-left: 88px;
-      margin-right: 16px;
+    background-color: #6574C4;
+    margin-right: 16px;
+    width: fit-content;
+    max-width: 266px;
     
       @include border-radius(20px 20px 0 20px);
 
