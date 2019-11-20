@@ -7,13 +7,66 @@ import IntlMessages from 'util/IntlMessages';
 import InfoView from 'components/InfoView';
 import {userSignIn} from 'actions/Auth';
 
+const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+const validateForm = (errors) => {
+  let valid = true;
+  Object.values(errors).forEach(
+    (val) => val.length > 0 && (valid = false)
+  );
+  return valid;
+}
+
+
 class SignIn extends React.Component {
   constructor() {
     super();
     this.state = {
       email: '',
       password: '',
-      disabled: true
+      disabled: true,
+      email: null,
+      password: null,
+      errors: {
+        email: '',
+        password: '',
+      }
+    }
+  }
+
+  handleChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = this.state.errors;
+
+    switch (name) {
+      case 'email': 
+        errors.email = 
+          validEmailRegex.test(value)
+            ? ''
+            : 'Email is not valid!';
+        break;
+      case 'password': 
+        errors.password = 
+          value.length < 8
+            ? 'Password must be 8 characters long!'
+            : '';
+        break;
+      default:
+        break;
+    }
+
+    this.setState({errors, [name]: value});
+  }
+
+  handleSubmit = (event) => {
+    const email = this.state.email;
+    const password = this.state.password;
+    event.preventDefault();
+    if(validateForm(this.state.errors)) {
+      console.info('Valid Form');
+      this.props.userSignIn({email, password});
+    }else{
+      console.error('Invalid Form')
     }
   }
 
@@ -26,7 +79,8 @@ class SignIn extends React.Component {
   render() {
     const {
       email,
-      password
+      password,
+      errors
     } = this.state;
     return (
       <div
@@ -48,24 +102,29 @@ class SignIn extends React.Component {
                   <TextField
                     label={<IntlMessages id="appModule.email"/>}
                     fullWidth
-                    onChange={(event) => this.setState({email: event.target.value})}
+                    //onChange={(event) => this.setState({email: event.target.value})}
+                    type='email' name='email' onChange={this.handleChange} noValidate 
                     defaultValue={email}
                     margin="normal"
                     className="mt-0 mb-3 my-sm-3"
                   />
+                  {errors.email.length > 0 && 
+                <span className='error'>{errors.email}</span>}
                   <TextField
                     type="password"
                     label={<IntlMessages id="appModule.password"/>}
                     fullWidth
-                    onChange={(event) => this.setState({password: event.target.value})}
+                   // onChange={(event) => this.setState({password: event.target.value})}
+                    name='password' onChange={this.handleChange} noValidate 
                     defaultValue={password}
                     margin="normal"
                     className="mt-0 mb-3 my-sm-3"
                   />
-
+                    {errors.password.length > 0 && 
+                <span className='error'>{errors.password}</span>}
                   <div className="mb-3 mt-2 d-flex align-items-center justify-content-center">
-                    <Button onClick={() => {
-                      this.props.userSignIn({email, password});
+                    <Button onClick={(event) => {
+                      this.handleSubmit(event);
                     }} variant="contained" color="primary" disabled={this.props.disabled}>
                       <IntlMessages id="appModule.signIn"/>
                     </Button>
