@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 import {connect} from 'react-redux'
 import Button from '@material-ui/core/Button';
 import SwipeableViews from 'react-swipeable-views';
@@ -15,6 +15,7 @@ import ContactList from 'components/chatPanel/ContactList/index';
 import SearchBox from 'components/SearchBox';
 import IntlMessages from 'util/IntlMessages';
 import MenuIcon from '@material-ui/icons/Menu';
+import {setInitUrl} from './../../../../actions/Auth';
 
 import {
   fetchChatUser,
@@ -33,7 +34,7 @@ import {
 import CustomScrollbars from 'util/CustomScrollbars';
 import { isIOS } from 'react-device-detect';
 
-class ChatPanelWithRedux extends Component {
+class ChatPanelWithRedux extends PureComponent {
   filterContacts = (userName) => {
     this.props.filterContacts(userName);
   };
@@ -255,7 +256,7 @@ class ChatPanelWithRedux extends Component {
               :
               <ChatUserList chatUsers={this.props.chatUsers}
                             selectedSectionId={this.props.selectedSectionId}
-                            onSelectUser={this.onSelectUser.bind(this)}/>
+                            onSelectUser={this.onSelectUser.bind(this)} />
             }
           </CustomScrollbars>
 
@@ -299,6 +300,20 @@ class ChatPanelWithRedux extends Component {
       </div>)
   };
 
+  loadSmsLink(nextProps){
+    const {subScribeUSerData, location} = this.props
+    if(nextProps.chatUsers.length >0 && subScribeUSerData){
+       if(location && location.pathname.replace('/app/chat/','') !== '' &&
+          location.pathname.replace('/app/chat','') !== ''){
+           const user = nextProps.chatUsers.find((item) => item.contactHashCode === 
+           location.pathname.replace('/app/chat/',''))
+           if(user && document.getElementById('selectedUser').innerText !== user.name){
+            this.onSelectUser(user); 
+            //nextProps.onSelectUser(user ,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
+           }
+    }
+  }
+  }
   constructor() {
     super();
     this.state = {
@@ -308,16 +323,18 @@ class ChatPanelWithRedux extends Component {
   }
 
   componentDidMount() {
-    const {subScribeUSerData} = this.props
-    if(subScribeUSerData != null){
-      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id)
-    }
+    // const {subScribeUSerData} = this.props
+    // if(subScribeUSerData != null){
+    //   this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    // }
+    console.log('componentDidMount', this.props);
+   // this.loadSmsLink();
   }
 
   componentWillReceiveProps(nextProps){
-    if(this.props.subScribeUSerData != nextProps.subScribeUSerData){
-      this.props.fetchChatUser(nextProps.subScribeUSerData.businessAgents["0"].id)
-    }
+   if(this.props.chatUsers != nextProps.chatUsers){
+     this.loadSmsLink(nextProps);
+   }
   }
 
   updateSearchChatUser(evt) {
@@ -339,6 +356,7 @@ class ChatPanelWithRedux extends Component {
               <Drawer open={drawerState} anchor={"left"}
                       onClose={this.onChatToggleDrawer.bind(this)}>
                 {userState === 1 ? this.ChatUsers() : this.AppUsersInfo()}
+                this.loadSmsLink();
               </Drawer>
             </div>
             <div className="chat-sidenav d-none d-xl-flex">
@@ -405,5 +423,5 @@ export default connect(mapStateToProps, {
   updateMessageValue,
   updateSearchChatUser,
   onChatToggleDrawer,
-  readAlltheChatMessages
+  readAlltheChatMessages,setInitUrl
 })(ChatPanelWithRedux);

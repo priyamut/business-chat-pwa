@@ -25,7 +25,8 @@ import Conversation from 'components/chatPanel/Conversation/index';
 import Moment from 'moment';
 
 import {
-  updateConversation
+  updateConversation,
+  fetchChatUser
 } from 'actions/Chat'
 const RestrictedRoute = ({component: Component, token, ...rest}) =>
   <Route
@@ -102,10 +103,18 @@ class App extends Component {
     }
     if (nextProps.token && !nextProps.authUser) {
       this.props.getUser()
-
+    }
+    if(this.props.subScribeUSerData != nextProps.subScribeUSerData){
+      this.props.fetchChatUser(nextProps.subScribeUSerData.businessAgents["0"].id)
     }
   }
 
+  componentDidMount(){
+    const {subScribeUSerData} = this.props
+    if(subScribeUSerData != null){
+      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    }
+  }
   render() {
     const {sessionDetails, globalVariables} = this.state;
     const {match, location, locale, token, initURL, isDirectionRTL,subScribeUSerData} = this.props;
@@ -200,4 +209,4 @@ const mapStateToProps = ({settings, auth, chatData}) => {
   return {sideNavColor, token, locale, isDirectionRTL, authUser, initURL,subScribeUSerData,conversation}
 };
 
-export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation})(App);
+  export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation,fetchChatUser})(App);
