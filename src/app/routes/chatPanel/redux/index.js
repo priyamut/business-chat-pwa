@@ -50,6 +50,7 @@ class ChatPanelWithRedux extends PureComponent {
   onSelectUser = (user) => {
     const {subScribeUSerData} = this.props;
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
+    this.ChangeUrl(user['contactHashCode']);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
@@ -65,6 +66,14 @@ class ChatPanelWithRedux extends PureComponent {
     }
   };
 
+   ChangeUrl(url) {
+    if (typeof (window.history.pushState) != "undefined") {
+        var obj = { Page: 'page', Url: url };
+        window.history.pushState(obj, obj.Page, obj.Url);
+    } else {
+        alert("Browser does not support HTML5.");
+    }
+  }
 
   submitComment = () => {
     if (this.props.message !== '') {

@@ -158,7 +158,6 @@ export default (state = INIT_STATE, action) => {
     }
 
     case ON_SELECT_USER: {
-      console.log(action.payload)
       return {
         ...state,
         loader: true,
