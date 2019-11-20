@@ -2,7 +2,7 @@ import React from 'react';
 
 const SentMessageCell = ({conversation}) => {
   let date  = new Date(conversation.time); 
-  const bubbleTime = formatDate(date) + ', '+
+  const bubbleTime = date.toDateString() + ', '+
   date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
   
   function formatDate(date){
