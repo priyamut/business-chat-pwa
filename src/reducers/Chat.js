@@ -32,7 +32,7 @@ const INIT_STATE = {
   message: '',
   chatUsers: [],
   conversationList: [],
-  conversation: null,
+  conversation: [],
   chatUnreadCount  : {}
 };
 
