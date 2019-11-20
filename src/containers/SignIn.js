@@ -47,8 +47,8 @@ class SignIn extends React.Component {
         break;
       case 'password': 
         errors.password = 
-          value.length < 8
-            ? 'Password must be 8 characters long!'
+          value.length <= 0
+            ? 'Password is not valid!'
             : '';
         break;
       default:
