@@ -197,8 +197,7 @@
   cursor: pointer;
   max-height: 96px;
 
-  &.active,
-  &:hover {
+  &.active{
     background-color: lighten($app-primary, 45%);
   }
 }
