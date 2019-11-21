@@ -59,7 +59,7 @@ class ChatPanelWithRedux extends PureComponent {
     });
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
     this.changeContactDetails(user);
-    this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    //this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
   };
 
   changeContactDetails(user){
