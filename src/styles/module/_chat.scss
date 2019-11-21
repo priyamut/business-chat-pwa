@@ -176,6 +176,12 @@
       font-size: 0.7rem;
     }
 }
+.component-none{
+  display: none !important;
+}
+.component-block{
+  display: block !important;
+}
 .chat-main-content{
   & .chat-item.flex-row-reverse{
     & .bubble-time{

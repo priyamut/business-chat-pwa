@@ -58,6 +58,10 @@ class ChatPanelWithRedux extends PureComponent {
       scrollFlg: true
     });
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
+    this.changeContactDetails(user);
+  };
+
+  changeContactDetails(user){
     this.ChangeUrl('/app/chat/'+user['contactHashCode']);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
@@ -71,12 +75,11 @@ class ChatPanelWithRedux extends PureComponent {
       var anchor = document.getElementById('phone-anchor');
       anchor.href = `tel:${user.contactNo}`;
       document.getElementById("phone").style.display = "block";
-
     }
     if(user.unreadMessage > 0){
       this.props.readAlltheChatMessages(user.id);
-    }
-  };
+    }   
+  }
 
    ChangeUrl(url) {
     if (typeof (window.history.pushState) != "undefined") {
@@ -123,6 +126,7 @@ class ChatPanelWithRedux extends PureComponent {
       this.setState({
         scrollFlg: false
       });
+      this.changeStyle();
     }
   }
 
@@ -143,7 +147,8 @@ class ChatPanelWithRedux extends PureComponent {
             justifyContent:'center',height:'100%'}}>
               {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
               
-            {(selectedUser.contactNo !== null && selectedUser.contactNo !== "")
+            {(selectedUser.contactNo !== null && selectedUser.contactNo !== undefined
+            && selectedUser.contactNo !== "")
              ? 
             (<React.Fragment><AnnouncementIcon className="s-128 text-muted"/>
             <h3 className="text-muted">
@@ -335,6 +340,23 @@ class ChatPanelWithRedux extends PureComponent {
     }
   }
   }
+
+  changeStyle(){
+    let chatFooter = document.getElementsByClassName('chat-main-footer','chat-main');
+    let phoneAnchor = document.getElementById('phone-anchor');
+    if(chatFooter && chatFooter[0] instanceof Element && phoneAnchor){
+      if(this.props.conversation && this.props.conversation.user && 
+        (this.props.conversation.user.contactNo == null || this.props.conversation.user.contactNo == ''
+        || this.props.conversation.user.contactNo == undefined)){
+        chatFooter[0].classList.add('component-none');
+        phoneAnchor.classList.add('component-none');
+      }else{
+        chatFooter[0].classList.remove('component-none');
+         phoneAnchor.classList.remove('component-none');
+      }
+    }
+  }
+
   constructor() {
     super();
     this.state = {
