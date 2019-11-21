@@ -133,7 +133,7 @@ class App extends Component {
     }else{
       if(location.pathname.indexOf('/app/chat/') ==0){
         let locate = location.pathname.replace('/app/chat/','');
-        window.location.href = `/contacts/${locate}`;
+        window.open(`https://dev-business.agentz.ai/contacts/${locate}`, "_self");
       }
     }
     
@@ -206,7 +206,7 @@ class App extends Component {
       });
       conversation.Sms = updatedConversation;
       this.props.updateConversation(conversation);
-     // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
     }
 
   };
