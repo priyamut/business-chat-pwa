@@ -336,7 +336,8 @@ class ChatPanelWithRedux extends PureComponent {
            if(user && document.getElementById('selectedUser').innerText !== user.name){
              this.onSelectUser(user); 
            }
-          //  if(user == undefined || user ==null){
+          //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
+          //  && subScribeUSerData.businessAgents.length >0){
           //   const config = {
           //     headers: {
           //       'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
@@ -345,7 +346,8 @@ class ChatPanelWithRedux extends PureComponent {
           //       "mode": "no-cors"
           //     }
           //   }
-          //    axios.get(`consumer/v1/contacts/hash?hashCode=${location.pathname.replace('/app/chat/','')}`
+          //    axios.get(`consumer/v1/contacts/hash?hashCode=${location.pathname.replace('/app/chat/','')}
+          //    &businessAgentId=${subScribeUSerData.businessAgents["0"].id}`
           //    , config).then(({data}) => {
           //     let userData = this.constructJson(data,0);
           //     if(userData && document.getElementById('selectedUser').innerText !== userData.name){
