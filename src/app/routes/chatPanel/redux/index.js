@@ -19,6 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {setInitUrl} from './../../../../actions/Auth';
 import {Scrollbars} from 'react-custom-scrollbars';
 import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
+import axios from 'util/Api';
 
 import {
   fetchChatUser,
@@ -335,6 +336,25 @@ class ChatPanelWithRedux extends PureComponent {
            if(user && document.getElementById('selectedUser').innerText !== user.name){
              this.onSelectUser(user); 
            }
+          //  if(user == undefined || user ==null){
+          //   const config = {
+          //     headers: {
+          //       'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
+          //       "Content-Type":"application/json",
+          //       "Access-Control-Allow-Origin": "*",
+          //       "mode": "no-cors"
+          //     }
+          //   }
+          //    axios.get(`consumer/v1/contacts/hash?hashCode=${location.pathname.replace('/app/chat/','')}`
+          //    , config).then(({data}) => {
+          //     let userData = this.constructJson(data,0);
+          //     if(userData && document.getElementById('selectedUser').innerText !== userData.name){
+          //       this.onSelectUser(userData); 
+          //     }
+          //   }).catch(function (error) {
+          //   });
+          //  }
+           
     }
   }
   }
@@ -408,6 +428,91 @@ class ChatPanelWithRedux extends PureComponent {
         </div>
       </div>
     )
+  }
+   constructJson = (contactInfo,chatUnreadCount) =>{
+    let tempJSON = {};
+    if (contactInfo.createdDate !== undefined) {
+      tempJSON.createdDate = contactInfo.createdDate;
+    }
+    if (contactInfo.source !== undefined) {
+      tempJSON.source = this.getSourceType(contactInfo.source)
+    }
+    tempJSON.id = contactInfo.id;
+    tempJSON.contactHashCode = contactInfo.contactHashCode;
+    tempJSON.conversationId = contactInfo.conversationId;
+    tempJSON.businessAgentMappingId = contactInfo.businessAgentMappingId;
+    tempJSON.recentActivityDate = contactInfo.recentActivityDate;
+    tempJSON.unreadMessage = chatUnreadCount[contactInfo.id] ? chatUnreadCount[contactInfo.id] : 0;
+  
+    {
+      contactInfo && contactInfo.contactData.map((profileDetails, i) => {
+        if (profileDetails.name === 'contactNo') {
+          if (profileDetails.value.length > 1) {
+            let tempContactNo = '';
+            profileDetails.value.forEach(function (item, index) {
+              if (index === 0) {
+                tempContactNo = item;
+              } else {
+                tempContactNo += `, ${item}`;
+              }
+            })
+            tempJSON[`${profileDetails.name}`] = tempContactNo;
+          } else {
+            tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+          }
+        } else if (profileDetails.name === 'emailId') {
+          if (profileDetails.value.length > 1) {
+            let tempEmailId = '';
+            profileDetails.value.forEach(function (item, index) {
+              if (index === 0) {
+                tempEmailId = item;
+              } else {
+                tempEmailId += `, ${item}`;
+              }
+            })
+            tempJSON[`${profileDetails.name}`] = tempEmailId;
+          } else {
+            tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+          }
+        } else {
+          tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+          if (profileDetails.name === 'name' && profileDetails.value.length > 1) {
+            let otherName = null;
+            tempJSON.otherName = profileDetails.value.forEach(function (item, index) {
+              if (index !== 0) {
+                if (otherName != null) {
+                  otherName += `, ${item}`;
+                } else {
+                  otherName = item;
+                }
+              }
+            });
+            tempJSON.otherName = otherName;
+          }
+        }
+  
+      })
+    };
+  
+    return tempJSON;
+  }
+
+  getSourceType = (type) =>{
+    let source = '';
+    switch(type) {
+      case 'WEBSITE':
+          source = 'Agentz Contact Center'
+        break;
+      case 'DIGITAL_SMS':
+          source = 'Agentz Digital Receptionist - SMS'
+        break;
+      case 'DIGITAL_PHONE':
+          source = 'Agentz Digital Receptionist - Phone'
+        break;
+      default:
+          source = 'Agentz Digital Receptionist'
+    }
+    return source;
   }
 }
 
