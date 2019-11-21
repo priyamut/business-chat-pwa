@@ -18,7 +18,7 @@ import {
   UPDATE_SEARCH_CONVERSTAION
 } from 'constants/ActionTypes';
 import {USER_INFO_STATE} from '../constants/ActionTypes';
-
+import {createFilter} from 'utils/utils.js';
 
 const INIT_STATE = {
   loader: false,
@@ -150,9 +150,7 @@ export default (state = INIT_STATE, action) => {
         }
       } else {
         return {
-          ...state, chatUsers: state.chatUsers.filter((user) =>
-          (user.name || user.emailId || user.contactNo).toLowerCase().indexOf(action.payload.toLowerCase()) > -1
-          )
+          ...state, chatUsers: state.chatUsers.filter(createFilter(action.payload, ["name","emailId",'contactNo']))
         }
       }
     }
