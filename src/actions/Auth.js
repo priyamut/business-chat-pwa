@@ -41,10 +41,10 @@ export const userSignUp = ({name, email, password}) => {
       }
     }).catch(function (error) {
       if(error.request.status === 401){
-        userSignOut();
+        clearStorage();
+      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }
-      //dispatch({type: FETCH_ERROR, payload: error.message || 'Service Not Available'});
-      console.log("Error****:", error.message);
     });
   }
 };
@@ -76,11 +76,9 @@ export const userSignIn = ({email, password}) => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      // if(error.request.status === 401){
-      //   userSignOut();
-      // }
-     // dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
-      console.log("Error****:", error.message);
+      if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      }
     });
   }
 };
@@ -102,10 +100,10 @@ function subScribeUser(dispatch,businessId){
       }
     }).catch(function (error) {
       if(error.request.status === 401){
-        userSignOut();
+        clearStorage();
+      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }
-      //dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
-      console.log("Error****:", error.message);
     });
 }
 
@@ -130,10 +128,10 @@ export const getUser = () => {
       }
     }).catch(function (error) {
       if(error.request.status === 401){
-        userSignOut();
+        clearStorage();
+      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }
-      // dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
-      console.log("Error****:", error.message);
     });
   }
 };
@@ -144,15 +142,7 @@ export const userSignOut = () => {
     dispatch({type: SIGNOUT_USER});
     let idToken = localStorage.getItem("idToken");
     let accessToken = localStorage.getItem("accessToken");
-        localStorage.removeItem("token");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("idToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("businessId");
-        localStorage.removeItem("userId");
-        localStorage.removeItem("name");
-        localStorage.removeItem("businessMap");
-        window.location.reload(); // refresh the page
+    clearStorage();
         dispatch({type: SIGNOUT_USER_SUCCESS});
     axios.post('iam/v1/logout',{}, {headers: {
       "idToken": JSON.parse(idToken),
@@ -161,9 +151,22 @@ export const userSignOut = () => {
     ).then(({data}) => {
         dispatch({type: FETCH_SUCCESS});
     }).catch(function (error) {
-     // dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
-      console.log("Error****:", error.message);
+      if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      }
     });
   }
 };
+
+function clearStorage(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("idToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("businessId");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("name");
+  localStorage.removeItem("businessMap");
+  window.location.reload(); // refresh the page
+}
 

@@ -40,8 +40,9 @@ export const fetchChatUser = (businessAgentMappingId) => {
       if(error.request.status === 401){
         clearStorage();
       }
-      //dispatch({ type: FETCH_ERROR, payload: error.message });
-      console.log("Error****:", { error });
+      if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      }
     });
   }
 };
@@ -68,9 +69,9 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader, scrollToB
     }).catch(function (error) {
       if(error.request.status === 401){
         clearStorage();
+      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }
-      //dispatch({ type: FETCH_ERROR, payload: error.message });
-      console.log("Error****:", { error });
     });
   }
 };
@@ -101,9 +102,9 @@ export const submitComment = (subScribeUSerData, scrollToBottom) => {
     }).catch(function (error) {
       if(error.request.status === 401){
         this.clearStorage();
+      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }
-     // dispatch({ type: FETCH_ERROR, payload: error.message });
-      console.log("Error****:", { error });
     });
   }
 };
@@ -202,9 +203,9 @@ export const readAlltheChatMessages = (contactMasterId) => {
     }).catch(function (error) {
       if(error.request.status === 401){
         clearStorage();
+      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }
-     // dispatch({ type: FETCH_ERROR, payload: error.message });
-      console.log("Error****:", { error });
     });
   }
 };
