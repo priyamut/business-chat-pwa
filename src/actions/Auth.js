@@ -76,9 +76,9 @@ export const userSignIn = ({email, password}) => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
-        userSignOut();
-      }
+      // if(error.request.status === 401){
+      //   userSignOut();
+      // }
      // dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
