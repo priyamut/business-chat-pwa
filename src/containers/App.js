@@ -104,7 +104,8 @@ class App extends Component {
     if (nextProps.token && !nextProps.authUser) {
       this.props.getUser()
     }
-    if(this.props.subScribeUSerData != nextProps.subScribeUSerData){
+    if(this.props.subScribeUSerData != nextProps.subScribeUSerData && nextProps.subScribeUSerData.businessAgents &&
+      nextProps.subScribeUSerData.businessAgents.length >0){
       this.props.fetchChatUser(nextProps.subScribeUSerData.businessAgents["0"].id)
     }
   }
@@ -163,7 +164,8 @@ class App extends Component {
               heartbeat={1000 * 30}
               topics={[`${SocketConfig.subscribeTopicPrefix}/${sessionDetails.businessId}`,
               `${SocketConfig.subscribeTopicPrefix}/BUSINESS-${sessionDetails.businessId}`,
-              `${SocketConfig.subscribeTopicPrefix}/businessChat-${subScribeUSerData && subScribeUSerData.businessAgents["0"].id}`]} //${sessionInfo.businessId}
+              `${SocketConfig.subscribeTopicPrefix}/businessChat-${subScribeUSerData && subScribeUSerData.businessAgents &&
+                subScribeUSerData.businessAgents.length > 0 && subScribeUSerData.businessAgents["0"].id}`]} //${sessionInfo.businessId}
               ref={client => {
                 this.clientRef = client;
               }}
@@ -183,6 +185,7 @@ class App extends Component {
 
   
   onMessageReceive = response => {
+    const {subScribeUSerData} = this.props
     if(this.props.conversation && this.props.conversation.user && 
         response.contactMasterId == this.props.conversation.user.id){
       let conversation = JSON.parse(JSON.stringify(this.props.conversation));
@@ -194,8 +197,7 @@ class App extends Component {
       });
       conversation.Sms = updatedConversation;
       this.props.updateConversation(conversation);
-
-      console.log('this.props',this.props)
+      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
     }
 
   };

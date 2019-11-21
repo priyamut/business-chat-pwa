@@ -19,7 +19,8 @@ import {
   ON_READ_ALL_MESSAGE,
   UPDATE_SEARCH_CONVERSTAION
 } from 'constants/ActionTypes';
-import axios from 'util/Api'
+import axios from 'util/Api';
+import {userSignOut} from './../actions/Auth';
 
 export const fetchChatUser = (businessAgentMappingId) => {
   return (dispatch) => {
@@ -36,7 +37,10 @@ export const fetchChatUser = (businessAgentMappingId) => {
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      dispatch({ type: FETCH_ERROR, payload: error.message });
+      if(error.request.status === 401){
+        clearStorage();
+      }
+      //dispatch({ type: FETCH_ERROR, payload: error.message });
       console.log("Error****:", { error });
     });
   }
@@ -62,7 +66,10 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader, scrollToB
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      dispatch({ type: FETCH_ERROR, payload: error.message });
+      if(error.request.status === 401){
+        clearStorage();
+      }
+      //dispatch({ type: FETCH_ERROR, payload: error.message });
       console.log("Error****:", { error });
     });
   }
@@ -92,7 +99,10 @@ export const submitComment = (subScribeUSerData, scrollToBottom) => {
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      dispatch({ type: FETCH_ERROR, payload: error.message });
+      if(error.request.status === 401){
+        this.clearStorage();
+      }
+     // dispatch({ type: FETCH_ERROR, payload: error.message });
       console.log("Error****:", { error });
     });
   }
@@ -190,8 +200,23 @@ export const readAlltheChatMessages = (contactMasterId) => {
     axios.put(`notification/v1/businesses/${localStorage.getItem('businessId')}/notificationcenter/${contactMasterId}/readAll`, {}, config).then(({ data }) => {
 
     }).catch(function (error) {
-      dispatch({ type: FETCH_ERROR, payload: error.message });
+      if(error.request.status === 401){
+        clearStorage();
+      }
+     // dispatch({ type: FETCH_ERROR, payload: error.message });
       console.log("Error****:", { error });
     });
   }
 };
+
+export function clearStorage(){
+        localStorage.removeItem("token");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("idToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("businessId");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("name");
+        localStorage.removeItem("businessMap");
+        window.location.reload(); // refresh the page
+}

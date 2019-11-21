@@ -40,7 +40,10 @@ export const userSignUp = ({name, email, password}) => {
         dispatch({type: FETCH_ERROR, payload: "Network Error"});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.message || 'Service Not Available'});
+      if(error.request.status === 401){
+        userSignOut();
+      }
+      //dispatch({type: FETCH_ERROR, payload: error.message || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
@@ -73,7 +76,10 @@ export const userSignIn = ({email, password}) => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
+      // if(error.request.status === 401){
+      //   userSignOut();
+      // }
+     // dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
@@ -95,7 +101,10 @@ function subScribeUser(dispatch,businessId){
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
+      if(error.request.status === 401){
+        userSignOut();
+      }
+      //dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
 }
@@ -120,7 +129,10 @@ export const getUser = () => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
+      if(error.request.status === 401){
+        userSignOut();
+      }
+      // dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
@@ -149,8 +161,9 @@ export const userSignOut = () => {
     ).then(({data}) => {
         dispatch({type: FETCH_SUCCESS});
     }).catch(function (error) {
-      dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
+     // dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage || 'Service Not Available'});
       console.log("Error****:", error.message);
     });
   }
 };
+
