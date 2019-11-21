@@ -40,22 +40,30 @@ class SignIn extends React.Component {
 
     switch (name) {
       case 'email': 
+      this.setState({email: event.target.value})
         errors.email = 
           validEmailRegex.test(value)
             ? ''
             : 'Email is not valid!';
+            
         break;
       case 'password': 
-        errors.password = 
-          value.length <= 0
-            ? 'Password is not valid!'
-            : '';
+        this.setState({password: event.target.value})
+        errors.password = value.length <= 0 ? 'Password is not valid!' : '';
+           
         break;
       default:
         break;
     }
-
-    this.setState({errors, [name]: value});
+    if(validateForm(this.state.errors)){
+      this.setState({
+        disabled: false
+      });
+    }else{
+      this.setState({
+        disabled: true
+      });
+    }
   }
 
   handleSubmit = (event) => {
@@ -63,10 +71,7 @@ class SignIn extends React.Component {
     const password = this.state.password;
     event.preventDefault();
     if(validateForm(this.state.errors)) {
-      console.info('Valid Form');
       this.props.userSignIn({email, password});
-    }else{
-      console.error('Invalid Form')
     }
   }
 
@@ -108,7 +113,7 @@ class SignIn extends React.Component {
                     margin="normal"
                     className="mt-0 mb-3 my-sm-3"
                   />
-                  {errors.email.length > 0 && 
+                  {errors.email.length > 0 && this.state.email.length > 0 &&
                 <span className='error'>{errors.email}</span>}
                   <TextField
                     type="password"
@@ -120,12 +125,12 @@ class SignIn extends React.Component {
                     margin="normal"
                     className="mt-0 mb-3 my-sm-3"
                   />
-                    {errors.password.length > 0 && 
-                <span className='error'>{errors.password}</span>}
+                    {/* {errors.password.length > 0 && 
+                <span className='error'>{errors.password}</span>} */}
                   <div className="mb-3 mt-2 d-flex align-items-center justify-content-center">
                     <Button onClick={(event) => {
                       this.handleSubmit(event);
-                    }} variant="contained" color="primary" disabled={this.props.disabled}>
+                    }} variant="contained" color="primary" disabled={this.state.disabled}>
                       <IntlMessages id="appModule.signIn"/>
                     </Button>
 
