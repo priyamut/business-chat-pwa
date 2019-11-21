@@ -28,7 +28,9 @@ import {isIOS, isMobile} from 'react-device-detect';
 import {
   updateConversation,
   fetchChatUser
-} from 'actions/Chat'
+} from 'actions/Chat';
+import PullToRefresh from "pull-to-refresh-react";
+
 const RestrictedRoute = ({component: Component, token, ...rest}) =>
   <Route
     {...rest}
@@ -98,6 +100,15 @@ class App extends Component {
     alert('1. Open Share menu\n2. Tap on "Add to Home Screen" button');
   };
 
+  onRefresh =() =>{
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+        window.location.reload();
+      }, 2000);
+    });
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.token) {
       //axios.defaults.headers.common['Authorization'] = nextProps.token;
@@ -151,7 +162,10 @@ class App extends Component {
     return (
       // <React.Fragment>
         
-     
+      <PullToRefresh
+        options={{ pullDownHeight: 150 }}
+        onRefresh={this.onRefresh}
+      >
       <MuiThemeProvider theme={applyTheme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <IntlProvider
@@ -188,6 +202,7 @@ class App extends Component {
           </IntlProvider>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
+      </PullToRefresh>
       // </React.Fragment>
     );
   }
