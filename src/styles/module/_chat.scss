@@ -172,8 +172,12 @@
     margin-left: 10px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     & .chat-contact-no{
       font-size: 0.7rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 }
 .component-none{
