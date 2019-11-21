@@ -207,8 +207,10 @@ class App extends Component {
       conversation.Sms = updatedConversation;
       this.props.updateConversation(conversation);
       this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
-    }
-
+    }else if(this.props.conversation && this.props.conversation.user && 
+      this.props.conversation.user.id){
+        this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+      }
   };
 
 }
