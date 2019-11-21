@@ -22,7 +22,7 @@ const ReceivedMessageCell = ({conversation, user}) => {
 
   
 var date1 = moment(conversation.time);
-var dateComponent = date1.utc().format('lll');
+var dateComponent = date1.local().format('lll');
   
   return (
     <div className="d-flex flex-nowrap chat-item">
