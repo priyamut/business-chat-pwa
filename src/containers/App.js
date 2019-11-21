@@ -23,6 +23,7 @@ import {SocketConfig}
 from './../helpers/AppConstant';
 import Conversation from 'components/chatPanel/Conversation/index';
 import Moment from 'moment';
+import {isIOS, isMobile} from 'react-device-detect';
 
 import {
   updateConversation,
@@ -119,15 +120,23 @@ class App extends Component {
   render() {
     const {sessionDetails, globalVariables} = this.state;
     const {match, location, locale, token, initURL, isDirectionRTL,subScribeUSerData} = this.props;
-    if (location.pathname === '/') {
-      if (token === null) {
-        return ( <Redirect to={'/signin'}/> );
-      } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
-        return ( <Redirect to={'/app/chat'}/> );
-      } else {
-        return ( <Redirect to={initURL}/> );
+    if(isMobile){
+      if (location.pathname === '/') {
+        if (token === null) {
+          return ( <Redirect to={'/signin'}/> );
+        } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
+          return ( <Redirect to={'/app/chat'}/> );
+        } else {
+          return ( <Redirect to={initURL}/> );
+        }
+      }
+    }else{
+      if(location.pathname.indexOf('/app/chat/') ==0){
+        let locate = location.pathname.replace('/app/chat/','');
+        window.location.href = `/contacts/${locate}`;
       }
     }
+    
     const applyTheme = createMuiTheme(defaultTheme);
 
     if (isDirectionRTL) {
@@ -197,7 +206,7 @@ class App extends Component {
       });
       conversation.Sms = updatedConversation;
       this.props.updateConversation(conversation);
-      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+     // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
     }
 
   };
