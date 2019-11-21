@@ -162,10 +162,10 @@ class App extends Component {
     return (
       // <React.Fragment>
         
-      // <PullToRefresh
-      //   options={{ pullDownHeight: 100 }}
-      //   onRefresh={this.onRefresh}
-      // >
+      <PullToRefresh
+        options={{ pullDownHeight: 150 }}
+        onRefresh={this.onRefresh}
+      >
       <MuiThemeProvider theme={applyTheme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <IntlProvider
@@ -202,7 +202,7 @@ class App extends Component {
           </IntlProvider>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
-      // </PullToRefresh>
+      </PullToRefresh>
       // </React.Fragment>
     );
   }
