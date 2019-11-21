@@ -59,6 +59,7 @@ class ChatPanelWithRedux extends PureComponent {
     });
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
     this.changeContactDetails(user);
+    this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
   };
 
   changeContactDetails(user){
@@ -100,12 +101,9 @@ class ChatPanelWithRedux extends PureComponent {
     event.preventDefault();
     const content = event.target.value;
     //let errors = this.state.disabled;
-    this.updateMessageValue(event);
-    if(content.length > 200){
-      this.setState({disabled: true});
-    }else{
-      this.setState({disabled: false});
-     
+    if(content.length <= 200){
+     // this.setState({disabled: true});
+     this.updateMessageValue(event);
     }
   }
 

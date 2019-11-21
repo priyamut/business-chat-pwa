@@ -198,7 +198,6 @@ class App extends Component {
       conversation.Sms = updatedConversation;
       this.props.updateConversation(conversation);
       this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
-      console.log('this.props',this.props)
     }
 
   };
