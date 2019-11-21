@@ -7,7 +7,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Drawer from '@material-ui/core/Drawer';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton'
+import IconButton from '@material-ui/core/IconButton';
+import AnnouncementIcon from '@material-ui/icons/Announcement';
 import Input from '@material-ui/core/Input'
 import ChatUserList from 'components/chatPanel/ChatUserList/index';
 import Conversation from 'components/chatPanel/Conversation/index';
@@ -16,6 +17,8 @@ import SearchBox from 'components/SearchBox';
 import IntlMessages from 'util/IntlMessages';
 import MenuIcon from '@material-ui/icons/Menu';
 import {setInitUrl} from './../../../../actions/Auth';
+import {Scrollbars} from 'react-custom-scrollbars';
+import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
 
 import {
   fetchChatUser,
@@ -50,22 +53,33 @@ class ChatPanelWithRedux extends PureComponent {
 
   onSelectUser = (user) => {
     const {subScribeUSerData} = this.props;
+    this.props.updateMessageValue('');
+    this.setState({
+      scrollFlg: true
+    });
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
+    this.changeContactDetails(user);
+  };
+
+  changeContactDetails(user){
     this.ChangeUrl('/app/chat/'+user['contactHashCode']);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
     }
+    if(document.getElementById('selectedContactNo')){
+      var div = document.getElementById('selectedContactNo');
+      div.innerHTML =  user.name ? user.contactNo ? user.contactNo : '' : '';
+    }
     if(document.getElementById('phone')){
       var anchor = document.getElementById('phone-anchor');
       anchor.href = `tel:${user.contactNo}`;
       document.getElementById("phone").style.display = "block";
-
     }
     if(user.unreadMessage > 0){
       this.props.readAlltheChatMessages(user.id);
-    }
-  };
+    }   
+  }
 
    ChangeUrl(url) {
     if (typeof (window.history.pushState) != "undefined") {
@@ -77,10 +91,23 @@ class ChatPanelWithRedux extends PureComponent {
   }
 
   submitComment = () => {
-    if (this.props.message !== '') {
+    if (this.props.message !== '' && !this.state.disabled) {
         this.props.submitComment(this.props, this.scrollToBottom);
     }
   };
+
+  handleCommentChange = (event)=>{
+    event.preventDefault();
+    const content = event.target.value;
+    //let errors = this.state.disabled;
+    this.updateMessageValue(event);
+    if(content.length > 200){
+      this.setState({disabled: true});
+    }else{
+      this.setState({disabled: false});
+     
+    }
+  }
 
   scrollToBottom = () =>{ 
     var scroll = document.getElementsByClassName('chat-list-scroll', 'chat-box-main');
@@ -91,8 +118,17 @@ class ChatPanelWithRedux extends PureComponent {
   }
   updateMessageValue = (evt) => {
     this.props.updateMessageValue(evt.target.value);
-
   };
+
+  scrollComponentTobottom = () =>{
+    if(this.state.scrollFlg){
+      this.scrollComponent.scrollToBottom();
+      this.setState({
+        scrollFlg: false
+      });
+      this.changeStyle();
+    }
+  }
 
   Communication = () => {
     if(!this.props.conversation || this.props.conversation.length == 0){
@@ -103,20 +139,33 @@ class ChatPanelWithRedux extends PureComponent {
     let selectedUser = conversation.user;
     
     return <div className="chat-main">
-      <CustomScrollbars className="chat-list-scroll scrollbar"
-                        style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
-            {Sms.length == 0 ?
+      <Scrollbars className="chat-list-scroll scrollbar"
+                        style={{height: 'calc(100vh - 222px)'}} onUpdate={this.scrollComponentTobottom} ref={c => { this.scrollComponent = c }}>
+            { Sms.length == 0 ?
             <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px',
             display: 'flex', flexDirection: 'column', flexWrap:'nowrap',
             justifyContent:'center',height:'100%'}}>
-              <i className="zmdi zmdi-comments s-128 text-muted"/>
-              <h3 className="text-muted"> {<IntlMessages id="chat.noMessageToShow"/>}</h3>
+              {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
+              
+            {(selectedUser.contactNo !== null && selectedUser.contactNo !== undefined
+            && selectedUser.contactNo !== "")
+             ? 
+            (<React.Fragment><AnnouncementIcon className="s-128 text-muted"/>
+            <h3 className="text-muted">
+            <IntlMessages id="chat.noMessageToShow"/>
+            </h3>
+            </React.Fragment>)
+            : (<React.Fragment>
+              <SpeakerNotesOffIcon className="s-128 text-muted"/>
+            <h3 className="text-muted">
+            <IntlMessages id="chat.noContactNoForthisUser"/>
+            </h3></React.Fragment>)}
             </div>
             : <Conversation conversationData={Sms}
             selectedUser={selectedUser}  />}
 
         
-      </CustomScrollbars>
+      </Scrollbars>
 
       <div className="chat-main-footer">
         <div className="d-flex flex-row align-items-center" style={{maxHeight: 51}}>
@@ -125,7 +174,8 @@ class ChatPanelWithRedux extends PureComponent {
                             <textarea
                               id="required" className="border-0 form-control chat-textarea"
                               onKeyUp={this._handleKeyPress.bind(this)}
-                              onChange={this.updateMessageValue.bind(this)}
+                              //onChange={this.updateMessageValue.bind(this)}
+                              onChange={this.handleCommentChange.bind(this)} noValidate
                               value={message}
                               autocorrect="off"
                               placeholder="Type and hit enter to send message"
@@ -133,7 +183,7 @@ class ChatPanelWithRedux extends PureComponent {
             </div>
           </div>
           <div className="chat-sent">
-            <IconButton
+            <IconButton disabled={this.state.disabled}
               onClick={this.submitComment.bind(this)}
               aria-label="Send message">
               <i className="zmdi  zmdi-mail-send"/>
@@ -290,10 +340,29 @@ class ChatPanelWithRedux extends PureComponent {
     }
   }
   }
+
+  changeStyle(){
+    let chatFooter = document.getElementsByClassName('chat-main-footer','chat-main');
+    let phoneAnchor = document.getElementById('phone-anchor');
+    if(chatFooter && chatFooter[0] instanceof Element && phoneAnchor){
+      if(this.props.conversation && this.props.conversation.user && 
+        (this.props.conversation.user.contactNo == null || this.props.conversation.user.contactNo == ''
+        || this.props.conversation.user.contactNo == undefined)){
+        chatFooter[0].classList.add('component-none');
+        phoneAnchor.classList.add('component-none');
+      }else{
+        chatFooter[0].classList.remove('component-none');
+         phoneAnchor.classList.remove('component-none');
+      }
+    }
+  }
+
   constructor() {
     super();
     this.state = {
       selectedTabIndex: 0,
+      disabled: false,
+      scrollFlg :true
     }
     this.scrollComponent = React.createRef();
   }

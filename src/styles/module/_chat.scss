@@ -165,6 +165,23 @@
     flex-direction: column !important;
     }
 }
+.chat-contact-details{
+     color: white;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    & .chat-contact-no{
+      font-size: 0.7rem;
+    }
+}
+.component-none{
+  display: none !important;
+}
+.component-block{
+  display: block !important;
+}
 .chat-main-content{
   & .chat-item.flex-row-reverse{
     & .bubble-time{
@@ -184,7 +201,14 @@
     }
   }
 }
-
+#phone-anchor svg{
+  height: 22px;
+}
+.loader-view{
+  & .text-muted{
+    text-align: center;
+  }
+}
 .chat-user-item {
   border-bottom: solid 1px $gray-200;
   padding: 8px 12px;
@@ -193,8 +217,7 @@
   cursor: pointer;
   max-height: 96px;
 
-  &.active,
-  &:hover {
+  &.active{
     background-color: lighten($app-primary, 45%);
   }
 }

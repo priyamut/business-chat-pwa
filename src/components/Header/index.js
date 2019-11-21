@@ -180,9 +180,10 @@ class Header extends React.Component {
           <Link className="app-logo mr-2 d-none d-sm-block" to="/">
             <img src={require("assets/images/agentz.png")} alt="Agentz" title="Agentz"/>
           </Link> */}
-          
-          <div id="selectedUser" className="chat-contact-name" style={{color: "white"
-    ,fontWeight: "500",fontSize: "1rem" , marginLeft: "10px"}}></div>
+          <div className="chat-contact-details">
+          <span id="selectedUser" className="chat-contact-name" ></span>
+          <span id="selectedContactNo" className="chat-contact-no"></span>
+          </div>
 
           {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
           <Menu/>} */}
@@ -201,7 +202,7 @@ class Header extends React.Component {
             <li className="list-inline-item app-tour">
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.showPopup}>
-                                 <ExitToAppIcon color={'white'} />
+                                 <ExitToAppIcon color={'white'} style={{height: '23px'}} />
 
             </IconButton>
             </li>

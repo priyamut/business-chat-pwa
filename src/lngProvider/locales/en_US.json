@@ -173,6 +173,7 @@
   "chart.tree": "Tree Graph",
   "chat.selectUserChat": "Select User to start Chat",
   "chat.noMessageToShow": "No messages",
+  "chat.noContactNoForthisUser": "Messaging not available as this contact does not have a phone number.",
   "chat.selectContactChat": "Select a contact to start messaging",
   "chat.chatUser": "Chats",
   "chat.contacts": "Contacts",

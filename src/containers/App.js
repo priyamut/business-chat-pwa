@@ -183,7 +183,7 @@ class App extends Component {
 
   
   onMessageReceive = response => {
-    if(this.props.conversation && 
+    if(this.props.conversation && this.props.conversation.user && 
         response.contactMasterId == this.props.conversation.user.id){
       let conversation = JSON.parse(JSON.stringify(this.props.conversation));
       const updatedConversation = conversation.Sms.concat({
