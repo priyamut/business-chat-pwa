@@ -63,6 +63,10 @@ class ChatPanelWithRedux extends PureComponent {
       var div = document.getElementById('selectedUser');
         div.innerHTML = user.name || user.emailId || user.contactNo;
     }
+    if(document.getElementById('selectedContactNo')){
+      var div = document.getElementById('selectedContactNo');
+      div.innerHTML =  user.name ? user.contactNo ? user.contactNo : '' : '';
+    }
     if(document.getElementById('phone')){
       var anchor = document.getElementById('phone-anchor');
       anchor.href = `tel:${user.contactNo}`;

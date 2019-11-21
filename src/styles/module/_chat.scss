@@ -165,6 +165,17 @@
     flex-direction: column !important;
     }
 }
+.chat-contact-details{
+     color: white;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    & .chat-contact-no{
+      font-size: 0.7rem;
+    }
+}
 .chat-main-content{
   & .chat-item.flex-row-reverse{
     & .bubble-time{
@@ -183,6 +194,9 @@
       font-weight: 400;
     }
   }
+}
+#phone-anchor svg{
+  height: 22px;
 }
 .loader-view{
   & .text-muted{
