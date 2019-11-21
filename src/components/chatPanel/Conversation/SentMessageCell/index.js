@@ -21,7 +21,7 @@ const SentMessageCell = ({conversation}) => {
   }
 
 var date1 = moment(conversation.time);
-var dateComponent = date1.utc().format('llll');
+var dateComponent = date1.utc().format('lll');
 console.log(dateComponent);
 
   return (
