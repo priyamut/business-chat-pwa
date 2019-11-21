@@ -60,7 +60,7 @@ class ChatPanelWithRedux extends PureComponent {
     });
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
     this.changeContactDetails(user);
-    //this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
   };
 
   changeContactDetails(user){
@@ -327,16 +327,18 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   loadSmsLink(nextProps){
-    const {subScribeUSerData, location} = this.props
-    if(nextProps.chatUsers.length >0 && subScribeUSerData){
+    const {subScribeUSerData} = this.props
+    let location = window.location;
+    if(nextProps.chatUsers.length >0 && subScribeUSerData && this.state.scrollFlg){
        if(location && location.pathname.replace('/app/chat/','') !== '' &&
           location.pathname.replace('/app/chat','') !== ''){
            const user = nextProps.chatUsers.find((item) => item.contactHashCode === 
            location.pathname.replace('/app/chat/',''))
-           if(user && document.getElementById('selectedUser').innerText !== user.name){
+           if(user && (document.getElementById('selectedUser').innerText !== null)){
              this.onSelectUser(user); 
            }
-          //  if(user == undefined || user ==null){
+          //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
+          //  && subScribeUSerData.businessAgents.length >0){
           //   const config = {
           //     headers: {
           //       'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
@@ -345,7 +347,8 @@ class ChatPanelWithRedux extends PureComponent {
           //       "mode": "no-cors"
           //     }
           //   }
-          //    axios.get(`consumer/v1/contacts/hash?hashCode=${location.pathname.replace('/app/chat/','')}`
+          //    axios.get(`consumer/v1/contacts/hash?hashCode=${location.pathname.replace('/app/chat/','')}
+          //    &businessAgentId=${subScribeUSerData.businessAgents["0"].id}`
           //    , config).then(({data}) => {
           //     let userData = this.constructJson(data,0);
           //     if(userData && document.getElementById('selectedUser').innerText !== userData.name){
@@ -388,9 +391,18 @@ class ChatPanelWithRedux extends PureComponent {
   
 
   componentWillReceiveProps(nextProps){
-   if(this.props.chatUsers != nextProps.chatUsers){
+    const {subScribeUSerData} = this.props
+   if(this.props.chatUsers != nextProps.chatUsers && isIOS){
      this.loadSmsLink(nextProps);
    }
+  //  else{
+  //   if(nextProps.chatUsers.length >0 && subScribeUSerData){
+  //     if(location && location.pathname.replace('/contacts/','') !== '' &&
+  //        location.pathname.replace('/contacts','') !== ''){
+  //         if(user){
+  //           window.location.href =  `/contacts/${location.pathname.replace('/app/chat/','')}`;
+  //         }
+  //     }
   }
 
   updateSearchChatUser(evt) {
