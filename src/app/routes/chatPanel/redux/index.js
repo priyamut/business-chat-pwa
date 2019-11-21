@@ -17,6 +17,8 @@ import SearchBox from 'components/SearchBox';
 import IntlMessages from 'util/IntlMessages';
 import MenuIcon from '@material-ui/icons/Menu';
 import {setInitUrl} from './../../../../actions/Auth';
+import {Scrollbars} from 'react-custom-scrollbars';
+import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
 
 import {
   fetchChatUser,
@@ -52,6 +54,9 @@ class ChatPanelWithRedux extends PureComponent {
   onSelectUser = (user) => {
     const {subScribeUSerData} = this.props;
     this.props.updateMessageValue('');
+    this.setState({
+      scrollFlg: true
+    });
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
     this.ChangeUrl('/app/chat/'+user['contactHashCode']);
     if(document.getElementById('selectedUser')){
@@ -108,6 +113,15 @@ class ChatPanelWithRedux extends PureComponent {
     this.props.updateMessageValue(evt.target.value);
   };
 
+  scrollComponentTobottom = () =>{
+    if(this.state.scrollFlg){
+      this.scrollComponent.scrollToBottom();
+      this.setState({
+        scrollFlg: false
+      });
+    }
+  }
+
   Communication = () => {
     if(!this.props.conversation || this.props.conversation.length == 0){
       return;
@@ -117,23 +131,32 @@ class ChatPanelWithRedux extends PureComponent {
     let selectedUser = conversation.user;
     
     return <div className="chat-main">
-      <CustomScrollbars className="chat-list-scroll scrollbar"
-                        style={{height: 'calc(100vh - 222px)'}} ref={c => { this.scrollComponent = c }}>
-            {Sms.length == 0 ?
+      <Scrollbars className="chat-list-scroll scrollbar"
+                        style={{height: 'calc(100vh - 222px)'}} onUpdate={this.scrollComponentTobottom} ref={c => { this.scrollComponent = c }}>
+            { Sms.length == 0 ?
             <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px',
             display: 'flex', flexDirection: 'column', flexWrap:'nowrap',
             justifyContent:'center',height:'100%'}}>
               {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
-              <AnnouncementIcon className="s-128 text-muted"/>
-              <h3 className="text-muted">
-            {selectedUser.contactNo !== null && selectedUser.contactNo !== "" ? <IntlMessages id="chat.noMessageToShow"/>
-            : <IntlMessages id="chat.noContactNoForthisUser"/>} </h3>
+              
+            {(selectedUser.contactNo !== null && selectedUser.contactNo !== "")
+             ? 
+            (<React.Fragment><AnnouncementIcon className="s-128 text-muted"/>
+            <h3 className="text-muted">
+            <IntlMessages id="chat.noMessageToShow"/>
+            </h3>
+            </React.Fragment>)
+            : (<React.Fragment>
+              <SpeakerNotesOffIcon className="s-128 text-muted"/>
+            <h3 className="text-muted">
+            <IntlMessages id="chat.noContactNoForthisUser"/>
+            </h3></React.Fragment>)}
             </div>
             : <Conversation conversationData={Sms}
             selectedUser={selectedUser}  />}
 
         
-      </CustomScrollbars>
+      </Scrollbars>
 
       <div className="chat-main-footer">
         <div className="d-flex flex-row align-items-center" style={{maxHeight: 51}}>
@@ -312,7 +335,8 @@ class ChatPanelWithRedux extends PureComponent {
     super();
     this.state = {
       selectedTabIndex: 0,
-      disabled: false
+      disabled: false,
+      scrollFlg :true
     }
     this.scrollComponent = React.createRef();
   }
