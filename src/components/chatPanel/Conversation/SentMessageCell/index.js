@@ -3,6 +3,7 @@ import moment from 'moment';
 import {
   FETCH_ERROR
 } from "./../../../../constants/ActionTypes";
+import { showMessage } from 'actions/Common';
 
 const SentMessageCell = ({ conversation, property }) => {
   var date1 = moment(conversation.time);
@@ -15,9 +16,10 @@ const SentMessageCell = ({ conversation, property }) => {
       
         <div className="bubble">
         {conversation.hasOwnProperty('type') && conversation.type &&
-       <i className="zmdi zmdi-info zmdi-hc-lg retry-connection" />}
+       <i className="zmdi zmdi-info zmdi-hc-lg retry-connection" onClick={(event)=>{
+         showMessage(event)
+       }}/>}
           <div className="message" style={{ color: '#fff' }}>{conversation.outGoingSms.message}</div>
-          
         </div>
         
         <div className="bubble-time">
@@ -33,6 +35,9 @@ const SentMessageCell = ({ conversation, property }) => {
   )
 
 
+  function showMessage(event){
+    alert('No connection. You will be able to send messages as soon as you are back online.')
+  }
 
   function handleRetry(event, conversation) {
     if (navigator.onLine) {
@@ -45,7 +50,7 @@ const SentMessageCell = ({ conversation, property }) => {
       };
       property.sendSms(paramData, property);
     } else {
-      alert('No Connection, you will be able to send messages as soon as you are back online.')
+      showMessage(event);
     }
   };
 
