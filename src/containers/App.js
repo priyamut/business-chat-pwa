@@ -30,7 +30,6 @@ import {
   fetchChatUser,
   readAlltheChatMessages
 } from 'actions/Chat';
-import PullToRefresh from "pull-to-refresh-react";
 
 const RestrictedRoute = ({component: Component, token, ...rest}) =>
   <Route

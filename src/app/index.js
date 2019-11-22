@@ -15,9 +15,21 @@ import {
 import {isIOS, isMobile} from 'react-device-detect';
 import asyncComponent from '../util/asyncComponent';
 import TopNav from 'components/TopNav';
+import PullToRefresh from "pull-to-refresh-react";
 
 class App extends React.Component {
 
+  onRefresh =() =>{
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+        this.forceUpdate()
+
+        //window.location.reload();
+      }, 500);
+    });
+  }
+  
   render() {
     const {match, drawerType, navigationStyle, horizontalNavPosition} = this.props;
     const drawerStyle = drawerType.includes(FIXED_DRAWER) ? 'fixed-drawer' : drawerType.includes(COLLAPSED_DRAWER) ? 'collapsible-drawer' : 'mini-drawer';
@@ -36,6 +48,10 @@ class App extends React.Component {
 
         <Sidebar/>
         <div className="app-main-container">
+        <PullToRefresh
+        options={{ pullDownHeight: 150 }}
+        onRefresh={this.onRefresh}
+      >
           <div
             className={`app-header ${navigationStyle === HORIZONTAL_NAVIGATION ? 'app-header-horizontal' : ''}`}>
             {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === ABOVE_THE_HEADER) &&
@@ -44,7 +60,7 @@ class App extends React.Component {
             {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === BELOW_THE_HEADER) &&
             <TopNav/>}
           </div>
-
+</PullToRefresh>
           <main className="cyan app-main-content-wrapper">
             <div className="cyan app-main-content">
               <Switch>
