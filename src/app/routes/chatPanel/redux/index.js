@@ -80,7 +80,7 @@ class ChatPanelWithRedux extends PureComponent {
       anchor.href = `tel:${user.contactNo}`;
       document.getElementById("phone").style.display = "block";
     }
-      this.props.readAlltheChatMessages(user.id);
+      //this.props.readAlltheChatMessages(user.id);
   }
 
    ChangeUrl(url) {
