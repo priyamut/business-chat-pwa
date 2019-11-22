@@ -7,7 +7,7 @@ import {
 const SentMessageCell = ({conversation, property}) => {
 var date1 = moment(conversation.time);
 var dateComponent = date1.local().format('lll');
-console.log(conversation);
+
 
   return (
     <div className="d-flex flex-nowrap chat-item flex-row-reverse">
@@ -25,20 +25,18 @@ console.log(conversation);
           </div>
   )
   function handleRetry(event,conversation){
-    //return (dispatch) => {
      if(navigator.onLine){
       const paramData = {
         businessId: localStorage.getItem('businessId'),
         contactMasterId: property.conversation.user.id,
         message: conversation.outGoingSms.message,
-        toNumber: property.conversation.user.contactNo
+        toNumber: property.conversation.user.contactNo,
+        conversationId: conversation.uniqueId
       };
         property.sendSms(paramData,property);
      }else{
-        //dispatch({ type: FETCH_ERROR, payload: 'No Connection, you will be able to send messages as soon as you are back online.'});
-        console.log('No Connection, you will be able to send messages as soon as you are back online.')
+        alert('No Connection, you will be able to send messages as soon as you are back online.')
       }
-    //}
   };
   
 };

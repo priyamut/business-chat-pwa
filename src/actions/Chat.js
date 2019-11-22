@@ -110,7 +110,7 @@ export const sendSms = (paramData,props) => {
     }).then(({ data }) => {
       if(props.updateConversation){
         console.log(props.conversation)
-        let currentMessage = props.conversation.Sms.find((item) => item.type === true);
+        let currentMessage = props.conversation.Sms.find((item) => item.uniqueId === paramData.conversationId);
         if(currentMessage){
           currentMessage.type = undefined;
           props.updateConversation(JSON.parse(JSON.stringify(props.conversation)));

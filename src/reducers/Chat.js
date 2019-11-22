@@ -183,7 +183,8 @@ export default (state = INIT_STATE, action) => {
           'smsReceipients': [{'toNum': "+15107562524"}]
         },
         'time': Moment().format('YYYY-MM-DDTHH:mm:ss'),
-         ...(!navigator.onLine && {"type" : true})
+         ...(!navigator.onLine && {"type" : true}),
+         'uniqueId':Math.random().toString(36).substring(7)
       });
 
       return {
