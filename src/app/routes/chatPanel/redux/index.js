@@ -60,6 +60,8 @@ class ChatPanelWithRedux extends PureComponent {
     });
     this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
     this.changeContactDetails(user);
+     
+     this.props.readAlltheChatMessages(user.id);
      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
   };
 
@@ -78,7 +80,7 @@ class ChatPanelWithRedux extends PureComponent {
       anchor.href = `tel:${user.contactNo}`;
       document.getElementById("phone").style.display = "block";
     }
-      this.props.readAlltheChatMessages(user.id);
+      //this.props.readAlltheChatMessages(user.id);
   }
 
    ChangeUrl(url) {
@@ -95,7 +97,7 @@ class ChatPanelWithRedux extends PureComponent {
     if (this.props.message !== '' && !this.state.disabled && subScribeUSerData && 
     subScribeUSerData.businessAgents && subScribeUSerData.businessAgents.length > 0) {
         this.props.submitComment(this.props, this.scrollToBottom);
-        this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+       // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
     }
   };
 

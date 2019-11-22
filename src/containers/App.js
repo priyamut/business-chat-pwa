@@ -27,7 +27,8 @@ import {isIOS, isMobile} from 'react-device-detect';
 
 import {
   updateConversation,
-  fetchChatUser
+  fetchChatUser,
+  readAlltheChatMessages
 } from 'actions/Chat';
 import PullToRefresh from "pull-to-refresh-react";
 
@@ -209,6 +210,7 @@ class App extends Component {
 
   
   onMessageReceive = response => {
+    if(response.hasOwnProperty('text')){
     const {subScribeUSerData} = this.props
     if(this.props.conversation && this.props.conversation.user && 
         response.contactMasterId == this.props.conversation.user.id){
@@ -222,12 +224,13 @@ class App extends Component {
       conversation.Sms = updatedConversation;
       this.props.updateConversation(conversation);
       this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+      this.props.readAlltheChatMessages(this.props.conversation.user.id);
     }else if(this.props.conversation && this.props.conversation.user && 
       this.props.conversation.user.id){
         this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
       }
   };
-
+  }
 }
 
 const mapStateToProps = ({settings, auth, chatData}) => {
@@ -237,4 +240,4 @@ const mapStateToProps = ({settings, auth, chatData}) => {
   return {sideNavColor, token, locale, isDirectionRTL, authUser, initURL,subScribeUSerData,conversation}
 };
 
-  export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation,fetchChatUser})(App);
+  export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation,fetchChatUser,readAlltheChatMessages})(App);
