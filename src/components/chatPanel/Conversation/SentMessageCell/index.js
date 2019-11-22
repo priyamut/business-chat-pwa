@@ -7,12 +7,13 @@ import {
 const SentMessageCell = ({conversation, property}) => {
 var date1 = moment(conversation.time);
 var dateComponent = date1.local().format('lll');
+console.log(conversation);
 
   return (
     <div className="d-flex flex-nowrap chat-item flex-row-reverse">
       <div className="bubble">
         <div className="message" style={{color : '#fff'}}>{conversation.outGoingSms.message}</div>
-          { !(navigator.onLine) && conversation.hasOwnProperty('type') &&
+          { conversation.hasOwnProperty('type') && conversation.type &&
             <a className="no-connection"  onClick={(event) => {
               handleRetry(event,conversation);
             }}>{`Tap here to retry`}</a>
@@ -32,7 +33,7 @@ var dateComponent = date1.local().format('lll');
         message: conversation.outGoingSms.message,
         toNumber: property.conversation.user.contactNo
       };
-        property.sensSms(paramData);
+        property.sendSms(paramData,property);
      }else{
         //dispatch({ type: FETCH_ERROR, payload: 'No Connection, you will be able to send messages as soon as you are back online.'});
         console.log('No Connection, you will be able to send messages as soon as you are back online.')
