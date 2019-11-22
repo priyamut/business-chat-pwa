@@ -73,7 +73,7 @@ class ChatPanelWithRedux extends PureComponent {
     }
     if(document.getElementById('selectedContactNo')){
       var div = document.getElementById('selectedContactNo');
-      div.innerHTML =  user.name ? user.contactNo ? user.contactNo : '' : '';
+      div.innerHTML =  user.name || user.emailId ? user.contactNo ? user.contactNo : '' : '';
     }
     if(document.getElementById('phone')){
       var anchor = document.getElementById('phone-anchor');
