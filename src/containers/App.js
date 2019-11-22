@@ -101,15 +101,6 @@ class App extends Component {
     alert('1. Open Share menu\n2. Tap on "Add to Home Screen" button');
   };
 
-  onRefresh =() =>{
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-       // window.location.reload();
-       this.forceUpdate();
-      }, 2000);
-    });
-  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.token) {
@@ -164,10 +155,7 @@ class App extends Component {
     return (
       // <React.Fragment>
         
-      <PullToRefresh
-        options={{ pullDownHeight: 150 }}
-        onRefresh={this.onRefresh}
-      >
+
       <MuiThemeProvider theme={applyTheme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <IntlProvider
@@ -204,7 +192,6 @@ class App extends Component {
           </IntlProvider>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
-      </PullToRefresh>
       // </React.Fragment>
     );
   }
