@@ -101,16 +101,6 @@ class App extends Component {
     alert('1. Open Share menu\n2. Tap on "Add to Home Screen" button');
   };
 
-  onRefresh =() =>{
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-        this.forceUpdate()
-
-        //window.location.reload();
-      }, 500);
-    });
-  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.token) {

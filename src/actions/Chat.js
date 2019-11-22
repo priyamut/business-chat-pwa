@@ -47,9 +47,9 @@ export const fetchChatUser = (businessAgentMappingId) => {
   }
 };
 
-export const onSelectUser = (user, businessAgentMappingId, hideLoader, scrollToBottom) => {
+export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
   return (dispatch) => {
-    dispatch({ type: ON_SELECT_USER });
+    dispatch({ type: FETCH_START });
     axios.get(`consumer/v1/${user.id}/sms?businessId=${businessAgentMappingId}`, {
       headers: {
         "idToken": JSON.parse(localStorage.getItem("idToken")),
@@ -62,7 +62,6 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader, scrollToB
         data.Sms = data.Sms.reverse();
         dispatch({ type: ON_SELECT_USER, payload: data });
         hideLoader();
-        scrollToBottom();
       } else {
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
@@ -77,13 +76,7 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader, scrollToB
 };
 
 
-export const submitComment = (subScribeUSerData, scrollToBottom) => {
-  const paramData = {
-    businessId: localStorage.getItem('businessId'),
-    contactMasterId: subScribeUSerData.conversation.user.id,
-    message: subScribeUSerData.message,
-    toNumber: subScribeUSerData.conversation.user.contactNo
-  };
+export const submitComment = (paramData) => {
   return (dispatch) => {
     dispatch({ type: SUBMIT_COMMENT });
     axios.post(`consumer/v1/sendsms`, paramData, {
@@ -93,9 +86,30 @@ export const submitComment = (subScribeUSerData, scrollToBottom) => {
       }
     }).then(({ data }) => {
       if (data == "") {
-        // dispatch({type: SUBMIT_COMMENT, payload: data});
         hideLoader();
-        scrollToBottom();
+      } else {
+        dispatch({ type: FETCH_ERROR, payload: data.error });
+      }
+    }).catch(function (error) {
+      if(error.request.status === 401){
+        this.clearStorage();
+      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+      }
+    });
+  }
+};
+export const sensSms = (paramData) => {
+  return (dispatch) => {
+    dispatch({ type: FETCH_START });
+    axios.post(`consumer/v1/sendsms`, paramData, {
+      headers: {
+        "idToken": JSON.parse(localStorage.getItem("idToken")),
+        "authorization": JSON.parse(localStorage.getItem("accessToken"))
+      }
+    }).then(({ data }) => {
+      if (data == "") {
+        hideLoader();
       } else {
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
