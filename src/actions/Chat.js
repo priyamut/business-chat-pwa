@@ -99,7 +99,7 @@ export const submitComment = (paramData) => {
     });
   }
 };
-export const sensSms = (paramData) => {
+export const sendSms = (paramData,props) => {
   return (dispatch) => {
     dispatch({ type: FETCH_START });
     axios.post(`consumer/v1/sendsms`, paramData, {
@@ -108,10 +108,13 @@ export const sensSms = (paramData) => {
         "authorization": JSON.parse(localStorage.getItem("accessToken"))
       }
     }).then(({ data }) => {
-      if (data == "") {
-        hideLoader();
-      } else {
-        dispatch({ type: FETCH_ERROR, payload: data.error });
+      if(props.updateConversation){
+        console.log(props.conversation)
+        let currentMessage = props.conversation.Sms.find((item) => item.type === true);
+        if(currentMessage){
+          currentMessage.type = undefined;
+          props.updateConversation(JSON.parse(JSON.stringify(props.conversation)));
+        }   
       }
     }).catch(function (error) {
       if(error.request.status === 401){
