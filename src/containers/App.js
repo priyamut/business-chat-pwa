@@ -105,7 +105,8 @@ class App extends Component {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
-        window.location.reload();
+       // window.location.reload();
+       this.forceUpdate();
       }, 2000);
     });
   }
