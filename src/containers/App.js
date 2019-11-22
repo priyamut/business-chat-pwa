@@ -105,8 +105,10 @@ class App extends Component {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
-        window.location.reload();
-      }, 2000);
+        this.forceUpdate()
+
+        //window.location.reload();
+      }, 500);
     });
   }
 
@@ -163,10 +165,7 @@ class App extends Component {
     return (
       // <React.Fragment>
         
-      <PullToRefresh
-        options={{ pullDownHeight: 150 }}
-        onRefresh={this.onRefresh}
-      >
+
       <MuiThemeProvider theme={applyTheme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <IntlProvider
@@ -203,7 +202,6 @@ class App extends Component {
           </IntlProvider>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
-      </PullToRefresh>
       // </React.Fragment>
     );
   }
