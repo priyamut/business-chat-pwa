@@ -51,6 +51,10 @@
 
 .module-user-info {
   @include display-flex(flex, column, nowrap);
+  overflow: hidden;
+  & .module-title h2{
+    font-size: 1rem;
+  }
 }
 
 .module-user-detail {

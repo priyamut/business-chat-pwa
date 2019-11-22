@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 import {connect} from 'react-redux'
 import Button from '@material-ui/core/Button';
 import SwipeableViews from 'react-swipeable-views';
@@ -7,7 +7,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Drawer from '@material-ui/core/Drawer';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton'
+import IconButton from '@material-ui/core/IconButton';
+import AnnouncementIcon from '@material-ui/icons/Announcement';
 import Input from '@material-ui/core/Input'
 import ChatUserList from 'components/chatPanel/ChatUserList/index';
 import Conversation from 'components/chatPanel/Conversation/index';
@@ -15,6 +16,11 @@ import ContactList from 'components/chatPanel/ContactList/index';
 import SearchBox from 'components/SearchBox';
 import IntlMessages from 'util/IntlMessages';
 import MenuIcon from '@material-ui/icons/Menu';
+import {setInitUrl} from './../../../../actions/Auth';
+import {Scrollbars} from 'react-custom-scrollbars';
+import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
+import axios from 'util/Api';
+
 import {
   fetchChatUser,
   fetchChatUserConversation,
@@ -24,13 +30,17 @@ import {
   onChatToggleDrawer,
   onSelectUser,
   submitComment,
+  sendSms,
   updateMessageValue,
   updateSearchChatUser,
-  userInfoState
+  userInfoState,
+  readAlltheChatMessages,
+  updateConversation
 } from 'actions/Chat'
 import CustomScrollbars from 'util/CustomScrollbars';
+import { isIOS } from 'react-device-detect';
 
-class ChatPanelWithRedux extends Component {
+class ChatPanelWithRedux extends PureComponent {
   filterContacts = (userName) => {
     this.props.filterContacts(userName);
   };
@@ -44,53 +54,127 @@ class ChatPanelWithRedux extends Component {
   };
 
   onSelectUser = (user) => {
-    this.props.onSelectUser(user);
-
-    setTimeout(() => {
-      this.props.hideLoader();
-    }, 1500);
+    const {subScribeUSerData} = this.props;
+    this.props.updateMessageValue('');
+    this.setState({
+      scrollFlg: true
+    });
+    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader);
+    this.changeContactDetails(user);
+     
+     this.props.readAlltheChatMessages(user.id);
+     this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
   };
 
-
-  submitComment = () => {
-    if (this.props.message !== '') {
-      this.props.submitComment();
-    }
-  };
-
-  updateMessageValue = (evt) => {
-    this.props.updateMessageValue(evt.target.value);
-
-  };
-
-  Communication = () => {
-    const {message, selectedUser, conversation} = this.props;
-    const {conversationData} = conversation;
+  changeContactDetails(user){
+    this.ChangeUrl('/app/chat/'+user['id']);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
-        div.innerHTML = selectedUser.name;
+        div.innerHTML = user.name || user.emailId || user.contactNo;
     }
+    if(document.getElementById('selectedContactNo')){
+      var div = document.getElementById('selectedContactNo');
+      div.innerHTML =  user.name || user.emailId ? user.contactNo ? user.contactNo : '' : '';
+    }
+    if(document.getElementById('phone')){
+      var anchor = document.getElementById('phone-anchor');
+      anchor.href = `tel:${user.contactNo}`;
+      document.getElementById("phone").style.display = "block";
+    }
+      //this.props.readAlltheChatMessages(user.id);
+  }
+
+   ChangeUrl(url) {
+    if (typeof (window.history.pushState) != "undefined") {
+        var obj = { Page: 'page', Url: url };
+        window.history.pushState(obj, obj.Page, obj.Url);
+    } else {
+        alert("Browser does not support HTML5.");
+    }
+  }
+
+  submitComment = () => {
+    const {subScribeUSerData} = this.props
+    if (this.props.message !== '' && !this.state.disabled && subScribeUSerData && 
+    subScribeUSerData.businessAgents && subScribeUSerData.businessAgents.length > 0) {
+      const paramData = {
+        businessId: localStorage.getItem('businessId'),
+        contactMasterId: this.props.conversation.user.id,
+        message: this.props.message,
+        toNumber: this.props.conversation.user.contactNo
+      };
+        this.props.submitComment(paramData);
+       // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    }
+  };
+
+  handleCommentChange = (event)=>{
+    event.preventDefault();
+    const content = event.target.value;
+    //let errors = this.state.disabled;
+    if(content.length <= 200){
+     // this.setState({disabled: true});
+     this.updateMessageValue(event);
+    }
+  }
+
+  scrollToBottom = () =>{ 
+    var scroll = document.getElementsByClassName('chat-list-scroll', 'chat-box-main');
+    if(scroll && scroll[0] instanceof Element){
+      scroll = scroll[0].children[0];
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+  }
+  updateMessageValue = (evt) => {
+    this.props.updateMessageValue(evt.target.value);
+  };
+
+  scrollComponentTobottom = () =>{
+    if(this.state.scrollFlg){
+      this.scrollComponent.scrollToBottom();
+      this.setState({
+        scrollFlg: false
+      });
+      this.changeStyle();
+    }
+  }
+
+  Communication = () => {
+    if(!this.props.conversation || this.props.conversation.length == 0){
+      return;
+    }
+    const {message, conversation} = this.props;
+    const {Sms} = conversation;
+    let selectedUser = conversation.user;
+    
     return <div className="chat-main">
+      <Scrollbars className="chat-list-scroll scrollbar"
+                        style={{height: 'calc(100vh - 222px)'}} onUpdate={this.scrollComponentTobottom} ref={c => { this.scrollComponent = c }}>
+            { Sms.length == 0 ?
+            <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px',
+            display: 'flex', flexDirection: 'column', flexWrap:'nowrap',
+            justifyContent:'center',height:'100%'}}>
+              {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
+              
+            {(selectedUser.contactNo !== null && selectedUser.contactNo !== undefined
+            && selectedUser.contactNo !== "")
+             ? 
+            (<React.Fragment><AnnouncementIcon className="s-128 text-muted"/>
+            <h3 className="text-muted">
+            <IntlMessages id="chat.noMessageToShow"/>
+            </h3>
+            </React.Fragment>)
+            : (<React.Fragment>
+              <SpeakerNotesOffIcon className="s-128 text-muted"/>
+            <h3 className="text-muted">
+            <IntlMessages id="chat.noContactNoForthisUser"/>
+            </h3></React.Fragment>)}
+            </div>
+            : <Conversation conversationData={Sms}
+            selectedUser={selectedUser} property={this.props} />}
 
-      {/* <div className="chat-main-header">
-        <IconButton className="d-block d-xl-none chat-btn" aria-label="Menu"
-                    onClick={this.onChatToggleDrawer.bind(this)}>
-          <MenuIcon />
-        </IconButton>
-        <div className="chat-main-header-info">
-
-          <div className="chat-contact-name">
-            {selectedUser.name}
-          </div>
-        </div>
-
-      </div> */}
-
-      <CustomScrollbars className="chat-list-scroll scrollbar"
-                        style={{height: 'calc(100vh - 222px)'}}>
-        <Conversation conversationData={conversationData}
-                      selectedUser={selectedUser}/>
-      </CustomScrollbars>
+        
+      </Scrollbars>
 
       <div className="chat-main-footer">
         <div className="d-flex flex-row align-items-center" style={{maxHeight: 51}}>
@@ -99,14 +183,16 @@ class ChatPanelWithRedux extends Component {
                             <textarea
                               id="required" className="border-0 form-control chat-textarea"
                               onKeyUp={this._handleKeyPress.bind(this)}
-                              onChange={this.updateMessageValue.bind(this)}
+                              //onChange={this.updateMessageValue.bind(this)}
+                              onChange={this.handleCommentChange.bind(this)} noValidate
                               value={message}
+                              autocorrect="off"
                               placeholder="Type and hit enter to send message"
                             />
             </div>
           </div>
           <div className="chat-sent">
-            <IconButton
+            <IconButton disabled={this.state.disabled}
               onClick={this.submitComment.bind(this)}
               aria-label="Send message">
               <i className="zmdi  zmdi-mail-send"/>
@@ -173,23 +259,13 @@ class ChatPanelWithRedux extends Component {
 
         <div className="chat-user-hd">
 
-          {/* <div className="chat-avatar mr-3" onClick={() => {
-            this.props.userInfoState(2);
-          }}>
-            <div className="chat-avatar-mode">
-              <img id="user-avatar-button" src='https://via.placeholder.com/150x150'
-                   className="rounded-circle size-50"
-                   alt=""/>
-              <span className="chat-mode online"/>
-            </div>
-          </div> */}
           <div className="module-user-info d-flex flex-column justify-content-center">
             <div className="module-title">
-              <h5 className="mb-0">Agentz</h5>
+              <h2 className="mb-0" style={{color : '#fff',fontWeight : '500',overflow: 'hidden',
+          whiteSpace: 'nowrap', textOverflow: 'ellipsis',    textTransform: "uppercase"
+        }}>{localStorage.getItem('name')}</h2>
             </div>
-            <div className="module-user-detail">
-              <span className="text-grey">Agentz@Agentz.ai</span>
-            </div>
+
           </div>
         </div>
 
@@ -202,18 +278,18 @@ class ChatPanelWithRedux extends Component {
         </div>
       </div>
 
-      <div className="cyan chat-sidenav-content">
-        <AppBar position="static" className="cyan no-shadow chat-tabs-header">
+      <div className="chat-sidenav-content">
+        <AppBar position="static" className="no-shadow chat-tabs-header">
           <Tabs
-            className="cyan chat-tabs"
+            className="chat-tabs"
             value={this.state.selectedTabIndex}
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
             fullWidth
           >
-            <Tab label={<IntlMessages id="chat.chatUser"/>}/>
             <Tab label={<IntlMessages id="chat.contacts"/>}/>
+            {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -221,27 +297,16 @@ class ChatPanelWithRedux extends Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <CustomScrollbars className="chat-sidenav-scroll scrollbar"
-                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)'}}>
+                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 146px)'}}>
             {this.props.chatUsers.length === 0 ?
               <div className="p-5">{this.props.userNotFound}</div>
               :
               <ChatUserList chatUsers={this.props.chatUsers}
                             selectedSectionId={this.props.selectedSectionId}
-                            onSelectUser={this.onSelectUser.bind(this)}/>
+                            onSelectUser={this.onSelectUser.bind(this)} />
             }
           </CustomScrollbars>
 
-          <CustomScrollbars className="chat-sidenav-scroll scrollbar"
-                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)'}}>
-            {
-              this.props.contactList.length === 0 ?
-                <div className="p-5">{this.props.userNotFound}</div>
-                :
-                <ContactList contactList={this.props.contactList}
-                             selectedSectionId={this.props.selectedSectionId}
-                             onSelectUser={this.onSelectUser.bind(this)}/>
-            }
-          </CustomScrollbars>
         </SwipeableViews>
 
       </div>
@@ -259,9 +324,9 @@ class ChatPanelWithRedux extends Component {
       <div className="chat-box">
         <div className="chat-box-main">{
           this.props.selectedUser === null ?
-            <div className="loader-view">
+            <div className="loader-view" style={{"margin-top" : isIOS ? '-40px' : '0px'}}>
               <i className="zmdi zmdi-comment s-128 text-muted"/>
-              <h1 className="text-muted"> {<IntlMessages id="chat.selectUserChat"/>}</h1>
+              
               <Button className="d-block d-xl-none" color="primary"
                       onClick={this.onChatToggleDrawer.bind(this)}>{<IntlMessages
                 id="chat.selectContactChat"/>}</Button>
@@ -271,21 +336,79 @@ class ChatPanelWithRedux extends Component {
       </div>)
   };
 
+  loadSmsLink(nextProps){
+    const {subScribeUSerData} = this.props
+    let location = window.location;
+    if(nextProps.chatUsers.length >0 && subScribeUSerData && this.state.scrollFlg){
+       if(location && location.pathname.replace('/app/chat/','') !== '' &&
+          location.pathname.replace('/app/chat','') !== ''){
+           const user = nextProps.chatUsers.find((item) => item.id === 
+           location.pathname.replace('/app/chat/',''))
+           if(user && (document.getElementById('selectedUser').innerText !== null)){
+             this.onSelectUser(user); 
+           }
+          //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
+          //  && subScribeUSerData.businessAgents.length >0){
+          //   const config = {
+          //     headers: {
+          //       'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
+          //       "Content-Type":"application/json",
+          //       "Access-Control-Allow-Origin": "*",
+          //       "mode": "no-cors"
+          //     }
+          //   }
+          //    axios.get(`consumer/v1/contacts/hash?hashCode=${location.pathname.replace('/app/chat/','')}
+          //    &businessAgentId=${subScribeUSerData.businessAgents["0"].id}`
+          //    , config).then(({data}) => {
+          //     let userData = this.constructJson(data,0);
+          //     if(userData && document.getElementById('selectedUser').innerText !== userData.name){
+          //       this.onSelectUser(userData); 
+          //     }
+          //   }).catch(function (error) {
+          //   });
+          //  }
+           
+    }
+  }
+  }
+
+  changeStyle(){
+    let chatFooter = document.getElementsByClassName('chat-main-footer','chat-main');
+    let phoneAnchor = document.getElementById('phone-anchor');
+    if(chatFooter && chatFooter[0] instanceof Element && phoneAnchor){
+      if(this.props.conversation && this.props.conversation.user && 
+        (this.props.conversation.user.contactNo == null || this.props.conversation.user.contactNo == ''
+        || this.props.conversation.user.contactNo == undefined)){
+        chatFooter[0].classList.add('component-none');
+        phoneAnchor.classList.add('component-none');
+      }else{
+        chatFooter[0].classList.remove('component-none');
+         phoneAnchor.classList.remove('component-none');
+      }
+    }
+  }
+
   constructor() {
     super();
     this.state = {
       selectedTabIndex: 0,
+      disabled: false,
+      scrollFlg :true
     }
+    this.scrollComponent = React.createRef();
   }
 
-  componentWillMount() {
-    this.props.fetchChatUser();
-    this.props.fetchChatUserConversation()
+  
+
+  componentWillReceiveProps(nextProps){
+    const {subScribeUSerData} = this.props
+   if(this.props.chatUsers != nextProps.chatUsers){
+     this.loadSmsLink(nextProps);
+   }
   }
 
   updateSearchChatUser(evt) {
     this.props.updateSearchChatUser(evt.target.value);
-    this.props.filterContacts(evt.target.value);
     this.props.filterUsers(evt.target.value);
   }
 
@@ -293,6 +416,7 @@ class ChatPanelWithRedux extends Component {
     this.props.onChatToggleDrawer();
   }
 
+  
   render() {
     const {loader, userState, drawerState} = this.props;
     return (
@@ -319,10 +443,96 @@ class ChatPanelWithRedux extends Component {
       </div>
     )
   }
+   constructJson = (contactInfo,chatUnreadCount) =>{
+    let tempJSON = {};
+    if (contactInfo.createdDate !== undefined) {
+      tempJSON.createdDate = contactInfo.createdDate;
+    }
+    if (contactInfo.source !== undefined) {
+      tempJSON.source = this.getSourceType(contactInfo.source)
+    }
+    tempJSON.id = contactInfo.id;
+    tempJSON.contactHashCode = contactInfo.contactHashCode;
+    tempJSON.conversationId = contactInfo.conversationId;
+    tempJSON.businessAgentMappingId = contactInfo.businessAgentMappingId;
+    tempJSON.recentActivityDate = contactInfo.recentActivityDate;
+    tempJSON.unreadMessage = chatUnreadCount[contactInfo.id] ? chatUnreadCount[contactInfo.id] : 0;
+  
+    {
+      contactInfo && contactInfo.contactData.map((profileDetails, i) => {
+        if (profileDetails.name === 'contactNo') {
+          if (profileDetails.value.length > 1) {
+            let tempContactNo = '';
+            profileDetails.value.forEach(function (item, index) {
+              if (index === 0) {
+                tempContactNo = item;
+              } else {
+                tempContactNo += `, ${item}`;
+              }
+            })
+            tempJSON[`${profileDetails.name}`] = tempContactNo;
+          } else {
+            tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+          }
+        } else if (profileDetails.name === 'emailId') {
+          if (profileDetails.value.length > 1) {
+            let tempEmailId = '';
+            profileDetails.value.forEach(function (item, index) {
+              if (index === 0) {
+                tempEmailId = item;
+              } else {
+                tempEmailId += `, ${item}`;
+              }
+            })
+            tempJSON[`${profileDetails.name}`] = tempEmailId;
+          } else {
+            tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+          }
+        } else {
+          tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+          if (profileDetails.name === 'name' && profileDetails.value.length > 1) {
+            let otherName = null;
+            tempJSON.otherName = profileDetails.value.forEach(function (item, index) {
+              if (index !== 0) {
+                if (otherName != null) {
+                  otherName += `, ${item}`;
+                } else {
+                  otherName = item;
+                }
+              }
+            });
+            tempJSON.otherName = otherName;
+          }
+        }
+  
+      })
+    };
+  
+    return tempJSON;
+  }
+
+  getSourceType = (type) =>{
+    let source = '';
+    switch(type) {
+      case 'WEBSITE':
+          source = 'Agentz Contact Center'
+        break;
+      case 'DIGITAL_SMS':
+          source = 'Agentz Digital Receptionist - SMS'
+        break;
+      case 'DIGITAL_PHONE':
+          source = 'Agentz Digital Receptionist - Phone'
+        break;
+      default:
+          source = 'Agentz Digital Receptionist'
+    }
+    return source;
+  }
 }
 
-const mapStateToProps = ({chatData, settings}) => {
+const mapStateToProps = ({chatData, settings,auth}) => {
   const {width} = settings;
+  const {subScribeUSerData} = auth;
   const {
     loader,
     userNotFound,
@@ -338,7 +548,6 @@ const mapStateToProps = ({chatData, settings}) => {
     conversation
   } = chatData;
 
-  console.log({chatData})
   return {
     width,
     loader,
@@ -352,7 +561,8 @@ const mapStateToProps = ({chatData, settings}) => {
     message,
     chatUsers,
     conversationList,
-    conversation
+    conversation,
+    subScribeUSerData
   }
 };
 
@@ -365,7 +575,10 @@ export default connect(mapStateToProps, {
   hideLoader,
   userInfoState,
   submitComment,
+  sendSms,
   updateMessageValue,
   updateSearchChatUser,
-  onChatToggleDrawer
+  onChatToggleDrawer,
+  readAlltheChatMessages,setInitUrl,
+  updateConversation
 })(ChatPanelWithRedux);

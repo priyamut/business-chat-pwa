@@ -12,10 +12,13 @@ import {
   SHOW_MESSAGE,
   SUBMIT_COMMENT,
   UPDATE_MESSAGE_VALUE,
-  UPDATE_SEARCH_CHAT_USER
+  UPDATE_SEARCH_CHAT_USER,
+  FETCH_ALL_CHAT_USER,
+  ON_READ_ALL_MESSAGE,
+  UPDATE_SEARCH_CONVERSTAION
 } from 'constants/ActionTypes';
 import {USER_INFO_STATE} from '../constants/ActionTypes';
-
+import {createFilter} from 'utils/utils.js';
 
 const INIT_STATE = {
   loader: false,
@@ -24,16 +27,103 @@ const INIT_STATE = {
   selectedSectionId: '',
   userState: 1,
   searchChatUser: '',
-  // contactList: [], onlt for production
-  contactList: users.filter((user) => !user.recent),
+  contactList: [],
   selectedUser: null,
   message: '',
-  // chatUsers: [],
-  // conversationList: [], //ony for prod
-  chatUsers: users.filter((user) => user.recent),
-  conversationList: conversationList,
-  conversation: null
+  chatUsers: [],
+  conversationList: [],
+  conversation: [],
+  chatUnreadCount  : {}
 };
+
+
+function constructJson (contactInfo,chatUnreadCount) {
+  let tempJSON = {};
+  if (contactInfo.createdDate !== undefined) {
+    tempJSON.createdDate = contactInfo.createdDate;
+  }
+  if (contactInfo.source !== undefined) {
+    tempJSON.source = getSourceType(contactInfo.source)
+  }
+  tempJSON.id = contactInfo.id;
+  tempJSON.contactHashCode = contactInfo.contactHashCode;
+  tempJSON.conversationId = contactInfo.conversationId;
+  tempJSON.businessAgentMappingId = contactInfo.businessAgentMappingId;
+  tempJSON.recentActivityDate = contactInfo.recentActivityDate;
+  tempJSON.unreadMessage = chatUnreadCount[contactInfo.id] ? chatUnreadCount[contactInfo.id] : 0;
+
+  {
+    contactInfo && contactInfo.contactData.map((profileDetails, i) => {
+      if (profileDetails.name === 'contactNo') {
+        if (profileDetails.value.length > 1) {
+          let tempContactNo = '';
+          profileDetails.value.forEach(function (item, index) {
+            if (index === 0) {
+              tempContactNo = item;
+            } else {
+              tempContactNo += `, ${item}`;
+            }
+          })
+          tempJSON[`${profileDetails.name}`] = tempContactNo;
+        } else {
+          tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+        }
+      } else if (profileDetails.name === 'emailId') {
+        if (profileDetails.value.length > 1) {
+          let tempEmailId = '';
+          profileDetails.value.forEach(function (item, index) {
+            if (index === 0) {
+              tempEmailId = item;
+            } else {
+              tempEmailId += `, ${item}`;
+            }
+          })
+          tempJSON[`${profileDetails.name}`] = tempEmailId;
+        } else {
+          tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+        }
+      } else {
+        tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
+        if (profileDetails.name === 'name' && profileDetails.value.length > 1) {
+          let otherName = null;
+          tempJSON.otherName = profileDetails.value.forEach(function (item, index) {
+            if (index !== 0) {
+              if (otherName != null) {
+                otherName += `, ${item}`;
+              } else {
+                otherName = item;
+              }
+            }
+          });
+          tempJSON.otherName = otherName;
+        }
+      }
+
+    })
+  };
+
+  return tempJSON;
+}
+
+
+function getSourceType(type){
+  let source = '';
+  switch(type) {
+    case 'WEBSITE':
+        source = 'Agentz Contact Center'
+      break;
+    case 'DIGITAL_SMS':
+        source = 'Agentz Digital Receptionist - SMS'
+      break;
+    case 'DIGITAL_PHONE':
+        source = 'Agentz Digital Receptionist - Phone'
+      break;
+    default:
+        source = 'Agentz Digital Receptionist'
+  }
+  return source;
+}
+
 
 
 export default (state = INIT_STATE, action) => {
@@ -47,7 +137,7 @@ export default (state = INIT_STATE, action) => {
       } else {
         return {
           ...state, contactList: users.filter((user) =>
-            !user.recent && user.name.toLowerCase().indexOf(action.payload.toLowerCase()) > -1
+             user.name.toLowerCase().indexOf(action.payload.toLowerCase()) > -1
           )
         }
       }
@@ -56,13 +146,11 @@ export default (state = INIT_STATE, action) => {
     case FILTER_USERS: {
       if (action.payload === '') {
         return {
-          ...state, chatUsers: users.filter(user => !user.recent)
+          ...state, chatUsers: state.contactList
         }
       } else {
         return {
-          ...state, chatUsers: users.filter((user) =>
-            !user.recent && user.name.toLowerCase().indexOf(action.payload.toLowerCase()) > -1
-          )
+          ...state, chatUsers: state.chatUsers.filter(createFilter(action.payload, ["name","emailId",'contactNo']))
         }
       }
     }
@@ -72,9 +160,9 @@ export default (state = INIT_STATE, action) => {
         ...state,
         loader: true,
         drawerState: false,
-        selectedSectionId: action.payload.id,
-        selectedUser: action.payload,
-        conversation: state.conversationList.find((data) => data.id === action.payload.id)
+        selectedSectionId: action.payload && action.payload.user ? action.payload.user.id : '', 
+        selectedUser: '',
+        conversation: action.payload
       }
     }
     case ON_TOGGLE_DRAWER: {
@@ -88,26 +176,52 @@ export default (state = INIT_STATE, action) => {
     }
 
     case SUBMIT_COMMENT: {
-      const updatedConversation = state.conversation.conversationData.concat({
-        'type': 'sent',
-        'message': state.message,
-        'sentAt': Moment().format('hh:mm:ss A'),
+      const updatedConversation = state.conversation.Sms.concat({
+        'messageType': "OUTGOING_SMS",
+        'outGoingSms': {
+          'message': state.message,
+          'smsReceipients': [{'toNum': "+15107562524"}]
+        },
+        'time': Moment().format('YYYY-MM-DDTHH:mm:ss'),
+         ...(!navigator.onLine && {"type" : true}),
+         'uniqueId':Math.random().toString(36).substring(7)
       });
 
       return {
         ...state,
         conversation: {
-          ...state.conversation, conversationData: updatedConversation
+          ...state.conversation, Sms: updatedConversation
         },
         message: '',
-        conversationList: state.conversationList.map(conversationData => {
-          if (conversationData.id === state.conversation.id) {
-            return {...state.conversation, conversationData: updatedConversation};
+        loader: false,
+        conversationList: state.conversationList.map(Sms => {
+          if (Sms.id === state.conversation.id) {
+            return {...state.conversation, Sms: updatedConversation};
           } else {
-            return conversationData;
+            return Sms;
           }
         })
 
+      }
+    }
+    case FETCH_ALL_CHAT_USER : {
+      return {
+        ...state,
+        loader: false
+      }
+    }
+    case ON_READ_ALL_MESSAGE : {
+      return {
+        ...state,
+        loader: false
+      }
+    }
+
+    case UPDATE_SEARCH_CONVERSTAION : {
+      return {
+        ...state,
+        loader: false,
+        conversation:action.payload
       }
     }
 
@@ -120,10 +234,18 @@ export default (state = INIT_STATE, action) => {
     }
 
     case FETCH_ALL_CHAT_USER_SUCCESS: {
+      let userData = action.payload;
+      let newUserData =[];
+      if(userData.contacts.length > 0){
+        newUserData = userData.contacts.map(element => constructJson(element,userData.unreadCount)).sort(function(a, b) {
+          return (b.recentActivityDate < a.recentActivityDate) ? -1 : ((b.recentActivityDate > a.recentActivityDate) ? 1 : 0);
+      });      
+      }
       return {
         ...state,
-        contactList: action.payload.filter((user) => !user.recent),
-        chatUsers: action.payload.filter((user) => user.recent),
+        contactList: newUserData,
+        chatUsers: newUserData,
+        chatUnreadCount:userData.unreadCount,
         loader: false,
       }
     }
@@ -144,4 +266,7 @@ export default (state = INIT_STATE, action) => {
     default:
       return state;
   }
+}
+export {
+  constructJson
 }

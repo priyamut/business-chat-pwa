@@ -10,10 +10,18 @@
 }
 
 .page-error-content {
-  margin: 0 auto;
-  padding: 40px 0;
-  width: 380px;
-  max-width: 94%;
+    margin: 0 auto;
+    padding: 40px 0;
+    width: 380px;
+    max-width: 94%;
+    height: 100vh;
+    margin: 0 auto;
+    margin-top: 42vh;
+
+    & .btn-primary{
+      background-color: #3f51b5 !important;
+      border-color: #3f51b5 !important;
+    }
 
   @media screen and (max-width: 767px) {
     padding: 15px 0;

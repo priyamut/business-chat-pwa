@@ -24,6 +24,16 @@ import Menu from 'components/TopNav/Menu';
 import UserInfoPopup from 'components/UserInfo/UserInfoPopup';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {userSignOut} from 'actions/Auth';
+import PhoneIcon from '@material-ui/icons/Phone';
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 import {
   onChatToggleDrawer
@@ -71,8 +81,9 @@ class Header extends React.Component {
     });
   };
   onToggleCollapsedNav = (e) => {
-    const val = !this.props.navCollapsed;
-    this.props.toggleCollapsedNav(val);
+    // const val = !this.props.navCollapsed;
+    // this.props.toggleCollapsedNav(val);
+    this.props.userSignOut();
   };
 
   constructor() {
@@ -85,6 +96,8 @@ class Header extends React.Component {
       userInfo: false,
       langSwitcher: false,
       appNotification: false,
+      showDialog: false, 
+      loader: false
     }
   }
 
@@ -94,65 +107,57 @@ class Header extends React.Component {
     });
   }
 
-  Apps = () => {
-    return (
-      <ul className="jr-list jr-list-half">
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/app/calendar/basic">
-                <i className="zmdi zmdi-calendar zmdi-hc-fw"/>
-                <span className="jr-list-text"><IntlMessages id="sidebar.calendar.basic"/></span>
-            </Link>
-        </li>
-
-        <li className="jr-list-item">
-          <Link className="jr-list-link" to="/app/to-do">
-            <i className="zmdi zmdi-check-square zmdi-hc-fw"/>
-            <span className="jr-list-text"><IntlMessages id="sidebar.appModule.toDo"/></span>
-          </Link>
-        </li>
-
-        <li className="jr-list-item">
-          <Link className="jr-list-link" to="/app/mail">
-            <i className="zmdi zmdi-email zmdi-hc-fw"/>
-            <span className="jr-list-text"><IntlMessages id="sidebar.appModule.mail"/></span>
-          </Link>
-        </li>
-
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/app/chat">
-                <i className="zmdi zmdi-comment zmdi-hc-fw"/>
-                <span className="jr-list-text"><IntlMessages id="sidebar.appModule.chat"/></span>
-            </Link>
-        </li>
-
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/app/contact">
-                <i className="zmdi zmdi-account-box zmdi-hc-fw"/>
-                <span className="jr-list-text"><IntlMessages id="sidebar.appModule.contact"/></span>
-            </Link>
-        </li>
-
-        <li className="jr-list-item">
-            <Link className="jr-list-link" to="/">
-                <i className="zmdi zmdi-plus-circle-o zmdi-hc-fw"/>
-                <span className="jr-list-text">Add New</span>
-            </Link>
-        </li>
-      </ul>)
-  };
 
   onChatToggleDrawer = () =>{
     this.props.onChatToggleDrawer();
   }
+
+  onConfirm = () => {
+    this.setState({
+      loader: true
+    });
+    this.props.userSignOut();
+  };
+
+  onCancel =() =>{
+    this.setState({
+      showDialog: false
+    })
+  }
   
+  showPopup =() =>{
+    this.setState({
+      showDialog: true
+    });
+  }
+
 
   render() {
     const {drawerType, locale, navigationStyle, horizontalNavPosition} = this.props;
     const drawerStyle = drawerType.includes(FIXED_DRAWER) ? 'd-block d-xl-none' : drawerType.includes(COLLAPSED_DRAWER) ? 'd-block' : 'd-none';
 
     return (
+      
       <AppBar
         className={`app-main-header ${(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === BELOW_THE_HEADER) ? 'app-main-header-top' : ''}`}>
+          <Dialog
+          open={this.state.showDialog}
+          TransitionComponent={Slide}
+          onClose={this.onCancel}
+        >
+          <DialogTitle>{"Do you want to logout?"}</DialogTitle>
+          <DialogActions>
+            <Button onClick={this.onCancel} color="secondary">
+              NO
+            </Button>
+            <Button onClick={this.onConfirm} color="primary">
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* {this.state.loader ?
+               <CircularProgress/> : ''
+            } */}
         <Toolbar className="app-toolbar" disableGutters={false}>
           {navigationStyle === HORIZONTAL_NAVIGATION ?
             <div className="d-block d-md-none pointer mr-3" onClick={this.onToggleCollapsedNav}>
@@ -162,48 +167,67 @@ class Header extends React.Component {
             </div>
             :
             <div className="list-inline-item app-tou">
-            <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
+              <div className="header-notifications list-inline ml-auto">
+
+              <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.onChatToggleDrawer}>
-                      <MenuIcon />
+                                        <span className="menu-icon"/>
+                                        <span class="button__badge" style={{display: "none"}} id="button__badge"></span>
+
             </IconButton>
+              </div>
             </div>
           }
       
-
+        {/* 
           <Link className="app-logo mr-2 d-none d-sm-block" to="/">
             <img src={require("assets/images/agentz.png")} alt="Agentz" title="Agentz"/>
-          </Link>
-          
-          <div id="selectedUser" className="chat-contact-name" style={{"color" : "black"}}></div>
+          </Link> */}
+          <div className="chat-contact-details">
+          <span id="selectedUser" className="chat-contact-name" ></span>
+          <span id="selectedContactNo" className="chat-contact-no"></span>
+          </div>
 
           {/* {(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === INSIDE_THE_HEADER) &&
           <Menu/>} */}
 
-          <ul className="header-notifications list-inline ml-auto">
+           <ul className="header-notifications list-inline ml-auto">
             
             <li className="list-inline-item app-tour">
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
-                        onClick={this.onToggleCollapsedNav}>
-                                 <HomeIcon />
+                        >
+                                 <div id="phone" style={{display:"none"}}>
+               <a id="phone-anchor"  itemprop="telephone" dir="ltr" style={{"color": "white"}}>{<PhoneIcon color={"white"} />}</a>
+                                 </div>
+
+            </IconButton>
+            </li>
+            <li className="list-inline-item app-tour">
+               <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
+                        onClick={this.showPopup}>
+                                 <ExitToAppIcon color={'white'} style={{height: '23px'}} />
 
             </IconButton>
             </li>
            
-          </ul>
+        </ul>
           
           <div className="ellipse-shape"></div>
+          
         </Toolbar>
+        
       </AppBar>
+     
     );
   }
 
 }
 
-
-const mapStateToProps = ({chatData,settings}) => {
+const mapStateToProps = ({chatData,settings, auth}) => {
   const {drawerType, locale, navigationStyle, horizontalNavPosition} = settings;
   const{onChatToggleDrawer} = chatData;
-  return {drawerType, locale, navigationStyle, horizontalNavPosition,onChatToggleDrawer}
+  const {authUser} = auth;
+  return {drawerType, locale, navigationStyle, horizontalNavPosition,onChatToggleDrawer,authUser}
 };
 
-export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage,onChatToggleDrawer})(Header));
+export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage,onChatToggleDrawer,userSignOut})(Header));

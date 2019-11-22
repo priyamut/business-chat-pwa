@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import Moment from 'moment';
 import ChatUserList from 'components/chatPanel/ChatUserList';
-import conversationList from '../data/conversationList';
 import Conversation from 'components/chatPanel/Conversation/index';
 import users from '../data/chatUsers';
 import ContactList from 'components/chatPanel/ContactList/index';
@@ -180,7 +179,7 @@ class ChatPanel extends Component {
             textColor="primary"
             variant="fullWidth">
             <Tab label={<IntlMessages id="chat.chatUser"/>}/>
-            <Tab label={<IntlMessages id="chat.contacts"/>}/>
+            {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -235,9 +234,9 @@ class ChatPanel extends Component {
       selectedUser: user,
       conversation: this.state.conversationList.find((data) => data.id === user.id)
     });
-    setTimeout(() => {
-      this.setState({loader: false});
-    }, 1500);
+    // setTimeout(() => {
+    //   this.setState({loader: false});
+    // }, 1500);
   };
   showCommunication = () => {
     return (
@@ -270,7 +269,7 @@ class ChatPanel extends Component {
       selectedUser: null,
       message: '',
       chatUsers: users.filter((user) => user.recent),
-      conversationList: conversationList,
+      conversationList: [],
       conversation: null
     }
   }
