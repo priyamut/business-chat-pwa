@@ -380,6 +380,7 @@
     margin-left: 16px;
     margin-right: 88px;
     width: fit-content;
+    word-break: break-word;
 
     /* &:before,
      &:after {
@@ -558,6 +559,7 @@
 }
 .pull-down-container{
   width: 100%;
+  height: usnset !important;
 }
 .no-connection{
   font-size: 12px;

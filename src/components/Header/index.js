@@ -33,7 +33,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import PullToRefresh from "pull-to-refresh-react";
+
 
 import {
   onChatToggleDrawer
@@ -131,25 +131,13 @@ class Header extends React.Component {
     });
   }
 
-  onRefresh =() =>{
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-        this.forceUpdate()
 
-        //window.location.reload();
-      }, 500);
-    });
-  }
   render() {
     const {drawerType, locale, navigationStyle, horizontalNavPosition} = this.props;
     const drawerStyle = drawerType.includes(FIXED_DRAWER) ? 'd-block d-xl-none' : drawerType.includes(COLLAPSED_DRAWER) ? 'd-block' : 'd-none';
 
     return (
-      <PullToRefresh
-        options={{ pullDownHeight: 150 }}
-        onRefresh={this.onRefresh}
-      >
+      
       <AppBar
         className={`app-main-header ${(navigationStyle === HORIZONTAL_NAVIGATION && horizontalNavPosition === BELOW_THE_HEADER) ? 'app-main-header-top' : ''}`}>
           <Dialog
@@ -229,7 +217,7 @@ class Header extends React.Component {
         </Toolbar>
         
       </AppBar>
-      </PullToRefresh>
+     
     );
   }
 
