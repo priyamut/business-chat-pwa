@@ -22,6 +22,7 @@ class SignIn extends React.Component {
     super();
     this.state = {
       email: '',
+
       password: '',
       disabled: true,
       email: null,
@@ -70,7 +71,8 @@ class SignIn extends React.Component {
     const email = this.state.email;
     const password = this.state.password;
     event.preventDefault();
-    if(validateForm(this.state.errors)) {
+    if(validateForm(this.state.errors) && email !== null &&
+    email !== "" && password !== null && password !== "") {
       this.props.userSignIn({email, password});
     }
   }

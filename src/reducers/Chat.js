@@ -183,6 +183,7 @@ export default (state = INIT_STATE, action) => {
           'smsReceipients': [{'toNum': "+15107562524"}]
         },
         'time': Moment().format('YYYY-MM-DDTHH:mm:ss'),
+         ...(!navigator.onLine && {"type" : true})
       });
 
       return {
@@ -211,7 +212,7 @@ export default (state = INIT_STATE, action) => {
     case ON_READ_ALL_MESSAGE : {
       return {
         ...state,
-        loader: true
+        loader: false
       }
     }
 

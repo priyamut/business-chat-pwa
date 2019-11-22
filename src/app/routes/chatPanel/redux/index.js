@@ -30,6 +30,7 @@ import {
   onChatToggleDrawer,
   onSelectUser,
   submitComment,
+  sensSms,
   updateMessageValue,
   updateSearchChatUser,
   userInfoState,
@@ -58,7 +59,7 @@ class ChatPanelWithRedux extends PureComponent {
     this.setState({
       scrollFlg: true
     });
-    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader, this.scrollToBottom);
+    this.props.onSelectUser(user,subScribeUSerData.businessAgents["0"].id, this.props.hideLoader);
     this.changeContactDetails(user);
      
      this.props.readAlltheChatMessages(user.id);
@@ -96,7 +97,13 @@ class ChatPanelWithRedux extends PureComponent {
     const {subScribeUSerData} = this.props
     if (this.props.message !== '' && !this.state.disabled && subScribeUSerData && 
     subScribeUSerData.businessAgents && subScribeUSerData.businessAgents.length > 0) {
-        this.props.submitComment(this.props, this.scrollToBottom);
+      const paramData = {
+        businessId: localStorage.getItem('businessId'),
+        contactMasterId: this.props.conversation.user.id,
+        message: this.props.message,
+        toNumber: this.props.conversation.user.contactNo
+      };
+        this.props.submitComment(paramData);
        // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
     }
   };
@@ -164,7 +171,7 @@ class ChatPanelWithRedux extends PureComponent {
             </h3></React.Fragment>)}
             </div>
             : <Conversation conversationData={Sms}
-            selectedUser={selectedUser}  />}
+            selectedUser={selectedUser} property={this.props} />}
 
         
       </Scrollbars>
@@ -568,6 +575,7 @@ export default connect(mapStateToProps, {
   hideLoader,
   userInfoState,
   submitComment,
+  sensSms,
   updateMessageValue,
   updateSearchChatUser,
   onChatToggleDrawer,
