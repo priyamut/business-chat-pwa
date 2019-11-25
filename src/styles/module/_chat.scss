@@ -341,10 +341,12 @@
   width: calc(100% - 2px);
   height:50px;
   line-height:50px;
-  border-radius: 75px;
+  border-radius: 4px;
   border: 1px solid #cecaca;
   margin:0px 0px 2px 2px;
-
+  -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 
   & .d-flex{
     max-height: 36px !important;

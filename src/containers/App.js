@@ -74,13 +74,13 @@ class App extends Component {
             "mode": "no-cors"
           }
         }
-        axios.get('https://dev-business.agentz.ai/envInfo',{}, config).then(({data}) => {
-            this.setState({
-              globalVariables : data
-            })
-          }).catch(function (error) {
-            console.log("Error****:", {error});
-          });
+        // axios.get('https://demo-api.agentz/envInfo',{}, config).then(({data}) => {
+        //     this.setState({
+        //       globalVariables : data
+        //     })
+        //   }).catch(function (error) {
+        //     console.log("Error****:", {error});
+        //   });
         
         
           axios.post('business/v1/sessions',{'businessId': 
