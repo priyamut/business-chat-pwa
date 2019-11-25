@@ -72,11 +72,11 @@ class ChatPanelWithRedux extends PureComponent {
     this.ChangeUrl('/app/chat/'+user['id']);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
-        div.innerHTML = user.name || user.emailId || user.contactNo;
+        div.innerHTML = user.name || user.emailId || this.formatPhoneNumber(user.contactNo);
     }
     if(document.getElementById('selectedContactNo')){
       var div = document.getElementById('selectedContactNo');
-      let contactNo = this.formatPhoneNumber(user.contactNo);
+      let contactNo = user.contactNo ? this.formatPhoneNumber(user.contactNo) : '';
       div.innerHTML =  user.name || user.emailId ? contactNo ? contactNo : '' : '';
     }
     if(document.getElementById('phone')){
