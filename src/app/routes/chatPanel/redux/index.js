@@ -220,6 +220,7 @@ class ChatPanelWithRedux extends PureComponent {
                               value={message}
                               autocorrect="off"
                               placeholder="Type and hit enter to send message"
+                              ref={(input) => { this.nameInput = input; }}
                             />
             </div>
           </div>
@@ -439,6 +440,7 @@ class ChatPanelWithRedux extends PureComponent {
    }
   }
 
+ 
   updateSearchChatUser(evt) {
     this.props.updateSearchChatUser(evt.target.value);
     this.props.filterUsers(evt.target.value);
@@ -451,6 +453,9 @@ class ChatPanelWithRedux extends PureComponent {
   
   render() {
     const {loader, userState, drawerState} = this.props;
+    if(this.nameInput){
+      this.nameInput.focus();
+    }
     return (
       <div className="app-wrapper app-wrapper-module">
         <div className="app-module chat-module animated slideInUpTiny animation-duration-3">
