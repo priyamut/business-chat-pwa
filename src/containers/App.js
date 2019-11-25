@@ -24,6 +24,7 @@ from './../helpers/AppConstant';
 import Conversation from 'components/chatPanel/Conversation/index';
 import Moment from 'moment';
 import {isIOS, isMobile} from 'react-device-detect';
+import {userSignOut} from 'actions/Auth';
 
 import {
   updateConversation,
@@ -57,6 +58,60 @@ class App extends Component {
       globalVariables: {},
       conversation: {}
     }
+
+    this.events = [
+      "load",
+      "mousemove",
+      "mousedown",
+      "click",
+      "scroll",
+      "keypress"
+    ];
+    
+    this.warn = this.warn.bind(this);
+    this.logout = this.logout.bind(this);
+    this.resetTimeout = this.resetTimeout.bind(this);
+
+    for (var i in this.events) {
+      window.addEventListener(this.events[i], this.resetTimeout);
+    }
+
+    this.setTimeout();
+  }
+ 
+  clearTimeout() {
+    if (this.warnTimeout) clearTimeout(this.warnTimeout);
+    if (this.logoutTimeout) clearTimeout(this.logoutTimeout);
+  }
+
+  setTimeout() {
+    this.warnTimeout = setTimeout(this.warn, 60 * 60000);
+    this.logoutTimeout = setTimeout(this.logout,  30 * 24 * 60 * 60000);// 30 * 24 * 60 * 60000
+  }
+
+  resetTimeout() {
+    this.clearTimeout();
+    this.setTimeout();
+  }
+
+  warn() {
+    //alert("You will be logged out automatically in 1 minute.");
+    if(this.clientRef){
+      this.clientRef.disconnect()
+    }
+  }
+
+  logout() {
+    this.props.userSignOut();
+    this.destroy();
+  }
+
+  destroy() {
+    this.clearTimeout();
+
+    for (var i in this.events) {
+      window.removeEventListener(this.events[i], this.resetTimeout);
+    }
   }
 
   componentWillMount() {
@@ -74,15 +129,7 @@ class App extends Component {
             "mode": "no-cors"
           }
         }
-        // axios.get('https://demo-api.agentz/envInfo',{}, config).then(({data}) => {
-        //     this.setState({
-        //       globalVariables : data
-        //     })
-        //   }).catch(function (error) {
-        //     console.log("Error****:", {error});
-        //   });
-        
-        
+       
           axios.post('business/v1/sessions',{'businessId': 
           localStorage.getItem('businessId')}, config).then(({data}) => {
             this.setState({
@@ -227,4 +274,4 @@ const mapStateToProps = ({settings, auth, chatData}) => {
   return {sideNavColor, token, locale, isDirectionRTL, authUser, initURL,subScribeUSerData,conversation}
 };
 
-  export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation,fetchChatUser,readAlltheChatMessages})(App);
+  export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation,fetchChatUser,readAlltheChatMessages,userSignOut})(App);
