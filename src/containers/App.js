@@ -70,29 +70,22 @@ class App extends Component {
     
     this.warn = this.warn.bind(this);
     this.logout = this.logout.bind(this);
-    this.resetTimeout = this.resetTimeout.bind(this);
 
-    for (var i in this.events) {
-     // window.addEventListener(this.events[i], this.resetTimeout);
-    }
+    
 
-   // this.setTimeout();
+    this.setTimeout();
   }
  
-  clearTimeout() {
+  clearTimeout = () => {
     if (this.warnTimeout) clearTimeout(this.warnTimeout);
     if (this.logoutTimeout) clearTimeout(this.logoutTimeout);
   }
 
-  setTimeout() {
-    this.warnTimeout = setTimeout(this.warn, 60 * 60000);
-    this.logoutTimeout = setTimeout(this.logout,  30 * 24 * 60 * 60000);// 30 * 24 * 60 * 60000
+  setTimeout =()=> {
+    this.warnTimeout = setTimeout(this.warn, 3600000);
+    this.logoutTimeout = setTimeout(this.logout,  2147483647);// 30 * 24 * 60 * 60000
   }
 
-  resetTimeout() {
-    this.clearTimeout();
-    this.setTimeout();
-  }
 
   warn() {
     //alert("You will be logged out automatically in 1 minute.");
@@ -106,12 +99,8 @@ class App extends Component {
     this.destroy();
   }
 
-  destroy() {
+  destroy =()=> {
     this.clearTimeout();
-
-    for (var i in this.events) {
-      window.removeEventListener(this.events[i], this.resetTimeout);
-    }
   }
 
   componentWillMount() {
