@@ -379,6 +379,10 @@
   line-height: 20px;
 
   & .bubble {
+
+    & .message{
+      padding-left: 2px;
+    }
     padding: 10px;
     background-color: lighten($app-primary, 45%);
     //@include box-shadow(0 0 2px rgba(0, 0, 0, .13));
