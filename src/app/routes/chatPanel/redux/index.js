@@ -20,6 +20,8 @@ import {setInitUrl} from './../../../../actions/Auth';
 import {Scrollbars} from 'react-custom-scrollbars';
 import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
 import axios from 'util/Api';
+//import phoneParser from './../../../../extern';
+import { parsePhoneNumberFromString } from 'libphonenumber-js'
 
 import {
   fetchChatUser,
@@ -74,7 +76,8 @@ class ChatPanelWithRedux extends PureComponent {
     }
     if(document.getElementById('selectedContactNo')){
       var div = document.getElementById('selectedContactNo');
-      div.innerHTML =  user.name || user.emailId ? user.contactNo ? user.contactNo : '' : '';
+      let contactNo = this.formatPhoneNumber(user.contactNo);
+      div.innerHTML =  user.name || user.emailId ? contactNo ? contactNo : '' : '';
     }
     if(document.getElementById('phone')){
       var anchor = document.getElementById('phone-anchor');
@@ -91,6 +94,32 @@ class ChatPanelWithRedux extends PureComponent {
     } else {
         alert("Browser does not support HTML5.");
     }
+  }
+
+
+   formatPhoneNumber = (inputStr) => {
+    //Filter only numbers from the input
+    let returnString = inputStr;
+    let returnStr = parsePhoneNumberFromString(inputStr);
+    let phoneNumberString = inputStr;
+    let areaCode = null;
+    if(returnStr){
+     areaCode = returnStr.countryCallingCode ? returnStr.countryCallingCode : null ;
+      phoneNumberString = returnStr.nationalNumber;
+    }else{
+      areaCode = '1';
+    }
+     var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+     var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+     if (match) {
+      returnString = '';
+      if(areaCode){
+        returnString = '+' + areaCode;
+      }
+       returnString =  returnString + ' (' + match[1] + ') ' + match[2] + '-' + match[3];
+     }
+    
+     return returnString;
   }
 
   submitComment = () => {
@@ -466,9 +495,10 @@ class ChatPanelWithRedux extends PureComponent {
             profileDetails.value.forEach(function (item, index) {
               if (index === 0) {
                 tempContactNo = item;
-              } else {
-                tempContactNo += `, ${item}`;
               }
+              //  else {
+              //   tempContactNo += `, ${item}`;
+              // }
             })
             tempJSON[`${profileDetails.name}`] = tempContactNo;
           } else {

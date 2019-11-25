@@ -60,9 +60,10 @@ function constructJson (contactInfo,chatUnreadCount) {
           profileDetails.value.forEach(function (item, index) {
             if (index === 0) {
               tempContactNo = item;
-            } else {
-              tempContactNo += `, ${item}`;
             }
+            //  else {
+            //   tempContactNo += `, ${item}`;
+            // }
           })
           tempJSON[`${profileDetails.name}`] = tempContactNo;
         } else {
