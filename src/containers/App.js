@@ -73,10 +73,10 @@ class App extends Component {
     this.resetTimeout = this.resetTimeout.bind(this);
 
     for (var i in this.events) {
-      window.addEventListener(this.events[i], this.resetTimeout);
+     // window.addEventListener(this.events[i], this.resetTimeout);
     }
 
-    this.setTimeout();
+   // this.setTimeout();
   }
  
   clearTimeout() {
