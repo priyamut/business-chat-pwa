@@ -100,6 +100,9 @@ class ChatPanelWithRedux extends PureComponent {
    formatPhoneNumber = (inputStr) => {
     //Filter only numbers from the input
     let returnString = inputStr;
+    if(!inputStr.startsWith('+') && inputStr.length > 10){
+      inputStr = '+' + inputStr;
+    }
     let returnStr = parsePhoneNumberFromString(inputStr);
     let phoneNumberString = inputStr;
     let areaCode = null;
