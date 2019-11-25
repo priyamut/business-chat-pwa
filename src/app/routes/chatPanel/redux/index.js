@@ -144,7 +144,7 @@ class ChatPanelWithRedux extends PureComponent {
     event.preventDefault();
     const content = event.target.value;
     //let errors = this.state.disabled;
-    if(content.length <= 200){
+    if(content.length <= 200 && content.trim().length > 0){
      // this.setState({disabled: true});
      this.updateMessageValue(event);
     }

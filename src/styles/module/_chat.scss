@@ -324,6 +324,9 @@
   width: 100%;
   flex-basis: 100%;
 }
+.chat-list-scroll > div:first-child{
+ overflow-x: hidden;
+}
 // @media screen and (max-width: 576px){
 //   .chat-main-footer {
 //     margin-bottom: 10px !important;
@@ -344,9 +347,9 @@
   border-radius: 4px;
   border: 1px solid #cecaca;
   margin:0px 0px 2px 2px;
-  -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  // -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  // -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  // box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 
   & .d-flex{
     max-height: 36px !important;
@@ -371,6 +374,7 @@
 
 .chat-item {
   padding: 4px 8px;
+  background: #fff;
 
   & .bubble {
     padding: 10px;
@@ -394,7 +398,7 @@
 
     &:before {
      left: -7px;
-    border-left: 20px solid #E5E5EA;
+    border-left: 20px solid #e4e7f6;
     border-bottom-right-radius: 16px 14px;
     -webkit-transform: translate(0, -2px);
     transform: translate(0, -2px);
@@ -424,7 +428,8 @@
     margin-right: 16px;
     width: fit-content;
     max-width: 266px;
-    
+    min-width: 32px;
+    min-height: 26px;
       @include border-radius(20px);
 
       &:before,
