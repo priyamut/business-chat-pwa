@@ -125,14 +125,12 @@ class App extends Component {
               sessionDetails : data
             })
           }).catch(function (error) {
-           
             console.log("Error****:", {error});
           });
         //}
   }
 
   handleAddToHomescreen = () => {
-    console.log("here")
     alert('1. Open Share menu\n2. Tap on "Add to Home Screen" button');
   };
 

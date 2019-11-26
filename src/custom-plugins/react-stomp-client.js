@@ -48,7 +48,6 @@ class StompClient extends React.Component {
   }
 
   componentDidMount() {
-    console.log('state',this.state)
     this.connect();
   }
 
