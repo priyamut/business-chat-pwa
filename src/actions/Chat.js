@@ -37,7 +37,7 @@ export const fetchChatUser = (businessAgentMappingId) => {
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }
       if(error && error.response && error.response.data && error.response.data.errorMessage){
@@ -66,7 +66,7 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -91,7 +91,7 @@ export const submitComment = (paramData) => {
         dispatch({ type: FETCH_ERROR, payload: data.error });
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request &&  error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -117,7 +117,7 @@ export const sendSms = (paramData,props) => {
         }   
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -218,7 +218,7 @@ export const readAlltheChatMessages = (contactMasterId) => {
     axios.put(`notification/v1/businesses/${localStorage.getItem('businessId')}/notificationcenter/${contactMasterId}/readAll`, {}, config).then(({ data }) => {
 
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
