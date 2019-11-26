@@ -396,7 +396,7 @@ class ChatPanelWithRedux extends PureComponent {
           //  && subScribeUSerData.businessAgents.length >0){
           //   const config = {
           //     headers: {
-          //       'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
+          //       'Authorization': "13c57fd4-5d93-4cdf-8f4d-20d035bb8ee3",
           //       "Content-Type":"application/json",
           //       "Access-Control-Allow-Origin": "*",
           //       "mode": "no-cors"
