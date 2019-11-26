@@ -109,7 +109,6 @@ export const sendSms = (paramData,props) => {
       }
     }).then(({ data }) => {
       if(props.updateConversation){
-        console.log(props.conversation)
         let currentMessage = props.conversation.Sms.find((item) => item.uniqueId === paramData.conversationId);
         if(currentMessage){
           currentMessage.type = undefined;
@@ -205,25 +204,28 @@ export const onChatToggleDrawer = () => {
 };
 
 export const readAlltheChatMessages = (contactMasterId) => {
-
-  const config = {
-    headers: {
-      "idToken": JSON.parse(localStorage.getItem("idToken")),
-      "authorization": JSON.parse(localStorage.getItem("accessToken")),
-      "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
-    }
-  }
-  return (dispatch) => {
-    dispatch({ type: ON_READ_ALL_MESSAGE });
-    axios.put(`notification/v1/businesses/${localStorage.getItem('businessId')}/notificationcenter/${contactMasterId}/readAll`, {}, config).then(({ data }) => {
-
-    }).catch(function (error) {
-      if(error.request && error.request.status === 401){
-        clearStorage();
-      }else if(error && error.response && error.response.data && error.response.data.errorMessage){
-        dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+  console.log('readAlltheChatMessages',JSON.parse(localStorage.getItem("businessMap")))
+  if(JSON.parse(localStorage.getItem("businessMap"))!== null && 
+  JSON.parse(localStorage.getItem("businessMap")).length > 0){
+    const config = {
+      headers: {
+        "idToken": JSON.parse(localStorage.getItem("idToken")),
+        "authorization": JSON.parse(localStorage.getItem("accessToken")),
+        "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
       }
-    });
+    }
+    return (dispatch) => {
+      dispatch({ type: ON_READ_ALL_MESSAGE });
+      axios.put(`notification/v1/businesses/${localStorage.getItem('businessId')}/notificationcenter/${contactMasterId}/readAll`, {}, config).then(({ data }) => {
+  
+      }).catch(function (error) {
+        if(error.request && error.request.status === 401){
+          clearStorage();
+        }else if(error && error.response && error.response.data && error.response.data.errorMessage){
+          dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
+        }
+      });
+    }
   }
 };
 
