@@ -204,7 +204,6 @@ export const onChatToggleDrawer = () => {
 };
 
 export const readAlltheChatMessages = (contactMasterId) => {
-  console.log('readAlltheChatMessages',JSON.parse(localStorage.getItem("businessMap")))
   if(JSON.parse(localStorage.getItem("businessMap"))!== null && 
   JSON.parse(localStorage.getItem("businessMap")).length > 0){
     const config = {
