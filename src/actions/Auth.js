@@ -36,11 +36,10 @@ export const userSignUp = ({name, email, password}) => {
         dispatch({type: USER_TOKEN_SET, payload: data.accessToken});
         dispatch({type: USER_DATA, payload: data.name});
       } else {
-        console.log("payload: data.error", data.error);
         dispatch({type: FETCH_ERROR, payload: "Network Error"});
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -99,7 +98,7 @@ function subScribeUser(dispatch,businessId){
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -127,7 +126,7 @@ export const getUser = () => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
