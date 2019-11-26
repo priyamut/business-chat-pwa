@@ -24,6 +24,7 @@ from './../helpers/AppConstant';
 import Conversation from 'components/chatPanel/Conversation/index';
 import Moment from 'moment';
 import {isIOS, isMobile} from 'react-device-detect';
+import {userSignOut} from 'actions/Auth';
 
 import {
   updateConversation,
@@ -57,6 +58,49 @@ class App extends Component {
       globalVariables: {},
       conversation: {}
     }
+
+    this.events = [
+      "load",
+      "mousemove",
+      "mousedown",
+      "click",
+      "scroll",
+      "keypress"
+    ];
+    
+    this.warn = this.warn.bind(this);
+    this.logout = this.logout.bind(this);
+
+    
+
+    this.setTimeout();
+  }
+ 
+  clearTimeout = () => {
+    if (this.warnTimeout) clearTimeout(this.warnTimeout);
+    if (this.logoutTimeout) clearTimeout(this.logoutTimeout);
+  }
+
+  setTimeout =()=> {
+    this.warnTimeout = setTimeout(this.warn, 3600000);
+    this.logoutTimeout = setTimeout(this.logout,  2147483647);// 30 * 24 * 60 * 60000
+  }
+
+
+  warn() {
+    //alert("You will be logged out automatically in 1 minute.");
+    if(this.clientRef){
+      this.clientRef.disconnect()
+    }
+  }
+
+  logout() {
+    this.props.userSignOut();
+    this.destroy();
+  }
+
+  destroy =()=> {
+    this.clearTimeout();
   }
 
   componentWillMount() {
@@ -68,35 +112,25 @@ class App extends Component {
    
         const config = {
           headers: {
-            'Authorization': "13c57fd4-5d93-4cdf-8f4d-20d035bb8ee3",
+            'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
             "Content-Type":"application/json",
             "Access-Control-Allow-Origin": "*",
             "mode": "no-cors"
           }
         }
-        // axios.get('https://demo-api.agentz/envInfo',{}, config).then(({data}) => {
-        //     this.setState({
-        //       globalVariables : data
-        //     })
-        //   }).catch(function (error) {
-        //     console.log("Error****:", {error});
-        //   });
-        
-        
+       
           axios.post('business/v1/sessions',{'businessId': 
           localStorage.getItem('businessId')}, config).then(({data}) => {
             this.setState({
               sessionDetails : data
             })
           }).catch(function (error) {
-           
             console.log("Error****:", {error});
           });
         //}
   }
 
   handleAddToHomescreen = () => {
-    console.log("here")
     alert('1. Open Share menu\n2. Tap on "Add to Home Screen" button');
   };
 
@@ -136,7 +170,7 @@ class App extends Component {
     }else{
       if(location.pathname.indexOf('/app/chat/') ==0){
         let locate = location.pathname.replace('/app/chat/','');
-        window.open(`https://business.agentz.ai/contacts/${locate}`, "_self");
+        window.open(`https://dev-business.agentz.ai/contacts/${locate}`, "_self");
       }
     }
     
@@ -172,7 +206,7 @@ class App extends Component {
                 </Switch>
                 {sessionDetails.id  && (  
             <StompClient
-              url={`wss://demo2-websocket.agentz.ai/websocket?auth=${sessionDetails.id}`}
+              url={`wss://dev-websocket.agentz.ai/websocket?auth=${sessionDetails.id}`}
               heartbeat={1000 * 30}
               topics={[`${SocketConfig.subscribeTopicPrefix}/${sessionDetails.businessId}`,
               `${SocketConfig.subscribeTopicPrefix}/BUSINESS-${sessionDetails.businessId}`,
@@ -184,7 +218,7 @@ class App extends Component {
               onMessage={(message) => this.onMessageReceive(message)}
               debug={false}
             />
-          )};
+          )}
          
               </div>
             </RTL>
@@ -227,4 +261,4 @@ const mapStateToProps = ({settings, auth, chatData}) => {
   return {sideNavColor, token, locale, isDirectionRTL, authUser, initURL,subScribeUSerData,conversation}
 };
 
-  export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation,fetchChatUser,readAlltheChatMessages})(App);
+  export default connect(mapStateToProps, {setInitUrl, getUser,updateConversation,fetchChatUser,readAlltheChatMessages,userSignOut})(App);

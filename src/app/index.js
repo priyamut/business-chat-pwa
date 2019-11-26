@@ -23,9 +23,8 @@ class App extends React.Component {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
-        this.forceUpdate()
-
-        //window.location.reload();
+        //this.forceUpdate()
+       window.location.reload();
       }, 500);
     });
   }

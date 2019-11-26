@@ -20,7 +20,9 @@ import {setInitUrl} from './../../../../actions/Auth';
 import {Scrollbars} from 'react-custom-scrollbars';
 import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
 import axios from 'util/Api';
-
+//import phoneParser from './../../../../extern';
+import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import Pullable from 'react-pullable';
 import {
   fetchChatUser,
   fetchChatUserConversation,
@@ -70,11 +72,12 @@ class ChatPanelWithRedux extends PureComponent {
     this.ChangeUrl('/app/chat/'+user['id']);
     if(document.getElementById('selectedUser')){
       var div = document.getElementById('selectedUser');
-        div.innerHTML = user.name || user.emailId || user.contactNo;
+        div.innerHTML = user.name || user.emailId || this.formatPhoneNumber(user.contactNo);
     }
     if(document.getElementById('selectedContactNo')){
       var div = document.getElementById('selectedContactNo');
-      div.innerHTML =  user.name || user.emailId ? user.contactNo ? user.contactNo : '' : '';
+      let contactNo = user.contactNo ? this.formatPhoneNumber(user.contactNo) : '';
+      div.innerHTML =  user.name || user.emailId ? contactNo ? contactNo : '' : '';
     }
     if(document.getElementById('phone')){
       var anchor = document.getElementById('phone-anchor');
@@ -93,9 +96,38 @@ class ChatPanelWithRedux extends PureComponent {
     }
   }
 
+
+   formatPhoneNumber = (inputStr) => {
+    //Filter only numbers from the input
+    let returnString = inputStr;
+    if(!inputStr.startsWith('+') && inputStr.length > 10){
+      inputStr = '+' + inputStr;
+    }
+    let returnStr = parsePhoneNumberFromString(inputStr);
+    let phoneNumberString = inputStr;
+    let areaCode = null;
+    if(returnStr){
+     areaCode = returnStr.countryCallingCode ? returnStr.countryCallingCode : null ;
+      phoneNumberString = returnStr.nationalNumber;
+    }else{
+      areaCode = '1';
+    }
+     var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+     var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+     if (match) {
+      returnString = '';
+      if(areaCode){
+        returnString = '+' + areaCode;
+      }
+       returnString =  returnString + ' (' + match[1] + ') ' + match[2] + '-' + match[3];
+     }
+    
+     return returnString;
+  }
+
   submitComment = () => {
     const {subScribeUSerData} = this.props
-    if (this.props.message !== '' && !this.state.disabled && subScribeUSerData && 
+    if (this.props.message.trim().length > 0 && !this.state.disabled && subScribeUSerData && 
     subScribeUSerData.businessAgents && subScribeUSerData.businessAgents.length > 0) {
       const paramData = {
         businessId: localStorage.getItem('businessId'),
@@ -188,6 +220,7 @@ class ChatPanelWithRedux extends PureComponent {
                               value={message}
                               autocorrect="off"
                               placeholder="Type and hit enter to send message"
+                              ref={(input) => { this.nameInput = input; }}
                             />
             </div>
           </div>
@@ -253,6 +286,16 @@ class ChatPanelWithRedux extends PureComponent {
       </div>
     </div>
   };
+
+ 
+  getUpdatedUser =() =>{
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+        this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id)
+      }, 1000);
+    });
+  }
   ChatUsers = () => {
     return <div className="chat-sidenav-main">
       <div className="chat-sidenav-header">
@@ -280,6 +323,7 @@ class ChatPanelWithRedux extends PureComponent {
 
       <div className="chat-sidenav-content">
         <AppBar position="static" className="no-shadow chat-tabs-header">
+          <Pullable className="test" onRefresh={() => this.getUpdatedUser()}>
           <Tabs
             className="chat-tabs"
             value={this.state.selectedTabIndex}
@@ -288,14 +332,15 @@ class ChatPanelWithRedux extends PureComponent {
             textColor="primary"
             fullWidth
           >
+            
             <Tab label={<IntlMessages id="chat.contacts"/>}/>
-            {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
+        </Pullable>
         </AppBar>
         <SwipeableViews
           index={this.state.selectedTabIndex}
           onChangeIndex={this.handleChangeIndex}
-        >
+          >
           <CustomScrollbars className="chat-sidenav-scroll scrollbar"
                             style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 146px)'}}>
             {this.props.chatUsers.length === 0 ?
@@ -407,6 +452,7 @@ class ChatPanelWithRedux extends PureComponent {
    }
   }
 
+ 
   updateSearchChatUser(evt) {
     this.props.updateSearchChatUser(evt.target.value);
     this.props.filterUsers(evt.target.value);
@@ -419,6 +465,9 @@ class ChatPanelWithRedux extends PureComponent {
   
   render() {
     const {loader, userState, drawerState} = this.props;
+    // if(this.nameInput){
+    //   this.nameInput.focus();
+    // }
     return (
       <div className="app-wrapper app-wrapper-module">
         <div className="app-module chat-module animated slideInUpTiny animation-duration-3">
@@ -466,9 +515,10 @@ class ChatPanelWithRedux extends PureComponent {
             profileDetails.value.forEach(function (item, index) {
               if (index === 0) {
                 tempContactNo = item;
-              } else {
-                tempContactNo += `, ${item}`;
               }
+              //  else {
+              //   tempContactNo += `, ${item}`;
+              // }
             })
             tempJSON[`${profileDetails.name}`] = tempContactNo;
           } else {

@@ -36,11 +36,10 @@ export const userSignUp = ({name, email, password}) => {
         dispatch({type: USER_TOKEN_SET, payload: data.accessToken});
         dispatch({type: USER_DATA, payload: data.name});
       } else {
-        console.log("payload: data.error", data.error);
         dispatch({type: FETCH_ERROR, payload: "Network Error"});
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -52,7 +51,7 @@ export const userSignUp = ({name, email, password}) => {
 export const userSignIn = ({email, password}) => {
   const config = {
     headers: {
-      'Authorization': "13c57fd4-5d93-4cdf-8f4d-20d035bb8ee3",
+      'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
       "Content-Type":"application/json",
       "Access-Control-Allow-Origin": "*",
       "mode": "no-cors"
@@ -99,7 +98,7 @@ function subScribeUser(dispatch,businessId){
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -127,7 +126,7 @@ export const getUser = () => {
         dispatch({type: FETCH_ERROR, payload: data.error});
       }
     }).catch(function (error) {
-      if(error.request.status === 401){
+      if(error.request && error.request.status === 401){
         clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
@@ -142,14 +141,7 @@ export const userSignOut = () => {
     dispatch({type: SIGNOUT_USER});
     let idToken = localStorage.getItem("idToken");
     let accessToken = localStorage.getItem("accessToken");
-    localStorage.removeItem("token");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("idToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("businessId");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("name");
-    localStorage.removeItem("businessMap");
+    clearStorage()
         dispatch({type: SIGNOUT_USER_SUCCESS});
     axios.post('iam/v1/logout',{}, {headers: {
       "idToken": JSON.parse(idToken),
