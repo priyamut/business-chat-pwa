@@ -92,7 +92,7 @@ export const submitComment = (paramData) => {
       }
     }).catch(function (error) {
       if(error.request.status === 401){
-        this.clearStorage();
+        clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }
@@ -118,7 +118,7 @@ export const sendSms = (paramData,props) => {
       }
     }).catch(function (error) {
       if(error.request.status === 401){
-        this.clearStorage();
+        clearStorage();
       }else if(error && error.response && error.response.data && error.response.data.errorMessage){
         dispatch({type: FETCH_ERROR, payload: error.response.data.errorMessage});
       }

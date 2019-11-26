@@ -127,7 +127,7 @@ class ChatPanelWithRedux extends PureComponent {
 
   submitComment = () => {
     const {subScribeUSerData} = this.props
-    if (this.props.message !== '' && !this.state.disabled && subScribeUSerData && 
+    if (this.props.message.trim().length > 0 && !this.state.disabled && subScribeUSerData && 
     subScribeUSerData.businessAgents && subScribeUSerData.businessAgents.length > 0) {
       const paramData = {
         businessId: localStorage.getItem('businessId'),
@@ -144,7 +144,7 @@ class ChatPanelWithRedux extends PureComponent {
     event.preventDefault();
     const content = event.target.value;
     //let errors = this.state.disabled;
-    if(content.length <= 200 && content.trim().length > 0){
+    if(content.length <= 200){
      // this.setState({disabled: true});
      this.updateMessageValue(event);
     }
@@ -453,9 +453,9 @@ class ChatPanelWithRedux extends PureComponent {
   
   render() {
     const {loader, userState, drawerState} = this.props;
-    if(this.nameInput){
-      this.nameInput.focus();
-    }
+    // if(this.nameInput){
+    //   this.nameInput.focus();
+    // }
     return (
       <div className="app-wrapper app-wrapper-module">
         <div className="app-module chat-module animated slideInUpTiny animation-duration-3">
