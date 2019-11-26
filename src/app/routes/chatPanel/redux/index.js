@@ -22,7 +22,7 @@ import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
 import axios from 'util/Api';
 //import phoneParser from './../../../../extern';
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
-
+import Pullable from 'react-pullable';
 import {
   fetchChatUser,
   fetchChatUserConversation,
@@ -286,6 +286,16 @@ class ChatPanelWithRedux extends PureComponent {
       </div>
     </div>
   };
+
+ 
+  getUpdatedUser =() =>{
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+        this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id)
+      }, 1000);
+    });
+  }
   ChatUsers = () => {
     return <div className="chat-sidenav-main">
       <div className="chat-sidenav-header">
@@ -313,6 +323,7 @@ class ChatPanelWithRedux extends PureComponent {
 
       <div className="chat-sidenav-content">
         <AppBar position="static" className="no-shadow chat-tabs-header">
+          <Pullable className="test" onRefresh={() => this.getUpdatedUser()}>
           <Tabs
             className="chat-tabs"
             value={this.state.selectedTabIndex}
@@ -321,14 +332,15 @@ class ChatPanelWithRedux extends PureComponent {
             textColor="primary"
             fullWidth
           >
+            
             <Tab label={<IntlMessages id="chat.contacts"/>}/>
-            {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
+        </Pullable>
         </AppBar>
         <SwipeableViews
           index={this.state.selectedTabIndex}
           onChangeIndex={this.handleChangeIndex}
-        >
+          >
           <CustomScrollbars className="chat-sidenav-scroll scrollbar"
                             style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 146px)'}}>
             {this.props.chatUsers.length === 0 ?
