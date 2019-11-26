@@ -218,7 +218,7 @@ class App extends Component {
               onMessage={(message) => this.onMessageReceive(message)}
               debug={false}
             />
-          )};
+          )}
          
               </div>
             </RTL>
