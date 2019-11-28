@@ -178,7 +178,16 @@ class ChatPanelWithRedux extends PureComponent {
     const {message, conversation} = this.props;
     const {Sms} = conversation;
     let selectedUser = conversation.user;
-    
+    const groupBy = (array, key) => {
+      return array.reduce((result, currentValue) => {
+        var value = new Date(currentValue[key]).toDateString();
+        (result[value] = result[value] || []).push(
+          currentValue
+        );
+        return result;
+      }, {}); 
+    };
+    const conversationFormed = groupBy(Sms, 'time');
     return <div className="chat-main">
       <Scrollbars className="chat-list-scroll scrollbar"
                         style={{height: 'calc(100vh - 222px)'}} onUpdate={this.scrollComponentTobottom} ref={c => { this.scrollComponent = c }}>
@@ -202,7 +211,7 @@ class ChatPanelWithRedux extends PureComponent {
             <IntlMessages id="chat.noContactNoForthisUser"/>
             </h3></React.Fragment>)}
             </div>
-            : <Conversation conversationData={Sms}
+            : <Conversation conversationData={conversationFormed}
             selectedUser={selectedUser} property={this.props} />}
 
         
