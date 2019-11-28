@@ -112,7 +112,7 @@ class App extends Component {
    
         const config = {
           headers: {
-            'Authorization': "13c57fd4-5d93-4cdf-8f4d-20d035bb8ee3",
+            'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
             "Content-Type":"application/json",
             "Access-Control-Allow-Origin": "*",
             "mode": "no-cors"
@@ -170,7 +170,7 @@ class App extends Component {
     }else{
       if(location.pathname.indexOf('/app/chat/') ==0){
         let locate = location.pathname.replace('/app/chat/','');
-        window.open(`https://business.agentz.ai/contacts/${locate}`, "_self");
+        window.open(`https://dev-business.agentz.ai/contacts/${locate}`, "_self");
       }
     }
     
@@ -206,7 +206,7 @@ class App extends Component {
                 </Switch>
                 {sessionDetails.id  && (  
             <StompClient
-              url={`wss://demo2-websocket.agentz.ai/websocket?auth=${sessionDetails.id}`}
+              url={`wss://dev-websocket.agentz.ai/websocket?auth=${sessionDetails.id}`}
               heartbeat={1000 * 30}
               topics={[`${SocketConfig.subscribeTopicPrefix}/${sessionDetails.businessId}`,
               `${SocketConfig.subscribeTopicPrefix}/BUSINESS-${sessionDetails.businessId}`,

@@ -7,7 +7,7 @@ import { showMessage } from 'actions/Common';
 
 const SentMessageCell = ({ conversation, property }) => {
   var date1 = moment(conversation.time);
-  var dateComponent = date1.local().format('lll');
+  var dateComponent = date1.local().format('LT');
 
 
   return (

@@ -4,7 +4,7 @@ import moment from 'moment';
 const ReceivedMessageCell = ({conversation, user}) => {
   let date  = new Date(conversation.time); 
 var date1 = moment(conversation.time);
-var dateComponent = date1.local().format('lll');
+var dateComponent = date1.local().format('LT');
   
   return (
     <div className="d-flex flex-nowrap chat-item">

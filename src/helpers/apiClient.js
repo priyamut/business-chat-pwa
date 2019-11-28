@@ -47,7 +47,7 @@ export default function apiClient(req) {
         return conf;
       }
       // if(conf.url.endsWith('/domains/publishedagents')){ //||conf.url.endsWith('/demotrial')){
-      //   conf.headers.authorization = "13c57fd4-5d93-4cdf-8f4d-20d035bb8ee3";//config.serviceToken;
+      //   conf.headers.authorization = "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb";//config.serviceToken;
       //   return conf;
       // }
       if (__SERVER__) {
