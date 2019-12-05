@@ -73,7 +73,7 @@ class App extends Component {
 
     
 
-    this.setTimeout();
+    //this.setTimeout();
   }
  
   clearTimeout = () => {
@@ -155,6 +155,7 @@ class App extends Component {
     }
   }
   render() {
+    console.log("props",this.props)
     const {sessionDetails, globalVariables} = this.state;
     const {match, location, locale, token, initURL, isDirectionRTL,subScribeUSerData} = this.props;
     if(isMobile){
@@ -233,16 +234,31 @@ class App extends Component {
   onMessageReceive = response => {
     if(response.hasOwnProperty('text')){
     const {subScribeUSerData} = this.props
+    console.log({response})
     if(this.props.conversation && this.props.conversation.user && 
         response.contactMasterId == this.props.conversation.user.id){
       let conversation = JSON.parse(JSON.stringify(this.props.conversation));
-      const updatedConversation = conversation.Sms.concat({
-        'messageType': response.type,
-        'incomingSms': {message: JSON.parse(response.text).message,
-          fromNumber: JSON.parse(response.text).fromNumber},
-        'time': response.createdDate,
-      });
-      conversation.Sms = updatedConversation;
+      
+      var updatedConversation;
+
+      if(response.type === 'INCOMING_SMS'){
+         updatedConversation = conversation.Sms.concat({
+           'id' : response.id,
+          'messageType': response.type,
+          'incomingSms': {message: JSON.parse(response.text).message,
+            fromNumber: JSON.parse(response.text).fromNumber},
+          'time': response.createdDate,
+        });
+      }else{
+        updatedConversation = conversation.Sms.concat({
+          'id' : response.id,
+          'messageType': response.type,
+          'outGoingSms': {message: JSON.parse(response.text).message,
+            "toNum": JSON.parse(response.text).smsRecipients[0].toNum},
+          'time': response.createdDate,
+        });
+      }  
+      conversation.Sms = [...new Map(updatedConversation.map(item => [item["id"], item])).values()];
       this.props.updateConversation(conversation);
       this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
       this.props.readAlltheChatMessages(this.props.conversation.user.id);
