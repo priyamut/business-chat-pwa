@@ -182,7 +182,6 @@ export default (state = INIT_STATE, action) => {
       var updatedConversation  =  state.conversation.Sms;
       
       if(!navigator.onLine) {
-        debugger
         updatedConversation = state.conversation.Sms.concat({
           'messageType': "OUTGOING_SMS",
           'outGoingSms': {
