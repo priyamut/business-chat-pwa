@@ -17,7 +17,7 @@ import {getUser, setInitUrl} from '../actions/Auth';
 import RTL from 'util/RTL';
 import axios from 'util/Api';
 import AddToHomescreen from 'react-add-to-homescreen';
-import StompClient from './../custom-plugins/react-stomp-client';
+//import StompClient from './../custom-plugins/react-stomp-client';
 
 import {SocketConfig} 
 from './../helpers/AppConstant';
@@ -205,7 +205,7 @@ class App extends Component {
                   <Route
                     component={asyncComponent(() => import('components/Error404'))}/>
                 </Switch>
-                {sessionDetails.id  && (  
+                {/* {sessionDetails.id  && (  
             <StompClient
               url={`wss://dev-websocket.agentz.ai/websocket?auth=${sessionDetails.id}`}
               heartbeat={1000 * 30}
@@ -219,7 +219,7 @@ class App extends Component {
               onMessage={(message) => this.onMessageReceive(message)}
               debug={false}
             />
-          )}
+          )} */}
          
               </div>
             </RTL>
