@@ -15,8 +15,8 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/?homescreen=1",
+  "start_url": "/signin",
   "display": "standalone",
-  "background_color": "#ffff",
+  "background_color": "#fff",
   "theme_color": "#00bcd4"
 }
