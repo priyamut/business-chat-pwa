@@ -1,7 +1,6 @@
 import Moment from 'moment';
 import users from 'app/routes/chatPanel/data/chatUsers';
 import conversationList from 'app/routes/chatPanel/data/conversationList';
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import {
   FETCH_ALL_CHAT_USER_CONVERSATION_SUCCESS,
   FETCH_ALL_CHAT_USER_SUCCESS,
@@ -36,33 +35,7 @@ const INIT_STATE = {
   conversation: [],
   chatUnreadCount  : {}
 };
-function formatPhoneNumber(inputStr){
-  //Filter only numbers from the input
-  let returnString = inputStr;
-  if(!inputStr.startsWith('+') && inputStr.length > 10){
-    inputStr = '+' + inputStr;
-  }
-  let returnStr = parsePhoneNumberFromString(inputStr);
-  let phoneNumberString = inputStr;
-  let areaCode = null;
-  if(returnStr){
-   areaCode = returnStr.countryCallingCode ? returnStr.countryCallingCode : null ;
-    phoneNumberString = returnStr.nationalNumber;
-  }else{
-    areaCode = '1';
-  }
-   var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
-   var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
-   if (match) {
-    returnString = '';
-    if(areaCode){
-      returnString = '+' + areaCode;
-    }
-     returnString =  returnString + ' (' + match[1] + ') ' + match[2] + '-' + match[3];
-   }
-  
-   return returnString;
-}
+
 
 function constructJson (contactInfo,chatUnreadCount) {
   let tempJSON = {};
@@ -92,9 +65,9 @@ function constructJson (contactInfo,chatUnreadCount) {
             //   tempContactNo += `, ${item}`;
             // }
           })
-          tempJSON[`${profileDetails.name}`] = formatPhoneNumber(tempContactNo);
+          tempJSON[`${profileDetails.name}`] = tempContactNo;
         } else {
-          tempJSON[`${profileDetails.name}`] = formatPhoneNumber(profileDetails.value[0]);
+          tempJSON[`${profileDetails.name}`] = profileDetails.value[0];
         }
       } else if (profileDetails.name === 'emailId') {
         if (profileDetails.value.length > 1) {
