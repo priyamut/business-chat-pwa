@@ -1,18 +1,10 @@
 import React, {Component} from 'react';
 import ReceivedMessageCell from "./ReceivedMessageCell/index";
 import SentMessageCell from "./SentMessageCell/index";
+import moment from 'moment';
 class  Conversation extends Component {
   formBreakDate = (date)=>{
-    var currentDate = new Date();
-    if(date === currentDate.toDateString()){
-      date = 'Today';
-    }
-    var previousDate = new Date(date);
-    if(previousDate.getFullYear() === currentDate.getFullYear() &&
-       previousDate.getMonth() === currentDate.getMonth() && 
-       previousDate.getDate() === (currentDate.getDate() -1)){
-         date = 'Yesterday';
-       }
+    
     return(
       <div className="break-date">
         <div className="date-break-tag-before"></div>
