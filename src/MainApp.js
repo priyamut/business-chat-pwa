@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {Route, Switch} from 'react-router-dom';
 
 import configureStore, {history} from './store';
-import './firebase/firebase';
+//import './firebase/firebase';
 import App from './containers/App';
 
 export const store = configureStore();

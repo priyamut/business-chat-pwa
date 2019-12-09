@@ -34,7 +34,8 @@ const INIT_STATE = {
   chatUsers: [],
   conversationList: [],
   conversation: [],
-  chatUnreadCount  : {}
+  chatUnreadCount  : {},
+  sendMessageCounter:0
 };
 function formatPhoneNumber(inputStr){
   //Filter only numbers from the input
@@ -204,17 +205,21 @@ export default (state = INIT_STATE, action) => {
     }
 
     case SUBMIT_COMMENT: {
-      const updatedConversation = state.conversation.Sms.concat({
-        'messageType': "OUTGOING_SMS",
-        'outGoingSms': {
-          'message': state.message,
-          'smsReceipients': [{'toNum': "+15107562524"}]
-        },
-        'time': Moment().format('YYYY-MM-DDTHH:mm:ss'),
-         ...(!navigator.onLine && {"type" : true}),
-         'uniqueId':Math.random().toString(36).substring(7)
-      });
 
+      var updatedConversation  =  state.conversation.Sms;
+      
+      if(!navigator.onLine) {
+        updatedConversation = state.conversation.Sms.concat({
+          'messageType': "OUTGOING_SMS",
+          'outGoingSms': {
+            'message': state.message,
+            'smsReceipients': [{'toNum': "+15107562524"}]
+          },
+          'time': Moment().format('YYYY-MM-DDTHH:mm:ss'),
+           ...(!navigator.onLine && {"type" : true}),
+           'uniqueId':Math.random().toString(36).substring(7)
+        });
+      }
       return {
         ...state,
         conversation: {
@@ -228,7 +233,8 @@ export default (state = INIT_STATE, action) => {
           } else {
             return Sms;
           }
-        })
+        }),
+        sendMessageCounter: state.sendMessageCounter ++ 
 
       }
     }
