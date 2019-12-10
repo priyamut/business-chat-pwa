@@ -28,9 +28,9 @@ class  Conversation extends Component {
         <div>
           
           {this.formBreakDate(key)}
-        {conversationData[key].map((convo, index) => convo.messageType === 'OUTGOING_SMS' ?
-        (<div> <SentMessageCell key={index} conversation={convo} property={property}/> </div> ):
-        (<div> <ReceivedMessageCell key={index} conversation={convo} user={selectedUser}/></div>))
+        {conversationData[key].map((convo, index) => convo.messageType === 'INCOMING_SMS' || convo.messageType === 'BUSINESS_SMS' ?
+       (<div> <ReceivedMessageCell key={index} conversation={convo} user={selectedUser}/></div>):
+        (<div> <SentMessageCell key={index} conversation={convo} property={property}/> </div> ))
 
            }
           </div>

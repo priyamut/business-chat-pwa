@@ -112,6 +112,34 @@ class ChatPanelWithRedux extends PureComponent {
     }
   };
 
+  componentDidMount(){
+  window.addEventListener('online', this.updateOnlineStatus);
+  window.addEventListener('offline', this.updateOnlineStatus);
+  }
+
+
+   updateOnlineStatus = ( event )=> {
+    if (navigator.onLine && !this.state.networkFlag) {
+      this.setState({
+        networkFlag : true
+      },()=>{
+        if(navigator.onLine){
+          if(this.props.selectedSectionId){
+            setTimeout(() => {
+              this.onSelectUser(this.props.conversation.user)
+            }, 3000);
+          }
+        }
+      })
+      console.log('device is now online');
+    } else {
+      console.log('device is now offline');
+      this.setState({
+        networkFlag : false
+      })
+    }
+  }
+
   handleCommentChange = (event) => {
     event.preventDefault();
     const content = event.target.value;
@@ -436,7 +464,8 @@ class ChatPanelWithRedux extends PureComponent {
     this.state = {
       selectedTabIndex: 0,
       disabled: false,
-      scrollFlg: true
+      scrollFlg: true,
+      networkFlag:true,
     }
     this.scrollComponent = React.createRef();
   }

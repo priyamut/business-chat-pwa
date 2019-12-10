@@ -155,7 +155,6 @@ class App extends Component {
     }
   }
   render() {
-    console.log("props",this.props)
     const {sessionDetails, globalVariables} = this.state;
     const {match, location, locale, token, initURL, isDirectionRTL,subScribeUSerData} = this.props;
     if(isMobile){
@@ -234,14 +233,13 @@ class App extends Component {
   onMessageReceive = response => {
     if(response.hasOwnProperty('text')){
     const {subScribeUSerData} = this.props
-    console.log({response})
     if(this.props.conversation && this.props.conversation.user && 
         response.contactMasterId == this.props.conversation.user.id){
       let conversation = JSON.parse(JSON.stringify(this.props.conversation));
       
       var updatedConversation;
-
-      if(response.type === 'INCOMING_SMS'){
+      if(response.type === 'INCOMING_SMS' || response.type === 'BUSINESS_SMS'){
+        
          updatedConversation = conversation.Sms.concat({
            'id' : response.id,
           'messageType': response.type,
