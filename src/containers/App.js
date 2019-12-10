@@ -239,7 +239,7 @@ class App extends Component {
       
       var updatedConversation;
       if(response.type === 'INCOMING_SMS' || response.type === 'BUSINESS_SMS'){
-        
+        console.log("response",response)
          updatedConversation = conversation.Sms.concat({
            'id' : response.id,
           'messageType': response.type,
@@ -247,14 +247,18 @@ class App extends Component {
             fromNumber: JSON.parse(response.text).fromNumber},
           'time': response.createdDate,
         });
+
       }else{
-        updatedConversation = conversation.Sms.concat({
-          'id' : response.id,
-          'messageType': response.type,
-          'outGoingSms': {message: JSON.parse(response.text).message,
-            "toNum": JSON.parse(response.text).smsRecipients[0].toNum},
-          'time': response.createdDate,
-        });
+        if(response.type === 'OUTGOING_SMS'){
+          updatedConversation = conversation.Sms.concat({
+            'id' : response.id,
+            'messageType': response.type,
+            'outGoingSms': {message: JSON.parse(response.text).message,
+              "toNum": JSON.parse(response.text).smsRecipients[0].toNum},
+            'time': response.createdDate,
+          });
+        }
+
       }  
       conversation.Sms = [...new Map(updatedConversation.map(item => [item["id"], item])).values()];
       this.props.updateConversation(conversation);
