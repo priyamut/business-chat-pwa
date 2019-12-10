@@ -135,6 +135,7 @@ class ChatPanelWithRedux extends PureComponent {
           chatFooter[0].style.lineHeight = clientHeight + 32 + 'px';
       }
     }
+    
   }
   scrollToBottom = () => {
     var scroll = document.getElementsByClassName('chat-list-scroll', 'chat-box-main');
