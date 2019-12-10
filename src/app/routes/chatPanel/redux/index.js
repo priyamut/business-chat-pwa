@@ -149,7 +149,16 @@ class ChatPanelWithRedux extends PureComponent {
       this.updateMessageValue(event);
     }
   }
-
+  handleOnInput = (event)=>{
+    if(event.target instanceof Element &&  event.target.value.length < 200){
+      event.target.style.height = 'auto';
+      var clientHeight = event.target.scrollHeight;
+      if(clientHeight > 200){
+        clientHeight = 200;
+      }
+      event.target.style.height = clientHeight + 'px';
+    }
+  }
   scrollToBottom = () => {
     var scroll = document.getElementsByClassName('chat-list-scroll', 'chat-box-main');
     if (scroll && scroll[0] instanceof Element) {
@@ -240,6 +249,7 @@ class ChatPanelWithRedux extends PureComponent {
               <textarea
                 id="required" className="border-0 form-control chat-textarea"
                 onKeyUp={this._handleKeyPress.bind(this)}
+                onInput = {this.handleOnInput.bind(this)}
                 //onChange={this.updateMessageValue.bind(this)}
                 onChange={this.handleCommentChange.bind(this)} noValidate
                 value={message}

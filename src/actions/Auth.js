@@ -49,6 +49,7 @@ export const userSignUp = ({name, email, password}) => {
 };
 
 export const userSignIn = ({email, password}) => {
+  email = email ? email.toLowerCase() : '';
   const config = {
     headers: {
       'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
