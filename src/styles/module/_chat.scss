@@ -169,29 +169,33 @@
   & .chat-item {
     flex-direction: column !important;
   }
-  & .break-date{
+
+  & .break-date {
     display: flex;
     align-items: center;
-     & .date-break-tag-before{
+
+    & .date-break-tag-before {
       width: calc(96%);
       border: 0.5px solid lightgrey;
       margin-left: 1%;
       height: 1px;
-     }
-     & .text-span{
+    }
+
+    & .text-span {
       align-self: center;
       padding: 0 8px;
       color: #333;
       font-size: 12px;
       white-space: nowrap;
       font-weight: bold;
-     }
-     & .date-break-tag-after{
+    }
+
+    & .date-break-tag-after {
       width: calc(96%);
       border: 0.5px solid lightgrey;
       height: 1px;
       margin-right: 1%;
-     }
+    }
   }
 }
 
@@ -662,4 +666,30 @@ body {
   font-family: sans-serif !important;
   font-size: 15px;
   color: #333;
+}
+
+.chat-band {
+  background-color: #DBEFF9;
+  border-radius: 130px;
+  padding: 16px;
+  margin: 20px;
+  color: #404040;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: .19px;
+  height: 80px;
+  text-align: center;
+  margin-bottom: 0px;
+}
+.band-time{
+  width: fit-content;
+  font-size: 10px;
+  font-weight: 400;
+  float: right;
+  position: relative;
+  margin-right: 32px;
+  padding-top: 4px;
+   & .time {
+    color:black
+    }
 }

@@ -6,6 +6,7 @@ const SocketConfig = {
     leave: '/app/chat.leave',
     archive: '/app/chat.archive',
     event: '/app/chat.event',
+    sms:'/chat.connectthroughsms',
     heartbeat: 10
 };
 

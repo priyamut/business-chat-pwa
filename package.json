@@ -90,7 +90,8 @@
     "save": "^2.4.0",
     "slick-carousel": "^1.8.1",
     "typeface-roboto": "^0.0.54",
-    "url-search-params": "^1.1.0"
+    "url-search-params": "^1.1.0",
+    "uuidv4": "^6.0.0"
   },
   "scripts": {
     "start": "react-scripts start node ./bin/server.js",
