@@ -94,8 +94,10 @@ function constructJson (contactInfo,chatUnreadCount) {
             // }
           })
           tempJSON[`${profileDetails.name}`] = formatPhoneNumber(tempContactNo);
+          tempJSON[`actualContactNo`] = tempContactNo;
         } else {
           tempJSON[`${profileDetails.name}`] = formatPhoneNumber(profileDetails.value[0]);
+          tempJSON[`actualContactNo`] = profileDetails.value[0];
         }
       } else if (profileDetails.name === 'emailId') {
         if (profileDetails.value.length > 1) {
