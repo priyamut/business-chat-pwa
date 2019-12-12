@@ -70,7 +70,8 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   changeContactDetails(user) {
-    this.ChangeUrl('/app/chat/' + user['id']);
+    var appendUrl = user['actualContactNo'] ? user['actualContactNo'] : user['id'];
+    this.ChangeUrl('/app/chat/' + appendUrl);
     if (document.getElementById('selectedUser')) {
       var div = document.getElementById('selectedUser');
       div.innerHTML = user.name || user.emailId || user.contactNo;
@@ -401,11 +402,15 @@ class ChatPanelWithRedux extends PureComponent {
     if (nextProps.chatUsers.length > 0 && subScribeUSerData && this.state.scrollFlg) {
       if (location && location.pathname.replace('/app/chat/', '') !== '' &&
         location.pathname.replace('/app/chat', '') !== '') {
-        const user = nextProps.chatUsers.find((item) => item.id ===
+        var user = nextProps.chatUsers.find((item) => item.actualContactNo ===
           location.pathname.replace('/app/chat/', ''))
-        if (user && (document.getElementById('selectedUser').innerText !== null)) {
-          this.onSelectUser(user);
-        }
+          if(user === null || user === undefined){
+             user = nextProps.chatUsers.find((item) => item.id ===
+               location.pathname.replace('/app/chat/', ''))
+          }
+          if (user && (document.getElementById('selectedUser').innerText !== null)) {
+              this.onSelectUser(user);
+          }
         //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
         //  && subScribeUSerData.businessAgents.length >0){
         //   const config = {
