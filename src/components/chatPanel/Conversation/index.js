@@ -51,10 +51,10 @@ class Conversation extends Component {
       return <RenderBandConversation message={"This contact is requesting live support. Type a message to respond."} time={convo.time} />;
     }
     if (convo.messageType === "TALK_TO_HUMAN_JOINED") {
-      return <RenderBandConversation message={"user has joined the conversation through the business console"} time={convo.time} />;
+      return <RenderBandConversation message={ `${localStorage.getItem('name')} has joined the conversation through the business console.`} time={convo.time} />;
     }
     if (convo.messageType === "TALK_TO_HUMAN_EXIT") {
-      return <RenderBandConversation message={"user has left the conversation from the business console"} time={convo.time} />;
+      return <RenderBandConversation message={`${localStorage.getItem('name')} has left the conversation from the business console`} time={convo.time} />;
     }
   };
 
