@@ -168,14 +168,14 @@ class StompClient extends React.Component {
     this.subscriptions.delete(topic);
   };
 
-  // Below methods can be accessed by ref attribute from the parent component
-  // sendMessage = (topic, msg, opt_headers = {}) => {
-  //   if (this.state.connected) {
-  //     this.client.send(topic, opt_headers, msg);
-  //   } else {
-  //     console.error('Send error: StompClient is disconnected');
-  //   }
-  // };
+ // Below methods can be accessed by ref attribute from the parent component
+  sendMessage = (topic, msg, opt_headers = {}) => {
+    if (this.state.connected) {
+      this.client.send(topic, opt_headers, msg);
+    } else {
+      console.error('Send error: StompClient is disconnected');
+    }
+  };
 }
 
 export default StompClient;
