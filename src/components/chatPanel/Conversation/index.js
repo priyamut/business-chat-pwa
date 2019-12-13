@@ -13,6 +13,18 @@ class Conversation extends Component {
       </div>
     );
   };
+
+  appendNewUser = (convo,selectedUser) =>{
+    if(selectedUser.newMessageId === convo.id){
+      return (
+        <div className="break-date">
+          <div className="date-break-tag-before new-message-span"></div>
+          <span className="text-span new-message-span">{'New Message '}</span>
+          <div className="date-break-tag-after new-message-span"></div>
+        </div>
+      );
+    }
+  }
   constructor(props) {
     super(props);
     this.state = {};
@@ -20,6 +32,7 @@ class Conversation extends Component {
   }
 
   renderConversation = (convo, selectedUser, property, index) => {
+    
     if (
       convo.messageType === "INCOMING_SMS" ||
       convo.messageType === "BUSINESS_SMS"
@@ -66,8 +79,14 @@ class Conversation extends Component {
           return (
             <div>
               {this.formBreakDate(key)}
-              {conversationData[key].map((convo, index) =>
-                this.renderConversation(convo, index, selectedUser, property)
+              {conversationData[key].map((convo, index) =>{
+                return(
+                  <div>
+                  {this.appendNewUser(convo,selectedUser)}
+                  {this.renderConversation(convo, index, selectedUser, property)}
+                  </div>
+                )
+              } 
               )}
             </div>
           );
