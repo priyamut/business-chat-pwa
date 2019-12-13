@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ReceivedMessageCell from "./ReceivedMessageCell/index";
 import SentMessageCell from "./SentMessageCell/index";
 import RenderBandConversation from "./RenderBandConversation/index";
-import moment from "moment";
 class Conversation extends Component {
   formBreakDate = date => {
     return (
@@ -61,13 +60,34 @@ class Conversation extends Component {
       );
     }
     if (convo.messageType === "TALK_TO_HUMAN_REQUEST") {
-      return <RenderBandConversation message={"This contact is requesting live support. Type a message to respond."} time={convo.time} />;
+      return (
+        <RenderBandConversation
+          message={
+            "This contact is requesting live support. Type a message to respond."
+          }
+          time={convo.time}
+        />
+      );
     }
     if (convo.messageType === "TALK_TO_HUMAN_JOINED") {
-      return <RenderBandConversation message={ `${localStorage.getItem('name')} has joined the conversation through the business console.`} time={convo.time} />;
+      return (
+        <RenderBandConversation
+          message={`${localStorage.getItem(
+            "name"
+          )} has joined the conversation through the business console.`}
+          time={convo.time}
+        />
+      );
     }
     if (convo.messageType === "TALK_TO_HUMAN_EXIT") {
-      return <RenderBandConversation message={`${localStorage.getItem('name')} has left the conversation from the business console`} time={convo.time} />;
+      return (
+        <RenderBandConversation
+          message={`${localStorage.getItem(
+            "name"
+          )} has left the conversation from the business console`}
+          time={convo.time}
+        />
+      );
     }
   };
 

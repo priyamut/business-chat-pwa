@@ -28,7 +28,9 @@ import { userSignOut } from "actions/Auth";
 import {
   updateConversation,
   fetchChatUser,
-  readAlltheChatMessages
+  readAlltheChatMessages,
+  stompClientSendMessage,
+  updateLiveSupportRequest
 } from "actions/Chat";
 import { uuid } from "uuidv4";
 const RestrictedRoute = ({ component: Component, token, ...rest }) => (
@@ -52,6 +54,7 @@ const RestrictedRoute = ({ component: Component, token, ...rest }) => (
 class App extends Component {
   constructor() {
     super();
+    this.clientRef = React.createRef();
     this.state = {
       sessionDetails: {},
       globalVariables: {},
@@ -116,15 +119,20 @@ class App extends Component {
     };
 
     axios
-      .post(
-        "business/v1/sessions",
-        { businessId: localStorage.getItem("businessId") },
-        config
-      )
+      .post("business/v1/sessions", { businessId }, config)
       .then(({ data }) => {
-        this.setState({
-          sessionDetails: data
-        });
+        this.setState(
+          {
+            sessionDetails: data
+          },
+          () => {
+            if (this.clientRef) {
+              let clientRef = this.clientRef;
+              clientRef["sessionDetails"] = this.state.sessionDetails;
+              this.props.stompClientSendMessage(clientRef);
+            }
+          }
+        );
       })
       .catch(function(error) {
         console.log("Error****:", { error });
@@ -134,28 +142,6 @@ class App extends Component {
 
   handleAddToHomescreen = () => {
     alert('1. Open Share menu\n2. Tap on "Add to Home Screen" button');
-  };
-
-  subscribeTopic = (consumerSessionId, pwaSessionId) => {
-    const subscriptionName = `${pwaSessionId}-${consumerSessionId}`;
-    if (this.clientRef) {
-      this.clientRef.subscribe(
-        `${SocketConfig.subscribeTopicPrefix}/${consumerSessionId}`,
-        this.SubscriptionHeaders(
-          subscriptionName,
-          consumerSessionId,
-          pwaSessionId
-        )
-      );
-    }
-  };
-
-  SubscriptionHeaders = (subscriptionName, topic, sessionId) => {
-    return {
-      "activemq.retroactive": "true",
-      id: `/topic/${topic}`,
-      session: sessionId
-    };
   };
 
   componentWillReceiveProps(nextProps) {
@@ -183,6 +169,7 @@ class App extends Component {
     }
   }
   render() {
+    console.log("props", this.props);
     const { sessionDetails, globalVariables } = this.state;
     const {
       match,
@@ -279,31 +266,21 @@ class App extends Component {
     );
   }
 
-  MessageBuilder = (sessionId, roomId) => {
-    return {
-      clientMessageId: uuid(),
-      roomId: roomId,
-      sessionId: sessionId,
-      sender: {
-        senderType: "BUSINESS",
-        id: sessionId,
-        name: "damon"
-      },
-      serverTime: moment().unix()
-    };
-  };
-
   onMessageReceive = response => {
     if (response.hasOwnProperty("type")) {
-      const { subScribeUSerData } = this.props;
+      const { subScribeUSerData, updatedLiveSupportRequestList } = this.props;
       if (
         this.props.conversation &&
         this.props.conversation.user &&
         response.contactMasterId == this.props.conversation.user.id
       ) {
         let conversation = JSON.parse(JSON.stringify(this.props.conversation));
+        let liveSupport = JSON.parse(
+          JSON.stringify(updatedLiveSupportRequestList)
+        );
 
         var updatedConversation;
+        var newLiveSupportRequest;
         if (
           response.type === "INCOMING_SMS" ||
           response.type === "BUSINESS_SMS"
@@ -337,27 +314,11 @@ class App extends Component {
               time: response.createdDate || moment().format()
             });
 
-            // this.subscribeTopic(
-            //   response.conversationId,
-            //   this.state.sessionDetails.id
-            // );
-            // let message = this.MessageBuilder(
-            //   this.state.sessionDetails.id,
-            //   response.conversationId
-            // );
-            // message.payload = {
-            //   payloadType: "CONNECT_THROUGH_SMS",
-            //   conversationId: response.conversationId,
-            //   sessionId: this.state.sessionDetails.id
-            // };
-            // if (this.clientRef) {
-            //   this.clientRef.sendMessage(
-            //     SocketConfig.leave,
-            //     JSON.stringify(message)
-            //   );
-            // } else {
-            //   console.log("not send");
-            // }
+            newLiveSupportRequest = liveSupport.concat({
+              id: response.contactMasterId,
+              conversationId: response.conversationId,
+              pwsSessionId: this.state.sessionDetails.id
+            });
           }
           if (
             response.type === "TALK_TO_HUMAN_JOINED" ||
@@ -369,6 +330,10 @@ class App extends Component {
               conversationId: response.conversationId,
               time: response.createdDate || moment().format()
             });
+
+            newLiveSupportRequest = liveSupport.filter(
+              el => el.id !== response.contactMasterId
+            );
           }
           if (response.type === "TALK_TO_HUMAN_EXIT") {
             updatedConversation = conversation.Sms.concat({
@@ -377,6 +342,10 @@ class App extends Component {
               conversationId: response.conversationId,
               time: response.createdDate || moment().format()
             });
+
+            newLiveSupportRequest = liveSupport.filter(
+              el => el.id !== response.contactMasterId
+            );
           }
         }
         conversation.Sms = [
@@ -385,6 +354,7 @@ class App extends Component {
           ).values()
         ];
         this.props.updateConversation(conversation);
+        this.props.updateLiveSupportRequest(newLiveSupportRequest);
         this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
         this.props.readAlltheChatMessages(this.props.conversation.user.id);
       } else if (
@@ -401,7 +371,7 @@ class App extends Component {
 const mapStateToProps = ({ settings, auth, chatData }) => {
   const { sideNavColor, locale, isDirectionRTL } = settings;
   const { authUser, token, initURL, subScribeUSerData } = auth;
-  const { conversation } = chatData;
+  const { conversation, updatedLiveSupportRequestList } = chatData;
   return {
     sideNavColor,
     token,
@@ -410,7 +380,8 @@ const mapStateToProps = ({ settings, auth, chatData }) => {
     authUser,
     initURL,
     subScribeUSerData,
-    conversation
+    conversation,
+    updatedLiveSupportRequestList
   };
 };
 
@@ -422,6 +393,8 @@ export default connect(
     updateConversation,
     fetchChatUser,
     readAlltheChatMessages,
-    userSignOut
+    userSignOut,
+    stompClientSendMessage,
+    updateLiveSupportRequest
   }
 )(App);

@@ -14,13 +14,13 @@ import {
   UPDATE_SEARCH_CHAT_USER,
   USER_INFO_STATE,
   FETCH_ERROR,
-  FETCH_ALL_CHAT_USER_UNREAD_COUNT,
   FETCH_START,
   ON_READ_ALL_MESSAGE,
-  UPDATE_SEARCH_CONVERSTAION
+  UPDATE_SEARCH_CONVERSTAION,
+  STOMP_CLIENT_FUNCTION,
+  UPDATE_LIVE_SUPPORT
 } from 'constants/ActionTypes';
 import axios from 'util/Api';
-import {userSignOut} from './../actions/Auth';
 
 export const fetchChatUser = (businessAgentMappingId) => {
   return (dispatch) => {
@@ -191,12 +191,29 @@ export const updateSearchChatUser = (userName) => {
 };
 
 
+export const stompClientSendMessage = (clientRef) => {
+  return {
+    type: STOMP_CLIENT_FUNCTION,
+    payload: clientRef
+  };
+};
+
+
 export const updateConversation = (updatedConversationList) => {
   return {
     type: UPDATE_SEARCH_CONVERSTAION,
     payload: updatedConversationList
   };
 };
+
+
+export const updateLiveSupportRequest = (updatedLiveSupportRequestList) => {
+  return {
+    type: UPDATE_LIVE_SUPPORT,
+    payload: updatedLiveSupportRequestList
+  };
+};
+
 export const onChatToggleDrawer = () => {
   return {
     type: ON_TOGGLE_DRAWER
