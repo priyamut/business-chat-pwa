@@ -19,7 +19,7 @@ class Conversation extends Component {
       return (
         <div className="break-date">
           <div className="date-break-tag-before new-message-span"></div>
-          <span className="text-span new-message-span">{'New Message '}</span>
+          <span className="text-span new-message-span">{'new messages'}</span>
           <div className="date-break-tag-after new-message-span"></div>
         </div>
       );
