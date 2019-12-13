@@ -180,7 +180,7 @@
       margin-left: 1%;
       height: 1px;
       &.new-message-span{
-        border:0.5px solid red;
+        border:0.5px solid #E01E5A;
       }
     }
 
@@ -192,7 +192,7 @@
       white-space: nowrap;
       font-weight: bold;
       &.new-message-span{
-        color:red;
+        color:#E01E5A;
       }
     }
 
@@ -202,7 +202,7 @@
       height: 1px;
       margin-right: 1%;
       &.new-message-span{
-        border:0.5px solid red;
+        border:0.5px solid #E01E5A;
       }
     }
   }
