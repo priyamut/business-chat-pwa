@@ -179,6 +179,9 @@
       border: 0.5px solid lightgrey;
       margin-left: 1%;
       height: 1px;
+      &.new-message-span{
+        border:0.5px solid red;
+      }
     }
 
     & .text-span {
@@ -188,6 +191,9 @@
       font-size: 12px;
       white-space: nowrap;
       font-weight: bold;
+      &.new-message-span{
+        color:red;
+      }
     }
 
     & .date-break-tag-after {
@@ -195,6 +201,9 @@
       border: 0.5px solid lightgrey;
       height: 1px;
       margin-right: 1%;
+      &.new-message-span{
+        border:0.5px solid red;
+      }
     }
   }
 }
