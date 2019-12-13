@@ -179,6 +179,9 @@
       border: 0.5px solid lightgrey;
       margin-left: 1%;
       height: 1px;
+      &.new-message-span{
+        border:0.5px solid #E01E5A;
+      }
     }
 
     & .text-span {
@@ -188,6 +191,9 @@
       font-size: 12px;
       white-space: nowrap;
       font-weight: bold;
+      &.new-message-span{
+        color:#E01E5A;
+      }
     }
 
     & .date-break-tag-after {
@@ -195,6 +201,9 @@
       border: 0.5px solid lightgrey;
       height: 1px;
       margin-right: 1%;
+      &.new-message-span{
+        border:0.5px solid #E01E5A;
+      }
     }
   }
 }
@@ -670,25 +679,25 @@ body {
 
 .chat-band {
   background-color: #DBEFF9;
-  border-radius: 130px;
-  padding:  8px 12px;
-  margin: 20px;
-  color: #404040;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: .19px;
-  text-align: center;
-  margin-bottom: 0px;
+    border-radius: 130px;
+    padding: 8px 12px;
+    margin: 12px;
+    color: #404040;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .19px;
+    text-align: center;
+    margin-bottom: 0px;
 }
 .band-time{
-  width: fit-content;
-  font-size: 10px;
-  font-weight: 400;
-  float: right;
-  position: relative;
-  margin-right: 32px;
-  padding-top: 4px;
+    font-size: 10px;
+    font-weight: 400;
+    position: relative;
+    margin-right: 32px;
+    padding-top: 4px;
+    text-align: right;
    & .time {
-    color:black
+    color:black;
+    float: right;
     }
 }
