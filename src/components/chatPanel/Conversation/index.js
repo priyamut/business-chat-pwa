@@ -81,10 +81,10 @@ class Conversation extends Component {
               {this.formBreakDate(key)}
               {conversationData[key].map((convo, index) =>{
                 return(
-                  <div>
+                  <>
                   {this.appendNewUser(convo,selectedUser)}
                   {this.renderConversation(convo, index, selectedUser, property)}
-                  </div>
+                  </>
                 )
               } 
               )}
