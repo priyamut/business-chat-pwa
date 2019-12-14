@@ -267,6 +267,7 @@ class App extends Component {
   }
 
   onMessageReceive = response => {
+    console.log({ response });
     if (response.hasOwnProperty("type")) {
       const { subScribeUSerData, updatedLiveSupportRequestList } = this.props;
       if (
@@ -275,6 +276,7 @@ class App extends Component {
         response.contactMasterId == this.props.conversation.user.id
       ) {
         let conversation = JSON.parse(JSON.stringify(this.props.conversation));
+
         let liveSupport = JSON.parse(
           JSON.stringify(updatedLiveSupportRequestList)
         );
@@ -319,6 +321,7 @@ class App extends Component {
               conversationId: response.conversationId,
               pwsSessionId: this.state.sessionDetails.id
             });
+            this.props.updateLiveSupportRequest(newLiveSupportRequest);
           }
           if (
             response.type === "TALK_TO_HUMAN_JOINED" ||
@@ -334,6 +337,7 @@ class App extends Component {
             newLiveSupportRequest = liveSupport.filter(
               el => el.id !== response.contactMasterId
             );
+            this.props.updateLiveSupportRequest(newLiveSupportRequest);
           }
           if (response.type === "TALK_TO_HUMAN_EXIT") {
             updatedConversation = conversation.Sms.concat({
@@ -346,6 +350,7 @@ class App extends Component {
             newLiveSupportRequest = liveSupport.filter(
               el => el.id !== response.contactMasterId
             );
+            this.props.updateLiveSupportRequest(newLiveSupportRequest);
           }
         }
         conversation.Sms = [
@@ -354,7 +359,6 @@ class App extends Component {
           ).values()
         ];
         this.props.updateConversation(conversation);
-        this.props.updateLiveSupportRequest(newLiveSupportRequest);
         this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
         this.props.readAlltheChatMessages(this.props.conversation.user.id);
       } else if (
