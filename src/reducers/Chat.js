@@ -83,18 +83,20 @@ function constructJson (contactInfo,chatUnreadCount) {
   {
     contactInfo && contactInfo.contactData.map((profileDetails, i) => {
       if (profileDetails.name === 'contactNo') {
+        let contactList = '';
         if (profileDetails.value.length > 1) {
-          let tempContactNo = '';
+          let tempContactNo = ''; 
           profileDetails.value.forEach(function (item, index) {
             if (index === 0) {
               tempContactNo = item;
+              contactList = item;
             }
-            //  else {
-            //   tempContactNo += `, ${item}`;
-            // }
+             else {
+              contactList += `, ${item}`;
+            }
           })
           tempJSON[`${profileDetails.name}`] = formatPhoneNumber(tempContactNo);
-          tempJSON[`actualContactNo`] = tempContactNo;
+          tempJSON[`actualContactNo`] = contactList;
         } else {
           tempJSON[`${profileDetails.name}`] = formatPhoneNumber(profileDetails.value[0]);
           tempJSON[`actualContactNo`] = profileDetails.value[0];

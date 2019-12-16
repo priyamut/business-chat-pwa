@@ -70,7 +70,8 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   changeContactDetails(user) {
-    var appendUrl = user['actualContactNo'] ? user['actualContactNo'] : user['id'];
+    var appendUrl = user['actualContactNo'] && user['actualContactNo'].split(',').length > 0  && 
+    user['actualContactNo'].split(',')[0] ? user['actualContactNo'].split(',')[0] : user['id'];
     this.ChangeUrl('/app/chat/' + appendUrl);
     if (document.getElementById('selectedUser')) {
       var div = document.getElementById('selectedUser');
@@ -113,19 +114,19 @@ class ChatPanelWithRedux extends PureComponent {
     }
   };
 
-  componentDidMount(){
-  window.addEventListener('online', this.updateOnlineStatus);
-  window.addEventListener('offline', this.updateOnlineStatus);
+  componentDidMount() {
+    window.addEventListener('online', this.updateOnlineStatus);
+    window.addEventListener('offline', this.updateOnlineStatus);
   }
 
 
-   updateOnlineStatus = ( event )=> {
+  updateOnlineStatus = (event) => {
     if (navigator.onLine && !this.state.networkFlag) {
       this.setState({
-        networkFlag : true
-      },()=>{
-        if(navigator.onLine){
-          if(this.props.selectedSectionId){
+        networkFlag: true
+      }, () => {
+        if (navigator.onLine) {
+          if (this.props.selectedSectionId) {
             setTimeout(() => {
               this.onSelectUser(this.props.conversation.user)
             }, 3000);
@@ -136,7 +137,7 @@ class ChatPanelWithRedux extends PureComponent {
     } else {
       console.log('device is now offline');
       this.setState({
-        networkFlag : false
+        networkFlag: false
       })
     }
   }
@@ -150,21 +151,21 @@ class ChatPanelWithRedux extends PureComponent {
       this.updateMessageValue(event);
     }
   }
-  handleOnInput = (event)=>{
-    if(event.target instanceof Element &&  event.target.value.length < 200){
+  handleOnInput = (event) => {
+    if (event.target instanceof Element && event.target.value.length < 200) {
       event.target.style.height = 'auto';
       var clientHeight = event.target.scrollHeight;
-      if(clientHeight > 200){
+      if (clientHeight > 200) {
         clientHeight = 200;
       }
       event.target.style.height = clientHeight + 'px';
       let chatFooter = document.getElementsByClassName('chat-main-footer', 'chat-main');
       if (chatFooter && chatFooter[0] instanceof Element && isIOS) {
-          chatFooter[0].style.height = clientHeight + 32 + 'px';
-          chatFooter[0].style.lineHeight = clientHeight + 32 + 'px';
+        chatFooter[0].style.height = clientHeight + 32 + 'px';
+        chatFooter[0].style.lineHeight = clientHeight + 32 + 'px';
       }
     }
-    
+
   }
   scrollToBottom = () => {
     var scroll = document.getElementsByClassName('chat-list-scroll', 'chat-box-main');
@@ -216,9 +217,9 @@ class ChatPanelWithRedux extends PureComponent {
         return result;
       }, {});
     };
-    if(Sms.length >0 && selectedUser.unreadMessage >0){
+    if (Sms.length > 0 && selectedUser.unreadMessage > 0) {
       var newMsgIdx = Sms.length - selectedUser.unreadMessage;
-      if(Sms.length > newMsgIdx){
+      if (Sms.length > newMsgIdx) {
         var uniqueId = Sms[newMsgIdx]['id'];
         selectedUser['newMessageId'] = uniqueId;
       }
@@ -262,7 +263,7 @@ class ChatPanelWithRedux extends PureComponent {
               <textarea
                 id="required" className="border-0 form-control chat-textarea"
                 onKeyUp={this._handleKeyPress.bind(this)}
-                onInput = {this.handleOnInput.bind(this)}
+                onInput={this.handleOnInput.bind(this)}
                 //onChange={this.updateMessageValue.bind(this)}
                 onChange={this.handleCommentChange.bind(this)} noValidate
                 value={message}
@@ -434,17 +435,21 @@ class ChatPanelWithRedux extends PureComponent {
     const { subScribeUSerData } = this.props
     let location = window.location;
     if (nextProps.chatUsers.length > 0 && subScribeUSerData && this.state.scrollFlg) {
+      var chatUsers = JSON.parse(JSON.stringify(nextProps.chatUsers));
       if (location && location.pathname.replace('/app/chat/', '') !== '' &&
         location.pathname.replace('/app/chat', '') !== '') {
-        var user = nextProps.chatUsers.find((item) => item.actualContactNo ===
-          location.pathname.replace('/app/chat/', ''))
-          if(user === null || user === undefined){
-             user = nextProps.chatUsers.find((item) => item.id ===
-               location.pathname.replace('/app/chat/', ''))
-          }
-          if (user && (document.getElementById('selectedUser').innerText !== null)) {
-              this.onSelectUser(user);
-          }
+        var dataFlg = false;
+        var returnData;
+        var user = chatUsers.find((item) =>  
+            item.actualContactNo && item.actualContactNo.indexOf(location.pathname.replace("/app/chat/", "")) >= 0);
+
+        if (user === null || user === undefined) {
+          user = nextProps.chatUsers.find((item) => item.id ===
+            location.pathname.replace('/app/chat/', ''))
+        }
+        if (user && (document.getElementById('selectedUser').innerText !== null)) {
+          this.onSelectUser(user);
+        }
         //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
         //  && subScribeUSerData.businessAgents.length >0){
         //   const config = {
@@ -492,7 +497,7 @@ class ChatPanelWithRedux extends PureComponent {
       selectedTabIndex: 0,
       disabled: false,
       scrollFlg: true,
-      networkFlag:true,
+      networkFlag: true,
     }
     this.scrollComponent = React.createRef();
   }
