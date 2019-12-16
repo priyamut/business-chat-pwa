@@ -74,9 +74,8 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   changeContactDetails(user) {
-    var appendUrl = user["actualContactNo"]
-      ? user["actualContactNo"]
-      : user["id"];
+    var appendUrl = user['actualContactNo'] && user['actualContactNo'].split(',').length > 0  && 
+    user['actualContactNo'].split(',')[0] ? user['actualContactNo'].split(',')[0] : user['id'];
     this.ChangeUrl("/app/chat/" + appendUrl);
     if (document.getElementById("selectedUser")) {
       var div = document.getElementById("selectedUser");
@@ -533,31 +532,22 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   loadSmsLink(nextProps) {
-    const { subScribeUSerData } = this.props;
+    const { subScribeUSerData } = this.props
     let location = window.location;
-    if (
-      nextProps.chatUsers.length > 0 &&
-      subScribeUSerData &&
-      this.state.scrollFlg
-    ) {
-      if (
-        location &&
-        location.pathname.replace("/app/chat/", "") !== "" &&
-        location.pathname.replace("/app/chat", "") !== ""
-      ) {
-        var user = nextProps.chatUsers.find(
-          item =>
-            item.actualContactNo === location.pathname.replace("/app/chat/", "")
-        );
+    if (nextProps.chatUsers.length > 0 && subScribeUSerData && this.state.scrollFlg) {
+      var chatUsers = JSON.parse(JSON.stringify(nextProps.chatUsers));
+      if (location && location.pathname.replace('/app/chat/', '') !== '' &&
+        location.pathname.replace('/app/chat', '') !== '') {
+        var dataFlg = false;
+        var returnData;
+        var user = chatUsers.find((item) =>  
+            item.actualContactNo && item.actualContactNo.indexOf(location.pathname.replace("/app/chat/", "")) >= 0);
+
         if (user === null || user === undefined) {
-          user = nextProps.chatUsers.find(
-            item => item.id === location.pathname.replace("/app/chat/", "")
-          );
+          user = nextProps.chatUsers.find((item) => item.id ===
+            location.pathname.replace('/app/chat/', ''))
         }
-        if (
-          user &&
-          document.getElementById("selectedUser").innerText !== null
-        ) {
+        if (user && (document.getElementById('selectedUser').innerText !== null)) {
           this.onSelectUser(user);
         }
         //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
