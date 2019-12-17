@@ -252,7 +252,18 @@ class ChatPanelWithRedux extends PureComponent {
       }, {});
     };
     if (Sms.length > 0 && selectedUser.unreadMessage > 0) {
-      var newMsgIdx = Sms.length - selectedUser.unreadMessage;
+      var  newSmsList = JSON.parse(JSON.stringify(Sms));
+      var outgoingsmsIdx = 0;
+      var indexFlg = false;
+      newSmsList.reverse().forEach(function(message,index){
+        if(!indexFlg  && message.messageType === 'OUTGOING_SMS'){
+          outgoingsmsIdx = index+1;
+          return index;
+        }else{
+          indexFlg = true;
+        }
+      });
+      var newMsgIdx = Sms.length - selectedUser.unreadMessage - outgoingsmsIdx;
       if (Sms.length > newMsgIdx) {
         var uniqueId = Sms[newMsgIdx]["id"];
         selectedUser["newMessageId"] = uniqueId;
