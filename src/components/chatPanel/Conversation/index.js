@@ -30,7 +30,7 @@ class Conversation extends Component {
     this.props = props;
   }
 
-  renderConversation = (convo, selectedUser, property, index) => {
+  renderConversation = (convo, selectedUser,  index,property) => {
     
     if (
       convo.messageType === "INCOMING_SMS" ||
