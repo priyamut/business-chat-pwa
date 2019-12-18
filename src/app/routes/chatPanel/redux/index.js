@@ -149,26 +149,62 @@ class ChatPanelWithRedux extends PureComponent {
 
   updateOnlineStatus = event => {
     if (navigator.onLine) {
-      if (this.props.conversation.user !== null) {
+      if (this.props.conversation.user &&
+        this.props.contactList && this.props.contactList.length > 0) {
         setTimeout(() => {
-          this.onSelectUser(this.props.conversation.user);
+          this.handleconversationSynconOffline();
         }, 6000);
+      }
+      
+      if (this.props.contactList && this.props.contactList.length === 0 && this.props.subScribeUSerData
+        && this.props.subScribeUSerData.businessAgents && this.props.subScribeUSerData.businessAgents['0']) {
+        this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id);
       }
       var event = document.createEvent("Events");
       event.initEvent("resume", true, true);
       document.dispatchEvent(event);
       console.log("device is now online");
+      this.setState({
+        networkFlag : true
+      })
     } else if (!navigator.onLine) {
       console.log("device is now offline");
+      this.setState({
+        networkFlag : false
+      })
     }
   };
 
+  handleconversationSynconOffline = () => {
+    if (this.props.conversation && this.props.conversation.Sms === undefined) {
+      this.onSelectUser(this.props.conversation.user);
+    }
+    //   if (response.type === "TALK_TO_HUMAN_EXIT") {
+    //     updatedConversation = conversation.Sms.concat({
+    //       id: response.id,
+    //       messageType: response.type,
+    //       conversationId: response.conversationId,
+    //       time: response.createdDate || moment().format()
+    //     });
+
+    //     newLiveSupportRequest = liveSupport.filter(
+    //       el => el.id !== response.contactMasterId
+    //     );
+    //     this.props.updateLiveSupportRequest(newLiveSupportRequest);
+    //   }
+    // }
+    // conversation.Sms = [
+    //   ...new Map(
+    //     updatedConversation.map(item => [item["id"], item])
+    //   ).values()
+    // ];
+    // this.props.updateConversation(conversation);
+
+  }
   handleCommentChange = event => {
     event.preventDefault();
     const content = event.target.value;
-    //let errors = this.state.disabled;
     if (content.length <= 200) {
-      // this.setState({disabled: true});
       this.updateMessageValue(event);
     }
   };
@@ -500,7 +536,7 @@ class ChatPanelWithRedux extends PureComponent {
               }}
             >
               {this.props.chatUsers.length === 0 ? (
-                <div className="p-5">{this.props.userNotFound}</div>
+                <div className="p-5" style={{ 'textAlign': 'center' }}>{this.props.userNotFound}</div>
               ) : (
                   <ChatUserList
                     chatUsers={this.props.chatUsers}

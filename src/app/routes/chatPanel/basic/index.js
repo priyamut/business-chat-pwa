@@ -193,7 +193,7 @@ class ChatPanel extends Component {
           <CustomScrollbars className="chat-sidenav-scroll scrollbar"
             style={{ height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)' }}>
             {this.state.chatUsers.length === 0 ?
-              <div className="p-5">{this.state.userNotFound}</div>
+              <div className="p-5" >{this.state.userNotFound}</div>
               :
               <ChatUserList chatUsers={this.state.chatUsers}
                 selectedSectionId={this.state.selectedSectionId}
@@ -263,7 +263,7 @@ class ChatPanel extends Component {
     super();
     this.state = {
       loader: false,
-      userNotFound: 'No user found',
+      userNotFound: 'Swipe down or pull to refresh the contacts.',
       drawerState: false,
       selectedSectionId: '',
       selectedTabIndex: 0,
