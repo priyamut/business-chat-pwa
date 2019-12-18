@@ -139,7 +139,6 @@ class ChatPanelWithRedux extends PureComponent {
   componentDidMount() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
-    document.removeEventListener("resume", function() {});
     window.addEventListener("online", this.updateOnlineStatus);
     window.addEventListener("offline", this.updateOnlineStatus);
   }
@@ -159,9 +158,6 @@ class ChatPanelWithRedux extends PureComponent {
       event.initEvent("resume", true, true);
       document.dispatchEvent(event);
       console.log("device is now online");
-      document.addEventListener("resume", function() {
-        console.log('Resuming this webapp');
-    });
     } else if (!navigator.onLine) {
       console.log("device is now offline");
     }
