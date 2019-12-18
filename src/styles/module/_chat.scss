@@ -701,3 +701,24 @@ body {
     float: right;
     }
 }
+.no-internet-tag{
+  & .no-internet{
+    text-align: center;
+      font-size: 16px;
+      color: #333;
+  }
+  & .no-internet-button{
+    border-radius: 50px;
+    text-transform: none;
+  }
+
+}
+.no-internet-span{
+  text-align: center;
+    font-size: 13px;
+  & span{
+    background: pink;
+    color: white;
+    padding: 0 2px;
+  }
+}
