@@ -1,76 +1,99 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#3f51b5">   
-    <meta name="description" content="">
-    <meta name="keywords"
-          content="Agentz Messenger">
-    <title>Agentz Messenger</title>
-    <!-- For removing IOS bounce effect -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/inobounce/0.2.0/inobounce.min.js"></script>
-    <link rel="stylesheet" href="loader.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.4/jquery-jvectormap.css" type="text/css" media="screen"/>
-    <meta name="apple-mobile-web-app-title" content="Agentz">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#fffff">
-    <meta name="msapplication-TileColor" content="#00aba9">
-<link rel="apple-touch-startup-image" href="/agentz_final-01_640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="/agentz_final-01_1_750x1294.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="/agentz_final-01_2_1242x2148.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="/agentz_final-01_3_1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="/agentz_final-01_6_2048x2732.png" media="(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="/agentz_final-01_5_1668x2224.png" media="(min-device-width: 834px) and (max-device-width: 834px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
-<link rel="apple-touch-startup-image" href="/agentz_final-01_4_1536x2048.png" media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#3f51b5">
+  <meta name="description" content="">
+  <meta name="keywords" content="Agentz Messenger">
+  <title>Agentz Messenger</title>
+  <!-- For removing IOS bounce effect -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/inobounce/0.2.0/inobounce.min.js"></script>
+  <link rel="stylesheet" href="loader.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.4/jquery-jvectormap.css"
+    type="text/css" media="screen" />
+  <meta name="apple-mobile-web-app-title" content="Agentz">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#fffff">
+  <meta name="msapplication-TileColor" content="#00aba9">
+  <link rel="apple-touch-startup-image" href="/agentz_final-01_640x1136.png"
+    media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/agentz_final-01_1_750x1294.png"
+    media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/agentz_final-01_2_1242x2148.png"
+    media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/agentz_final-01_3_1125x2436.png"
+    media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/agentz_final-01_6_2048x2732.png"
+    media="(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/agentz_final-01_5_1668x2224.png"
+    media="(min-device-width: 834px) and (max-device-width: 834px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/agentz_final-01_4_1536x2048.png"
+    media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
 
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="apple-touch-icon-precomposed" href="favicon.ico">
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
-
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon-precomposed" href="favicon.ico">
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
 
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places,geometry,drawing&key=AIzaSyBgqAomc9Vukt12AV3tJLasBnNehSNKuOY"></script>
-    <script defer>
 
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
-              // Registration was successful
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function (err) {
-              // registration failed :(
-              console.log('ServiceWorker registration failed: ', err);
-            }).catch(function (err) {
-              console.log(err)
-            });
-            onload='ontouchmove()="return(function(event) { event.preventDefault(); event.stopPropagation(); return(false); } );"'
-          });
-        } else {
-          console.log('service worker is not supported');
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places,geometry,drawing&key=AIzaSyBgqAomc9Vukt12AV3tJLasBnNehSNKuOY"></script>
+  <script defer>
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+          // Registration was successful
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function (err) {
+          // registration failed :(
+          console.log('ServiceWorker registration failed: ', err);
+        }).catch(function (err) {
+          console.log(err)
+        });
+        onload = 'ontouchmove()="return(function(event) { event.preventDefault(); event.stopPropagation(); return(false); } );"'
+      });
+    } else {
+      console.log('service worker is not supported');
+    }
+    (function () {
+      var timestamp = new Date().getTime();
+      function checkResume() {
+        var current = new Date().getTime();
+        if (current - timestamp > 5000 && navigator.onLine) {
+          var event = document.createEvent("Events");
+          event.initEvent("resume", true, true);
+          document.dispatchEvent(event);
         }
+        if (navigator.onLine) {
+          timestamp = current;
+        }
+      }
+      window.setInterval(checkResume, 5000);
+    })();
 
-        
-      </script>
+  </script>
 </head>
 
 <body id="body">
-<div id="app-site">
+  <div id="app-site">
     <div class="loader">
-        <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-        </svg>
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+      </svg>
     </div>
-</div>
+  </div>
 </body>
-</html>
 
+</html>
