@@ -187,8 +187,8 @@ class ChatPanelWithRedux extends PureComponent {
     const {subScribeUSerData } = this.props;
     var unsentMessages = [];
     let conversation = JSON.parse(JSON.stringify(this.props.conversation));
-    if (conversation.conversation && conversation.Sms === undefined) {
-      this.onSelectUser(conversation.user);
+    if (conversation && conversation.Sms === undefined) {
+      this.onSelectUser(this.props.conversation.user);
     } else if (conversation && conversation.Sms && conversation.Sms.length > 0) {
       unsentMessages = conversation.Sms.filter((item) =>
         item.type === true);
@@ -580,6 +580,11 @@ class ChatPanelWithRedux extends PureComponent {
   handleChangeIndex = index => {
     this.setState({ selectedTabIndex: index });
   };
+
+  onTryAgain = ()=>{
+    alert('No connection. You will be able to send messages as soon as you are back online.')
+  };
+
   renderInit = selectedUser => {
     if (selectedUser === null && navigator.onLine) {
       return (
@@ -620,6 +625,7 @@ class ChatPanelWithRedux extends PureComponent {
             className="no-internet-button"
             variant="contained"
             color="primary"
+            onClick={this.onTryAgain.bind(this)}
           >{<IntlMessages id="chat.tryAgain" />}
           </Button>
         </div>
