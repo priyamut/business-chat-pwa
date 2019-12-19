@@ -113,7 +113,7 @@ class ChatPanelWithRedux extends PureComponent {
       !this.state.disabled &&
       subScribeUSerData &&
       subScribeUSerData.businessAgents &&
-      subScribeUSerData.businessAgents.length > 0 && this.props.message.length <= 200
+      subScribeUSerData.businessAgents.length > 0 && this.props.message.length <= 500
     ) {
       const paramData = {
         businessId: localStorage.getItem("businessId"),
@@ -123,7 +123,7 @@ class ChatPanelWithRedux extends PureComponent {
       };
       this.props.submitComment(paramData);
       // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
-    } else if (this.props.message.length > 200) {
+    } else if (this.props.message.length > 500) {
       let chatFooter = document.getElementsByClassName(
         "chat-textarea",
         "chat-main"
@@ -145,14 +145,14 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   componentDidMount() {
-    document.removeEventListener("resume", this.updateOnlineStatus);
+    window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
    // window.addEventListener("online", this.updateOnlineStatus);
     window.addEventListener("offline", this.updateOnlineStatus);
-    document.addEventListener("resume",this.updateOnlineStatus);
+    window.addEventListener("online",this.updateOnlineStatus);
   }
   componentWillUnmount() {
-    document.removeEventListener("resume", this.updateOnlineStatus);
+    window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
   }
 
@@ -170,9 +170,6 @@ class ChatPanelWithRedux extends PureComponent {
         && this.props.subScribeUSerData.businessAgents && this.props.subScribeUSerData.businessAgents['0']) {
         this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id);
       }
-       var event = document.createEvent("Events");
-       event.initEvent("resume", true, true);
-      // window.dispatchEvent(event);
       console.log("device is now online");
       this.setState({
         networkFlag: true
@@ -233,16 +230,16 @@ class ChatPanelWithRedux extends PureComponent {
     if (event.target instanceof Element) {
       event.target.style.height = "auto";
       var clientHeight = event.target.scrollHeight;
-      if (clientHeight > 400) {
-        clientHeight = 400;
+      if (clientHeight > 250) {
+        clientHeight = 250;
       }
       event.target.style.height = clientHeight + "px";
       let chatFooter = document.getElementsByClassName(
         "chat-main-footer",
         "chat-main"
       );
-      if (chatFooter && chatFooter[0] instanceof Element && isIOS) {
-        chatFooter[0].style.height = clientHeight + 32 + "px";
+      if (chatFooter && chatFooter[0] instanceof Element ) {
+        chatFooter[0].style.minHeight = clientHeight + 32 + "px";
         chatFooter[0].style.lineHeight = clientHeight + 32 + "px";
       }
     }
@@ -381,7 +378,7 @@ class ChatPanelWithRedux extends PureComponent {
             <span className="no-internet-span">
               {<IntlMessages id="chat.backtoOnline" />}</span>
           )}
-          {this.props.message.length > 200 && (
+          {this.props.message.length > 500 && (
             <span className="message-exceed-length">
               {<IntlMessages id="chat.maxLimit" />}</span>
           )}
@@ -393,7 +390,7 @@ class ChatPanelWithRedux extends PureComponent {
             >
               <div className="col">
                 <div className="form-group">
-                  <textarea
+                  <textarea style={{"-webkit-overflow-scrolling": "touch"}}
                     id="required"
                     className="border-0 form-control chat-textarea"
                     onKeyUp={this._handleKeyPress.bind(this)}
