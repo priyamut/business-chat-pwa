@@ -145,18 +145,14 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   componentDidMount() {
-    document.removeEventListener("resume", {});
+    document.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
    // window.addEventListener("online", this.updateOnlineStatus);
     window.addEventListener("offline", this.updateOnlineStatus);
-   // document.addEventListener("resume",this.updateOnlineStatus);
-    //document.addEventListener("resume",this.updateOnlineStatus);
-    document.addEventListener("resume",function(){
-      console.log('resume');
-    });
+    document.addEventListener("online",this.updateOnlineStatus);
   }
   componentWillUnmount() {
-    document.removeEventListener("resume", {});
+    document.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
   }
 
