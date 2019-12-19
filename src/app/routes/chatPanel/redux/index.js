@@ -21,6 +21,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import SpeakerNotesOffIcon from "@material-ui/icons/SpeakerNotesOff";
 import axios from "util/Api";
 import Pullable from "react-pullable";
+import CloudOffIcon from '@material-ui/icons/CloudOff';
 import {
   fetchChatUser,
   fetchChatUserConversation,
@@ -58,6 +59,7 @@ class ChatPanelWithRedux extends PureComponent {
 
   onSelectUser = user => {
     const { subScribeUSerData } = this.props;
+    this.props.conversation.user = user;
     this.props.updateMessageValue("");
     this.setState({
       scrollFlg: true
@@ -74,8 +76,8 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   changeContactDetails(user) {
-    var appendUrl = user['actualContactNo'] && user['actualContactNo'].split(',').length > 0  && 
-    user['actualContactNo'].split(',')[0] ? user['actualContactNo'].split(',')[0] : user['id'];
+    var appendUrl = user['actualContactNo'] && user['actualContactNo'].split(',').length > 0 &&
+      user['actualContactNo'].split(',')[0] ? user['actualContactNo'].split(',')[0] : user['id'];
     this.ChangeUrl("/app/chat/" + appendUrl);
     if (document.getElementById("selectedUser")) {
       var div = document.getElementById("selectedUser");
@@ -111,7 +113,7 @@ class ChatPanelWithRedux extends PureComponent {
       !this.state.disabled &&
       subScribeUSerData &&
       subScribeUSerData.businessAgents &&
-      subScribeUSerData.businessAgents.length > 0
+      subScribeUSerData.businessAgents.length > 0 && this.props.message.length <= 200
     ) {
       const paramData = {
         businessId: localStorage.getItem("businessId"),
@@ -121,6 +123,14 @@ class ChatPanelWithRedux extends PureComponent {
       };
       this.props.submitComment(paramData);
       // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    } else if (this.props.message.length > 200) {
+      let chatFooter = document.getElementsByClassName(
+        "chat-textarea",
+        "chat-main"
+      );
+      if (chatFooter && chatFooter[0] instanceof Element) {
+        chatFooter[0].focus();
+      }
     }
 
     let currenUserIdRequestingLiveSupport = updatedLiveSupportRequestList.find(
@@ -135,50 +145,94 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   componentDidMount() {
+    window.removeEventListener("online", this.updateOnlineStatus);
+    window.removeEventListener("offline", this.updateOnlineStatus);
     window.addEventListener("online", this.updateOnlineStatus);
     window.addEventListener("offline", this.updateOnlineStatus);
   }
+  componentWillUnmount() {
+    window.removeEventListener("online", this.updateOnlineStatus);
+    window.removeEventListener("offline", this.updateOnlineStatus);
+  }
 
   updateOnlineStatus = event => {
-    if (navigator.onLine && !this.state.networkFlag) {
-      this.setState(
-        {
-          networkFlag: true
-        },
-        () => {
-          if (navigator.onLine) {
-            if (this.props.selectedSectionId) {
-              setTimeout(() => {
-                this.onSelectUser(this.props.conversation.user);
-              }, 3000);
-            }
-          }
-        }
-      );
+    if (navigator.onLine) {
+      if (this.props.conversation.user &&
+        this.props.contactList && this.props.contactList.length > 0) {
+        setTimeout(() => {
+          this.handleconversationSynconOffline();
+        }, 6000);
+      }
+
+      if (this.props.contactList && this.props.contactList.length === 0 && this.props.subScribeUSerData
+        && this.props.subScribeUSerData.businessAgents && this.props.subScribeUSerData.businessAgents['0']) {
+        this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id);
+      }
+      var event = document.createEvent("Events");
+      event.initEvent("resume", true, true);
+      document.dispatchEvent(event);
       console.log("device is now online");
-    } else {
+      this.setState({
+        networkFlag: true
+      })
+    } else if (!navigator.onLine) {
       console.log("device is now offline");
       this.setState({
         networkFlag: false
-      });
+      })
     }
   };
 
+  handleconversationSynconOffline = () => {
+    const {subScribeUSerData } = this.props;
+    var unsentMessages = [];
+    let conversation = JSON.parse(JSON.stringify(this.props.conversation));
+    if (conversation.conversation && conversation.Sms === undefined) {
+      this.onSelectUser(conversation.user);
+    } else if (conversation && conversation.Sms && conversation.Sms.length > 0) {
+      unsentMessages = conversation.Sms.filter((item) =>
+        item.type === true);
+      axios.get(`consumer/v1/${conversation.user.id}/sms?businessId=${subScribeUSerData.businessAgents["0"].id}`, {
+        headers: {
+          "idToken": JSON.parse(localStorage.getItem("idToken")),
+          "authorization": JSON.parse(localStorage.getItem("accessToken")),
+          "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
+        }
+      }).then(({ data }) => {
+        if (data) {
+          var updatedConversation;
+          data.user = conversation.user;
+          data.Sms = data.Sms.reverse();
+          if (unsentMessages.length > 0) {
+            data.Sms = data.Sms.concat(unsentMessages);
+            updatedConversation = data;
+            if (updatedConversation) {
+              this.props.updateConversation(updatedConversation);
+            }
+          }else{
+            updatedConversation = data;
+            this.props.updateConversation(updatedConversation);
+          }
+        } else {
+
+        }
+      }).catch(function (error) {
+      });
+    }
+  }
   handleCommentChange = event => {
     event.preventDefault();
     const content = event.target.value;
-    //let errors = this.state.disabled;
-    if (content.length <= 200) {
-      // this.setState({disabled: true});
-      this.updateMessageValue(event);
-    }
+    //if (content.length <= 200) {
+    this.updateMessageValue(event);
+    //}
   };
   handleOnInput = event => {
-    if (event.target instanceof Element && event.target.value.length < 200) {
+    if (event.target instanceof Element) {
       event.target.style.height = "auto";
       var clientHeight = event.target.scrollHeight;
-      if (clientHeight > 200) {
-        clientHeight = 200;
+      if (clientHeight > 400) {
+        clientHeight = 400;
       }
       event.target.style.height = clientHeight + "px";
       let chatFooter = document.getElementsByClassName(
@@ -252,14 +306,14 @@ class ChatPanelWithRedux extends PureComponent {
       }, {});
     };
     if (Sms.length > 0 && selectedUser.unreadMessage > 0) {
-      var  newSmsList = JSON.parse(JSON.stringify(Sms));
+      var newSmsList = JSON.parse(JSON.stringify(Sms));
       var outgoingsmsIdx = 0;
       var indexFlg = false;
-      newSmsList.reverse().forEach(function(message,index){
-        if(!indexFlg  && message.messageType === 'OUTGOING_SMS'){
-          outgoingsmsIdx = index+1;
+      newSmsList.reverse().forEach(function (message, index) {
+        if (!indexFlg && message.messageType === 'OUTGOING_SMS') {
+          outgoingsmsIdx = index + 1;
           return index;
-        }else{
+        } else {
           indexFlg = true;
         }
       });
@@ -271,92 +325,103 @@ class ChatPanelWithRedux extends PureComponent {
     }
     const conversationFormed = groupBy(Sms, "time");
     return (
-      <div className="chat-main">
-        <Scrollbars
-          className="chat-list-scroll scrollbar"
-          style={{ height: "calc(100vh - 222px)" }}
-          onUpdate={this.scrollComponentTobottom}
-          ref={c => {
-            this.scrollComponent = c;
-          }}
-        >
-          {Sms.length == 0 ? (
-            <div
-              className="loader-view"
-              style={{
-                "margin-top": isIOS ? "-40px" : "0px",
-                display: "flex",
-                flexDirection: "column",
-                flexWrap: "nowrap",
-                justifyContent: "center",
-                height: "100%"
-              }}
-            >
-              {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
-
-              {selectedUser.contactNo !== null &&
-              selectedUser.contactNo !== undefined &&
-              selectedUser.contactNo !== "" ? (
-                <React.Fragment>
-                  <AnnouncementIcon className="s-128 text-muted" />
-                  <h3 className="text-muted">
-                    <IntlMessages id="chat.noMessageToShow" />
-                  </h3>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <SpeakerNotesOffIcon className="s-128 text-muted" />
-                  <h3 className="text-muted">
-                    <IntlMessages id="chat.noContactNoForthisUser" />
-                  </h3>
-                </React.Fragment>
-              )}
-            </div>
-          ) : (
-            <Conversation
-              conversationData={conversationFormed}
-              selectedUser={selectedUser}
-              property={this.props}
-            />
-          )}
-        </Scrollbars>
-
-        <div className="chat-main-footer">
-          <div
-            className="d-flex flex-row align-items-center"
-            style={{ maxHeight: 51 }}
+      <>
+        <div className="chat-main">
+          <Scrollbars
+            className="chat-list-scroll scrollbar"
+            style={{ height: "calc(100vh - 222px)" }}
+            onUpdate={this.scrollComponentTobottom}
+            ref={c => {
+              this.scrollComponent = c;
+            }}
           >
-            <div className="col">
-              <div className="form-group">
-                <textarea
-                  id="required"
-                  className="border-0 form-control chat-textarea"
-                  onKeyUp={this._handleKeyPress.bind(this)}
-                  onInput={this.handleOnInput.bind(this)}
-                  //onChange={this.updateMessageValue.bind(this)}
-                  onChange={this.handleCommentChange.bind(this)}
-                  noValidate
-                  value={message}
-                  autocorrect="off"
-                  placeholder="Type and hit enter to send message"
-                  ref={input => {
-                    this.nameInput = input;
-                  }}
-                />
-              </div>
-            </div>
-            <div className="chat-sent">
-              <IconButton
-                disabled={this.state.disabled}
-                onClick={this.submitComment.bind(this)}
-                aria-label="Send message"
+            {Sms.length == 0 ? (
+              <div
+                className="loader-view"
+                style={{
+                  "margin-top": isIOS ? "-40px" : "0px",
+                  display: "flex",
+                  flexDirection: "column",
+                  flexWrap: "nowrap",
+                  justifyContent: "center",
+                  height: "100%"
+                }}
               >
-                <i className="zmdi  zmdi-mail-send" />
-              </IconButton>
+                {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
+
+                {selectedUser.contactNo !== null &&
+                  selectedUser.contactNo !== undefined &&
+                  selectedUser.contactNo !== "" ? (
+                    <React.Fragment>
+                      <AnnouncementIcon className="s-128 text-muted" />
+                      <h3 className="text-muted">
+                        <IntlMessages id="chat.noMessageToShow" />
+                      </h3>
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <SpeakerNotesOffIcon className="s-128 text-muted" />
+                      <h3 className="text-muted">
+                        <IntlMessages id="chat.noContactNoForthisUser" />
+                      </h3>
+                    </React.Fragment>
+                  )}
+              </div>
+            ) : (
+                <Conversation
+                  conversationData={conversationFormed}
+                  selectedUser={selectedUser}
+                  property={this.props}
+                />
+              )}
+          </Scrollbars>
+          {!navigator.onLine && (
+            <span className="no-internet-span">
+              {<IntlMessages id="chat.backtoOnline" />}</span>
+          )}
+          {this.props.message.length > 200 && (
+            <span className="message-exceed-length">
+              {<IntlMessages id="chat.maxLimit" />}</span>
+          )}
+
+          <div className="chat-main-footer">
+            <div
+              className="d-flex flex-row align-items-center"
+              style={{ maxHeight: 51 }}
+            >
+              <div className="col">
+                <div className="form-group">
+                  <textarea
+                    id="required"
+                    className="border-0 form-control chat-textarea"
+                    onKeyUp={this._handleKeyPress.bind(this)}
+                    onInput={this.handleOnInput.bind(this)}
+                    //onChange={this.updateMessageValue.bind(this)}
+                    onChange={this.handleCommentChange.bind(this)}
+                    noValidate
+                    value={message}
+                    autocorrect="off"
+                    placeholder="Type and hit enter to send message"
+                    ref={input => {
+                      this.nameInput = input;
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="chat-sent">
+                <IconButton
+                  disabled={this.state.disabled}
+                  onClick={this.submitComment.bind(this)}
+                  aria-label="Send message"
+                >
+                  <i className="zmdi  zmdi-mail-send" />
+                </IconButton>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+      </>
     );
   };
 
@@ -494,14 +559,14 @@ class ChatPanelWithRedux extends PureComponent {
               }}
             >
               {this.props.chatUsers.length === 0 ? (
-                <div className="p-5">{this.props.userNotFound}</div>
+                <div className="p-5" style={{ 'textAlign': 'center' }}>{this.props.userNotFound}</div>
               ) : (
-                <ChatUserList
-                  chatUsers={this.props.chatUsers}
-                  selectedSectionId={this.props.selectedSectionId}
-                  onSelectUser={this.onSelectUser.bind(this)}
-                />
-              )}
+                  <ChatUserList
+                    chatUsers={this.props.chatUsers}
+                    selectedSectionId={this.props.selectedSectionId}
+                    onSelectUser={this.onSelectUser.bind(this)}
+                  />
+                )}
             </CustomScrollbars>
           </SwipeableViews>
         </div>
@@ -515,11 +580,57 @@ class ChatPanelWithRedux extends PureComponent {
   handleChangeIndex = index => {
     this.setState({ selectedTabIndex: index });
   };
+  renderInit = selectedUser => {
+    if (selectedUser === null && navigator.onLine) {
+      return (
+        <div
+          className="loader-view"
+          style={{ "margin-top": isIOS ? "-40px" : "0px" }}
+        >
+          <i className="zmdi zmdi-comment s-128 text-muted" />
+
+          <Button
+            className="d-block d-xl-none"
+            color="primary"
+            onClick={this.onChatToggleDrawer.bind(this)}
+          >
+            {<IntlMessages id="chat.selectContactChat" />}
+          </Button>
+        </div>)
+    }
+    if (selectedUser !== null) {
+      return (
+        <>
+          {""}
+          {this.Communication()}
+        </>
+      )
+    }
+    if (selectedUser === null && !navigator.onLine) {
+      return (
+        <div
+          className="loader-view no-internet-tag"
+          style={{ "margin-top": isIOS ? "-40px" : "0px" }}
+        >
+          <CloudOffIcon className="s-128 text-muted" />
+          <h3 className="no-internet">
+            {<IntlMessages id="chat.noInternet" />}
+          </h3>
+          <Button
+            className="no-internet-button"
+            variant="contained"
+            color="primary"
+          >{<IntlMessages id="chat.tryAgain" />}
+          </Button>
+        </div>
+      )
+    }
+  }
   showCommunication = () => {
     return (
       <div className="chat-box">
         <div className="chat-box-main">
-          {this.props.selectedUser === null ? (
+          {/* {this.props.selectedUser === null && navigator.onLine ? (
             <div
               className="loader-view"
               style={{ "margin-top": isIOS ? "-40px" : "0px" }}
@@ -535,8 +646,9 @@ class ChatPanelWithRedux extends PureComponent {
               </Button>
             </div>
           ) : (
-            this.Communication()
-          )}
+              this.Communication()
+            )} */}
+          {this.renderInit(this.props.selectedUser)}
         </div>
       </div>
     );
@@ -551,8 +663,8 @@ class ChatPanelWithRedux extends PureComponent {
         location.pathname.replace('/app/chat', '') !== '') {
         var dataFlg = false;
         var returnData;
-        var user = chatUsers.find((item) =>  
-            item.actualContactNo && item.actualContactNo.indexOf(location.pathname.replace("/app/chat/", "")) >= 0);
+        var user = chatUsers.find((item) =>
+          item.actualContactNo && item.actualContactNo.indexOf(location.pathname.replace("/app/chat/", "")) >= 0);
 
         if (user === null || user === undefined) {
           user = nextProps.chatUsers.find((item) => item.id ===
@@ -715,8 +827,8 @@ class ChatPanelWithRedux extends PureComponent {
                 <CircularProgress />
               </div>
             ) : (
-              this.showCommunication()
-            )}
+                this.showCommunication()
+              )}
           </div>
         </div>
       </div>

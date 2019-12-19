@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -36,17 +36,18 @@ class ChatPanel extends Component {
     );
   };
   Communication = () => {
-    const {message, selectedUser, conversation} = this.state;
-    const {conversationData} = conversation;
-    return <div className="chat-main">
-      <div className="chat-main-header">
-        <IconButton className="d-block d-xl-none chat-btn" aria-label="Menu"
-                    onClick={this.onToggleDrawer.bind(this)}>
-          <i className="zmdi zmdi-comment-text"/>
-        </IconButton>
-        <div className="chat-main-header-info">
+    const { message, selectedUser, conversation } = this.state;
+    const { conversationData } = conversation;
+    return <>
+      <div className="chat-main">
+        <div className="chat-main-header">
+          <IconButton className="d-block d-xl-none chat-btn" aria-label="Menu"
+            onClick={this.onToggleDrawer.bind(this)}>
+            <i className="zmdi zmdi-comment-text" />
+          </IconButton>
+          <div className="chat-main-header-info">
 
-          {/* <div className="chat-avatar mr-2">
+            {/* <div className="chat-avatar mr-2">
             <div className="chat-avatar-mode">
               <img src={selectedUser.thumb}
                    className="rounded-circle size-60"
@@ -56,42 +57,45 @@ class ChatPanel extends Component {
             </div>
           </div> */}
 
-          <div className="chat-contact-name">
-            {selectedUser.name}
-          </div>
-        </div>
-
-      </div>
-
-      <CustomScrollbars className="chat-list-scroll scrollbar"
-                        style={{height: this.props.width >= 1200 ? 'calc(100vh - 300px)' : 'calc(100vh - 269px)'}}>
-        <Conversation conversationData={conversationData}
-                      selectedUser={selectedUser}/>
-      </CustomScrollbars>
-
-      <div className="chat-main-footer">
-        <div className="d-flex flex-row align-items-center" style={{maxHeight: 51}}>
-          <div className="col">
-            <div className="form-group">
-                            <textarea
-                              id="required" className="border-0 form-control chat-textarea"
-                              onKeyUp={this._handleKeyPress.bind(this)}
-                              onChange={this.updateMessageValue.bind(this)}
-                              value={message}
-                              placeholder="Type and hit enter to send message"
-                            />
+            <div className="chat-contact-name">
+              {selectedUser.name}
             </div>
           </div>
-          <div className="chat-sent">
-            <IconButton
-              onClick={this.submitComment.bind(this)}
-              aria-label="Send message">
-              <i className="zmdi  zmdi-mail-send"/>
-            </IconButton>
+
+        </div>
+
+        <CustomScrollbars className="chat-list-scroll scrollbar"
+          style={{ height: this.props.width >= 1200 ? 'calc(100vh - 300px)' : 'calc(100vh - 269px)' }}>
+          <Conversation conversationData={conversationData}
+            selectedUser={selectedUser} />
+        </CustomScrollbars>
+
+        <div className="chat-main-footer">
+          <div className="d-flex flex-row align-items-center" style={{ maxHeight: 51 }}>
+            <div className="col">
+              <div className="form-group">
+                <textarea
+                  id="required" className="border-0 form-control chat-textarea"
+                  onKeyUp={this._handleKeyPress.bind(this)}
+                  onChange={this.updateMessageValue.bind(this)}
+                  value={message}
+                  placeholder="Type and hit enter to send message"
+                />
+              </div>
+            </div>
+            <div className="chat-sent">
+              <IconButton
+                onClick={this.submitComment.bind(this)}
+                aria-label="Send message">
+                <i className="zmdi  zmdi-mail-send" />
+              </IconButton>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {!navigator.onLine && 
+       <i className="zmdi zmdi-info zmdi-hc-lg retry-connection" />}
+    </>
   };
 
   AppUsersInfo = () => {
@@ -100,18 +104,18 @@ class ChatPanel extends Component {
 
         <div className="chat-user-hd mb-0">
           <IconButton className="back-to-chats-button" aria-label="back button"
-                      onClick={() => {
-                        this.setState({
-                          userState: 1
-                        });
-                      }}>
-            <i className="zmdi zmdi-arrow-back"/>
+            onClick={() => {
+              this.setState({
+                userState: 1
+              });
+            }}>
+            <i className="zmdi zmdi-arrow-back" />
           </IconButton>
         </div>
         <div className="chat-user chat-user-center">
           <div className="chat-avatar mx-auto">
             <img src='https://via.placeholder.com/150x150'
-                 className="avatar avatar-shadow rounded-circle size-60 huge" alt="John Doe"/>
+              className="avatar avatar-shadow rounded-circle size-60 huge" alt="John Doe" />
           </div>
 
           <div className="user-name h4 my-2">Robert Johnson</div>
@@ -121,7 +125,7 @@ class ChatPanel extends Component {
       <div className="chat-sidenav-content">
 
         <CustomScrollbars className="chat-sidenav-scroll scrollbar"
-                          style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 162px)'}}>
+          style={{ height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 162px)' }}>
           <form className="p-4">
             <div className="form-group mt-4">
               <label>Mood</label>
@@ -135,7 +139,7 @@ class ChatPanel extends Component {
                 onChange={this.updateMessageValue.bind(this)}
                 defaultValue="it's a status....not your diary..."
                 placeholder="Status"
-                margin="none"/>
+                margin="none" />
 
             </div>
           </form>
@@ -163,8 +167,8 @@ class ChatPanel extends Component {
         <div className="search-wrapper">
 
           <SearchBox placeholder="Search or start new chat"
-                     onChange={this.updateSearchChatUser.bind(this)}
-                     value={this.state.searchChatUser}/>
+            onChange={this.updateSearchChatUser.bind(this)}
+            value={this.state.searchChatUser} />
 
         </div>
       </div>
@@ -178,7 +182,7 @@ class ChatPanel extends Component {
             indicatorColor="primary"
             textColor="primary"
             variant="fullWidth">
-            <Tab label={<IntlMessages id="chat.chatUser"/>}/>
+            <Tab label={<IntlMessages id="chat.chatUser" />} />
             {/* <Tab label={<IntlMessages id="chat.contacts"/>}/> */}
           </Tabs>
         </AppBar>
@@ -187,25 +191,25 @@ class ChatPanel extends Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <CustomScrollbars className="chat-sidenav-scroll scrollbar"
-                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)'}}>
+            style={{ height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)' }}>
             {this.state.chatUsers.length === 0 ?
-              <div className="p-5">{this.state.userNotFound}</div>
+              <div className="p-5" >{this.state.userNotFound}</div>
               :
               <ChatUserList chatUsers={this.state.chatUsers}
-                            selectedSectionId={this.state.selectedSectionId}
-                            onSelectUser={this.onSelectUser.bind(this)}/>
+                selectedSectionId={this.state.selectedSectionId}
+                onSelectUser={this.onSelectUser.bind(this)} />
             }
           </CustomScrollbars>
 
           <CustomScrollbars className="chat-sidenav-scroll scrollbar"
-                            style={{height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)'}}>
+            style={{ height: this.props.width >= 1200 ? 'calc(100vh - 328px)' : 'calc(100vh - 202px)' }}>
             {
               this.state.contactList.length === 0 ?
                 <div className="p-5">{this.state.userNotFound}</div>
                 :
                 <ContactList contactList={this.state.contactList}
-                             selectedSectionId={this.state.selectedSectionId}
-                             onSelectUser={this.onSelectUser.bind(this)}/>
+                  selectedSectionId={this.state.selectedSectionId}
+                  onSelectUser={this.onSelectUser.bind(this)} />
             }
           </CustomScrollbars>
         </SwipeableViews>
@@ -220,11 +224,11 @@ class ChatPanel extends Component {
   };
 
   handleChange = (event, value) => {
-    this.setState({selectedTabIndex: value});
+    this.setState({ selectedTabIndex: value });
   };
 
   handleChangeIndex = index => {
-    this.setState({selectedTabIndex: index});
+    this.setState({ selectedTabIndex: index });
   };
   onSelectUser = (user) => {
     this.setState({
@@ -243,12 +247,12 @@ class ChatPanel extends Component {
       <div className="chat-box">
         <div className="chat-box-main">{
           this.state.selectedUser === null ?
-            <div className="loader-view" style={{height: 'calc(100vh - 120px)'}}>
-              <i className="zmdi zmdi-comment s-128 text-muted"/>
-              <h1 className="text-muted">{<IntlMessages id="chat.selectUserChat"/>}</h1>
+            <div className="loader-view" style={{ height: 'calc(100vh - 120px)' }}>
+              <i className="zmdi zmdi-comment s-128 text-muted" />
+              <h1 className="text-muted">{<IntlMessages id="chat.selectUserChat" />}</h1>
               <Button className="d-block d-xl-none" color="primary"
-                      onClick={this.onToggleDrawer.bind(this)}>{<IntlMessages
-                id="chat.selectContactChat"/>}</Button>
+                onClick={this.onToggleDrawer.bind(this)}>{<IntlMessages
+                  id="chat.selectContactChat" />}</Button>
             </div>
             : this.Communication()}
         </div>
@@ -259,7 +263,7 @@ class ChatPanel extends Component {
     super();
     this.state = {
       loader: false,
-      userNotFound: 'No user found',
+      userNotFound: 'Swipe down or pull to refresh the contacts.',
       drawerState: false,
       selectedSectionId: '',
       selectedTabIndex: 0,
@@ -288,7 +292,7 @@ class ChatPanel extends Component {
         message: '',
         conversationList: this.state.conversationList.map(conversationData => {
           if (conversationData.id === this.state.conversation.id) {
-            return {...this.state.conversation, conversationData: updatedConversation};
+            return { ...this.state.conversation, conversationData: updatedConversation };
           } else {
             return conversationData;
           }
@@ -318,14 +322,14 @@ class ChatPanel extends Component {
   }
 
   render() {
-    const {loader, userState, drawerState} = this.state;
+    const { loader, userState, drawerState } = this.state;
     return (
       <div className="app-wrapper app-wrapper-module">
         <div className="app-module chat-module animated slideInUpTiny animation-duration-3">
           <div className="chat-module-box">
             <div className="d-block d-xl-none">
-              <Drawer open={drawerState} 
-                      onClose={this.onToggleDrawer.bind(this)}>
+              <Drawer open={drawerState}
+                onClose={this.onToggleDrawer.bind(this)}>
                 {userState === 1 ? this.ChatUsers() : this.AppUsersInfo()}
               </Drawer>
             </div>
@@ -334,8 +338,8 @@ class ChatPanel extends Component {
             </div>
             {loader ?
               <div className="loader-view w-100"
-                   style={{height: 'calc(100vh - 120px)'}}>
-                <CircularProgress/>
+                style={{ height: 'calc(100vh - 120px)' }}>
+                <CircularProgress />
               </div> : this.showCommunication()
             }
           </div>
@@ -345,9 +349,9 @@ class ChatPanel extends Component {
   }
 }
 
-const mapStateToProps = ({settings}) => {
-  const {width} = settings;
-  return {width}
+const mapStateToProps = ({ settings }) => {
+  const { width } = settings;
+  return { width }
 };
 
 export default connect(mapStateToProps)(ChatPanel);

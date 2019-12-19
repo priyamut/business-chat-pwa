@@ -14,7 +14,7 @@ class Conversation extends Component {
   };
 
   appendNewUser = (convo,selectedUser) =>{
-    if(selectedUser.newMessageId === convo.id){
+    if(selectedUser.newMessageId && convo.id && selectedUser.newMessageId === convo.id){
       return (
         <div className="break-date">
           <div className="date-break-tag-before new-message-span"></div>
