@@ -113,7 +113,7 @@ class ChatPanelWithRedux extends PureComponent {
       !this.state.disabled &&
       subScribeUSerData &&
       subScribeUSerData.businessAgents &&
-      subScribeUSerData.businessAgents.length > 0
+      subScribeUSerData.businessAgents.length > 0 && this.props.message.length <= 200
     ) {
       const paramData = {
         businessId: localStorage.getItem("businessId"),
@@ -123,6 +123,14 @@ class ChatPanelWithRedux extends PureComponent {
       };
       this.props.submitComment(paramData);
       // this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    } else if (this.props.message.length > 200) {
+      let chatFooter = document.getElementsByClassName(
+        "chat-textarea",
+        "chat-main"
+      );
+      if (chatFooter && chatFooter[0] instanceof Element) {
+        chatFooter[0].focus();
+      }
     }
 
     let currenUserIdRequestingLiveSupport = updatedLiveSupportRequestList.find(
@@ -155,7 +163,7 @@ class ChatPanelWithRedux extends PureComponent {
           this.handleconversationSynconOffline();
         }, 6000);
       }
-      
+
       if (this.props.contactList && this.props.contactList.length === 0 && this.props.subScribeUSerData
         && this.props.subScribeUSerData.businessAgents && this.props.subScribeUSerData.businessAgents['0']) {
         this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id);
@@ -165,55 +173,66 @@ class ChatPanelWithRedux extends PureComponent {
       document.dispatchEvent(event);
       console.log("device is now online");
       this.setState({
-        networkFlag : true
+        networkFlag: true
       })
     } else if (!navigator.onLine) {
       console.log("device is now offline");
       this.setState({
-        networkFlag : false
+        networkFlag: false
       })
     }
   };
 
   handleconversationSynconOffline = () => {
-    if (this.props.conversation && this.props.conversation.Sms === undefined) {
-      this.onSelectUser(this.props.conversation.user);
+    const {subScribeUSerData } = this.props;
+    var unsentMessages = [];
+    let conversation = JSON.parse(JSON.stringify(this.props.conversation));
+    if (conversation.conversation && conversation.Sms === undefined) {
+      this.onSelectUser(conversation.user);
+    } else if (conversation && conversation.Sms && conversation.Sms.length > 0) {
+      unsentMessages = conversation.Sms.filter((item) =>
+        item.type === true);
+      axios.get(`consumer/v1/${conversation.user.id}/sms?businessId=${subScribeUSerData.businessAgents["0"].id}`, {
+        headers: {
+          "idToken": JSON.parse(localStorage.getItem("idToken")),
+          "authorization": JSON.parse(localStorage.getItem("accessToken")),
+          "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
+        }
+      }).then(({ data }) => {
+        if (data) {
+          var updatedConversation;
+          data.user = conversation.user;
+          data.Sms = data.Sms.reverse();
+          if (unsentMessages.length > 0) {
+            data.Sms = data.Sms.concat(unsentMessages);
+            updatedConversation = data;
+            if (updatedConversation) {
+              this.props.updateConversation(updatedConversation);
+            }
+          }else{
+            updatedConversation = data;
+            this.props.updateConversation(updatedConversation);
+          }
+        } else {
+
+        }
+      }).catch(function (error) {
+      });
     }
-    //   if (response.type === "TALK_TO_HUMAN_EXIT") {
-    //     updatedConversation = conversation.Sms.concat({
-    //       id: response.id,
-    //       messageType: response.type,
-    //       conversationId: response.conversationId,
-    //       time: response.createdDate || moment().format()
-    //     });
-
-    //     newLiveSupportRequest = liveSupport.filter(
-    //       el => el.id !== response.contactMasterId
-    //     );
-    //     this.props.updateLiveSupportRequest(newLiveSupportRequest);
-    //   }
-    // }
-    // conversation.Sms = [
-    //   ...new Map(
-    //     updatedConversation.map(item => [item["id"], item])
-    //   ).values()
-    // ];
-    // this.props.updateConversation(conversation);
-
   }
   handleCommentChange = event => {
     event.preventDefault();
     const content = event.target.value;
-    if (content.length <= 200) {
-      this.updateMessageValue(event);
-    }
+    //if (content.length <= 200) {
+    this.updateMessageValue(event);
+    //}
   };
   handleOnInput = event => {
-    if (event.target instanceof Element && event.target.value.length < 200) {
+    if (event.target instanceof Element) {
       event.target.style.height = "auto";
       var clientHeight = event.target.scrollHeight;
-      if (clientHeight > 200) {
-        clientHeight = 200;
+      if (clientHeight > 400) {
+        clientHeight = 400;
       }
       event.target.style.height = clientHeight + "px";
       let chatFooter = document.getElementsByClassName(
@@ -359,6 +378,10 @@ class ChatPanelWithRedux extends PureComponent {
           {!navigator.onLine && (
             <span className="no-internet-span">
               {<IntlMessages id="chat.backtoOnline" />}</span>
+          )}
+          {this.props.message.length > 200 && (
+            <span className="message-exceed-length">
+              {<IntlMessages id="chat.maxLimit" />}</span>
           )}
 
           <div className="chat-main-footer">

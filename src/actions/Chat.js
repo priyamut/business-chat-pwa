@@ -75,6 +75,10 @@ export const onSelectUser = (user, businessAgentMappingId, hideLoader) => {
   }
 };
 
+export const getSmsData = (user,businessAgentMappingId) =>{
+  
+}
+
 
 export const submitComment = (paramData) => {
   return (dispatch) => {
