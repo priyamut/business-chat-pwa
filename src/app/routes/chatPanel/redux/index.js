@@ -145,14 +145,14 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   componentDidMount() {
-    document.removeEventListener("online", this.updateOnlineStatus);
+    window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
    // window.addEventListener("online", this.updateOnlineStatus);
     window.addEventListener("offline", this.updateOnlineStatus);
-    document.addEventListener("online",this.updateOnlineStatus);
+    window.addEventListener("online",this.updateOnlineStatus);
   }
   componentWillUnmount() {
-    document.removeEventListener("online", this.updateOnlineStatus);
+    window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
   }
 
@@ -170,9 +170,6 @@ class ChatPanelWithRedux extends PureComponent {
         && this.props.subScribeUSerData.businessAgents && this.props.subScribeUSerData.businessAgents['0']) {
         this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id);
       }
-       var event = document.createEvent("Events");
-       event.initEvent("resume", true, true);
-      // window.dispatchEvent(event);
       console.log("device is now online");
       this.setState({
         networkFlag: true
