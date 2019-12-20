@@ -169,7 +169,6 @@ class App extends Component {
     }
   }
   render() {
-    console.log("props", this.props);
     const { sessionDetails, globalVariables } = this.state;
     const {
       match,
