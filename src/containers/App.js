@@ -138,6 +138,22 @@ class App extends Component {
         console.log("Error****:", { error });
       });
     //}
+    (function () {
+      var timestamp = new Date().getTime();
+      function checkResume() {
+        var current = new Date().getTime();
+        if (current - timestamp > 5000 && navigator.onLine) {
+          var event = document.createEvent("Events");
+          event.initEvent("resume", true, true);
+          document.dispatchEvent(event);
+        }
+        if (navigator.onLine) {
+          timestamp = current;
+        }
+      }
+      window.setInterval(checkResume, 5000);
+    })();
+
   }
 
   handleAddToHomescreen = () => {

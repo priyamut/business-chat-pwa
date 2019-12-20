@@ -150,13 +150,20 @@ class ChatPanelWithRedux extends PureComponent {
     window.removeEventListener("resume",function(){
     })
     window.addEventListener("offline", this.updateOnlineStatus);
-    window.addEventListener("online",this.updateOnlineStatus);
+    window.addEventListener("online",function(){
+      if(!isIOS){
+        this.updateOnlineStatus();
+      }
+    });
+
     window.addEventListener("resume", function(){
       if(!this.state.resumeFlg){
-        //console.log('resume event');
         this.setState({
           resumeFlg: true
         })
+        if(isIOS){
+          this.updateOnlineStatus();
+        }
       }
     }.bind(this))
   }
