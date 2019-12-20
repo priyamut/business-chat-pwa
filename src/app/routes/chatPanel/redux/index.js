@@ -147,13 +147,24 @@ class ChatPanelWithRedux extends PureComponent {
   componentDidMount() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
-   // window.addEventListener("online", this.updateOnlineStatus);
+    window.removeEventListener("resume",function(){
+    })
     window.addEventListener("offline", this.updateOnlineStatus);
     window.addEventListener("online",this.updateOnlineStatus);
+    window.addEventListener("resume", function(){
+      if(!this.state.resumeFlg){
+        //console.log('resume event');
+        this.setState({
+          resumeFlg: true
+        })
+      }
+    }.bind(this))
   }
   componentWillUnmount() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
+    window.removeEventListener("resume",function(){
+    })
   }
 
  
@@ -177,7 +188,8 @@ class ChatPanelWithRedux extends PureComponent {
     } else if (!navigator.onLine) {
       console.log("device is now offline");
       this.setState({
-        networkFlag: false
+        networkFlag: false,
+        resumeFlg: false
       })
     }
   };
@@ -209,8 +221,10 @@ class ChatPanelWithRedux extends PureComponent {
               this.props.updateConversation(updatedConversation);
             }
           }else{
-            updatedConversation = data;
-            this.props.updateConversation(updatedConversation);
+            if(data.Sms.length !== this.props.conversation.Sms.length){
+              updatedConversation = data;
+              this.props.updateConversation(updatedConversation);
+            }
           }
         } else {
 
@@ -731,7 +745,8 @@ class ChatPanelWithRedux extends PureComponent {
       selectedTabIndex: 0,
       disabled: false,
       scrollFlg: true,
-      networkFlag: true
+      networkFlag: true,
+      resumeFlg: true
     };
     this.scrollComponent = React.createRef();
   }
