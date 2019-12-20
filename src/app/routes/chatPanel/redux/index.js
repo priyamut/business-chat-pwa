@@ -812,7 +812,8 @@ class ChatPanelWithRedux extends PureComponent {
     message.payload = {
       payloadType: "CONNECT_THROUGH_SMS",
       conversationId: conversationId,
-      sessionId: sessionId
+      sessionId: sessionId,
+      name: localStorage.getItem("name")
     };
     if (this.props.stompClientRef) {
       this.props.stompClientRef.sendMessage(
