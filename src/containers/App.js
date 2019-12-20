@@ -139,9 +139,10 @@ class App extends Component {
       });
     //}
     (function () {
-      var timestamp = new Date().getTime();
+      var timestamp = moment().unix();
+      console.log(timestamp);
       function checkResume() {
-        var current = new Date().getTime();
+        var current =  moment().unix();
         if (current - timestamp > 5000 && navigator.onLine) {
           var event = document.createEvent("Events");
           event.initEvent("resume", true, true);
