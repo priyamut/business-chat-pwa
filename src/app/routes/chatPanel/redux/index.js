@@ -408,11 +408,11 @@ class ChatPanelWithRedux extends PureComponent {
               />
             )}
           </Scrollbars>
-          {!navigator.onLine && (
+          {/* {!navigator.onLine && (
             <span className="no-internet-span">
               {<IntlMessages id="chat.backtoOnline" />}
             </span>
-          )}
+          )} */}
           {this.props.message.length > 500 && (
             <span className="message-exceed-length">
               {<IntlMessages id="chat.maxLimit" />}
