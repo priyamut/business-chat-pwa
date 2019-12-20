@@ -145,7 +145,7 @@ class App extends Component {
       function checkResume() {
         if (navigator.onLine) {
           var current = new Date().getTime();
-          if (connectionStatus === "Offline") {
+          if (((current - timestamp) > 10000) || connectionStatus === "Offline") {
             var event = document.createEvent("Events");
             event.initEvent("resume", true, true);
             document.dispatchEvent(event);
