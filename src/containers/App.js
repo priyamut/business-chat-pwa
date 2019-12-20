@@ -146,7 +146,6 @@ class App extends Component {
         if (navigator.onLine) {
           var current = new Date().getTime();
           if (connectionStatus === "Offline") {
-            alert("inside if condition");
             var event = document.createEvent("Events");
             event.initEvent("resume", true, true);
             document.dispatchEvent(event);
