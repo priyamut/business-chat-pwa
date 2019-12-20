@@ -147,31 +147,27 @@ class ChatPanelWithRedux extends PureComponent {
   componentDidMount() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
-    window.removeEventListener("resume",function(){
-    })
+    // window.removeEventListener("resume",function(){
+    // })
     window.addEventListener("offline", this.updateOnlineStatus);
-    window.addEventListener("online",function(){
-      if(!isIOS){
-        this.updateOnlineStatus();
-      }
-    });
+    window.addEventListener("online",this.updateOnlineStatus);
 
-    window.addEventListener("resume", function(){
-      if(!this.state.resumeFlg){
-        this.setState({
-          resumeFlg: true
-        })
-        if(isIOS){
-          this.updateOnlineStatus();
-        }
-      }
-    }.bind(this))
+    // window.addEventListener("resume", function(){
+    //   if(!this.state.resumeFlg){
+    //     this.setState({
+    //       resumeFlg: true
+    //     })
+    //     if(isIOS){
+    //       this.updateOnlineStatus();
+    //     }
+    //   }
+    // }.bind(this))
   }
   componentWillUnmount() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
-    window.removeEventListener("resume",function(){
-    })
+    // window.removeEventListener("resume",function(){
+    // })
   }
 
  
