@@ -21,7 +21,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import SpeakerNotesOffIcon from "@material-ui/icons/SpeakerNotesOff";
 import axios from "util/Api";
 import Pullable from "react-pullable";
-import CloudOffIcon from '@material-ui/icons/CloudOff';
+import CloudOffIcon from "@material-ui/icons/CloudOff";
 import {
   fetchChatUser,
   fetchChatUserConversation,
@@ -76,8 +76,12 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   changeContactDetails(user) {
-    var appendUrl = user['actualContactNo'] && user['actualContactNo'].split(',').length > 0 &&
-      user['actualContactNo'].split(',')[0] ? user['actualContactNo'].split(',')[0] : user['id'];
+    var appendUrl =
+      user["actualContactNo"] &&
+      user["actualContactNo"].split(",").length > 0 &&
+      user["actualContactNo"].split(",")[0]
+        ? user["actualContactNo"].split(",")[0]
+        : user["id"];
     this.ChangeUrl("/app/chat/" + appendUrl);
     if (document.getElementById("selectedUser")) {
       var div = document.getElementById("selectedUser");
@@ -113,7 +117,8 @@ class ChatPanelWithRedux extends PureComponent {
       !this.state.disabled &&
       subScribeUSerData &&
       subScribeUSerData.businessAgents &&
-      subScribeUSerData.businessAgents.length > 0 && this.props.message.length <= 500
+      subScribeUSerData.businessAgents.length > 0 &&
+      this.props.message.length <= 500
     ) {
       const paramData = {
         businessId: localStorage.getItem("businessId"),
@@ -147,95 +152,107 @@ class ChatPanelWithRedux extends PureComponent {
   componentDidMount() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
-    // window.removeEventListener("resume",function(){
-    // })
-    window.addEventListener("offline", this.updateOnlineStatus);
-    window.addEventListener("online",this.updateOnlineStatus);
 
-    // window.addEventListener("resume", function(){
-    //   if(!this.state.resumeFlg){
-    //     this.setState({
-    //       resumeFlg: true
-    //     })
-    //     if(isIOS){
-    //       this.updateOnlineStatus();
-    //     }
-    //   }
-    // }.bind(this))
+    window.addEventListener("offline", this.updateOnlineStatus);
+    window.addEventListener("online", this.updateOnlineStatus);
+
+    window.addEventListener(
+      "resume",
+      function() {
+        if (isIOS) {
+          this.updateOnlineStatus();
+        }
+      }.bind(this)
+    );
   }
   componentWillUnmount() {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
-    // window.removeEventListener("resume",function(){
-    // })
   }
 
- 
   updateOnlineStatus = event => {
     if (navigator.onLine) {
-      if (this.props.conversation.user &&
-        this.props.contactList && this.props.contactList.length > 0) {
+      if (
+        this.props.conversation.user &&
+        this.props.contactList &&
+        this.props.contactList.length > 0
+      ) {
         setTimeout(() => {
           this.handleconversationSynconOffline();
         }, 6000);
       }
 
-      if (this.props.contactList && this.props.contactList.length === 0 && this.props.subScribeUSerData
-        && this.props.subScribeUSerData.businessAgents && this.props.subScribeUSerData.businessAgents['0']) {
-        this.props.fetchChatUser(this.props.subScribeUSerData.businessAgents["0"].id);
+      if (
+        this.props.contactList &&
+        this.props.contactList.length === 0 &&
+        this.props.subScribeUSerData &&
+        this.props.subScribeUSerData.businessAgents &&
+        this.props.subScribeUSerData.businessAgents["0"]
+      ) {
+        this.props.fetchChatUser(
+          this.props.subScribeUSerData.businessAgents["0"].id
+        );
       }
       console.log("device is now online");
       this.setState({
         networkFlag: true
-      })
+      });
     } else if (!navigator.onLine) {
       console.log("device is now offline");
       this.setState({
         networkFlag: false,
         resumeFlg: false
-      })
+      });
     }
   };
 
   handleconversationSynconOffline = () => {
-    const {subScribeUSerData } = this.props;
+    const { subScribeUSerData } = this.props;
     var unsentMessages = [];
     let conversation = JSON.parse(JSON.stringify(this.props.conversation));
     if (conversation && conversation.Sms === undefined) {
       this.onSelectUser(this.props.conversation.user);
-    } else if (conversation && conversation.Sms && conversation.Sms.length > 0) {
-      unsentMessages = conversation.Sms.filter((item) =>
-        item.type === true);
-      axios.get(`consumer/v1/${conversation.user.id}/sms?businessId=${subScribeUSerData.businessAgents["0"].id}`, {
-        headers: {
-          "idToken": JSON.parse(localStorage.getItem("idToken")),
-          "authorization": JSON.parse(localStorage.getItem("accessToken")),
-          "agentDomain": JSON.parse(localStorage.getItem("businessMap"))[0].name
-        }
-      }).then(({ data }) => {
-        if (data) {
-          var updatedConversation;
-          data.user = conversation.user;
-          data.Sms = data.Sms.reverse();
-          if (unsentMessages.length > 0) {
-            data.Sms = data.Sms.concat(unsentMessages);
-            updatedConversation = data;
-            if (updatedConversation) {
-              this.props.updateConversation(updatedConversation);
-            }
-          }else{
-            if(data.Sms.length !== this.props.conversation.Sms.length){
-              updatedConversation = data;
-              this.props.updateConversation(updatedConversation);
+    } else if (
+      conversation &&
+      conversation.Sms &&
+      conversation.Sms.length > 0
+    ) {
+      unsentMessages = conversation.Sms.filter(item => item.type === true);
+      axios
+        .get(
+          `consumer/v1/${conversation.user.id}/sms?businessId=${subScribeUSerData.businessAgents["0"].id}`,
+          {
+            headers: {
+              idToken: JSON.parse(localStorage.getItem("idToken")),
+              authorization: JSON.parse(localStorage.getItem("accessToken")),
+              agentDomain: JSON.parse(localStorage.getItem("businessMap"))[0]
+                .name
             }
           }
-        } else {
-
-        }
-      }).catch(function (error) {
-      });
+        )
+        .then(({ data }) => {
+          if (data) {
+            var updatedConversation;
+            data.user = conversation.user;
+            data.Sms = data.Sms.reverse();
+            if (unsentMessages.length > 0) {
+              data.Sms = data.Sms.concat(unsentMessages);
+              updatedConversation = data;
+              if (updatedConversation) {
+                this.props.updateConversation(updatedConversation);
+              }
+            } else {
+              if (data.Sms.length !== this.props.conversation.Sms.length) {
+                updatedConversation = data;
+                this.props.updateConversation(updatedConversation);
+              }
+            }
+          } else {
+          }
+        })
+        .catch(function(error) {});
     }
-  }
+  };
   handleCommentChange = event => {
     event.preventDefault();
     const content = event.target.value;
@@ -255,7 +272,7 @@ class ChatPanelWithRedux extends PureComponent {
         "chat-main-footer",
         "chat-main"
       );
-      if (chatFooter && chatFooter[0] instanceof Element ) {
+      if (chatFooter && chatFooter[0] instanceof Element) {
         chatFooter[0].style.minHeight = clientHeight + 32 + "px";
         chatFooter[0].style.lineHeight = clientHeight + 32 + "px";
       }
@@ -325,8 +342,8 @@ class ChatPanelWithRedux extends PureComponent {
       var newSmsList = JSON.parse(JSON.stringify(Sms));
       var outgoingsmsIdx = 0;
       var indexFlg = false;
-      newSmsList.reverse().forEach(function (message, index) {
-        if (!indexFlg && message.messageType === 'OUTGOING_SMS') {
+      newSmsList.reverse().forEach(function(message, index) {
+        if (!indexFlg && message.messageType === "OUTGOING_SMS") {
           outgoingsmsIdx = index + 1;
           return index;
         } else {
@@ -366,38 +383,40 @@ class ChatPanelWithRedux extends PureComponent {
                 {/* <i className="zmdi zmdi-comments s-128 text-muted"/> */}
 
                 {selectedUser.contactNo !== null &&
-                  selectedUser.contactNo !== undefined &&
-                  selectedUser.contactNo !== "" ? (
-                    <React.Fragment>
-                      <AnnouncementIcon className="s-128 text-muted" />
-                      <h3 className="text-muted">
-                        <IntlMessages id="chat.noMessageToShow" />
-                      </h3>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <SpeakerNotesOffIcon className="s-128 text-muted" />
-                      <h3 className="text-muted">
-                        <IntlMessages id="chat.noContactNoForthisUser" />
-                      </h3>
-                    </React.Fragment>
-                  )}
+                selectedUser.contactNo !== undefined &&
+                selectedUser.contactNo !== "" ? (
+                  <React.Fragment>
+                    <AnnouncementIcon className="s-128 text-muted" />
+                    <h3 className="text-muted">
+                      <IntlMessages id="chat.noMessageToShow" />
+                    </h3>
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <SpeakerNotesOffIcon className="s-128 text-muted" />
+                    <h3 className="text-muted">
+                      <IntlMessages id="chat.noContactNoForthisUser" />
+                    </h3>
+                  </React.Fragment>
+                )}
               </div>
             ) : (
-                <Conversation
-                  conversationData={conversationFormed}
-                  selectedUser={selectedUser}
-                  property={this.props}
-                />
-              )}
+              <Conversation
+                conversationData={conversationFormed}
+                selectedUser={selectedUser}
+                property={this.props}
+              />
+            )}
           </Scrollbars>
           {!navigator.onLine && (
             <span className="no-internet-span">
-              {<IntlMessages id="chat.backtoOnline" />}</span>
+              {<IntlMessages id="chat.backtoOnline" />}
+            </span>
           )}
           {this.props.message.length > 500 && (
             <span className="message-exceed-length">
-              {<IntlMessages id="chat.maxLimit" />}</span>
+              {<IntlMessages id="chat.maxLimit" />}
+            </span>
           )}
 
           <div className="chat-main-footer">
@@ -407,7 +426,8 @@ class ChatPanelWithRedux extends PureComponent {
             >
               <div className="col">
                 <div className="form-group">
-                  <textarea style={{"-webkit-overflow-scrolling": "touch"}}
+                  <textarea
+                    style={{ "-webkit-overflow-scrolling": "touch" }}
                     id="required"
                     className="border-0 form-control chat-textarea"
                     onKeyUp={this._handleKeyPress.bind(this)}
@@ -436,7 +456,6 @@ class ChatPanelWithRedux extends PureComponent {
             </div>
           </div>
         </div>
-
       </>
     );
   };
@@ -575,14 +594,16 @@ class ChatPanelWithRedux extends PureComponent {
               }}
             >
               {this.props.chatUsers.length === 0 ? (
-                <div className="p-5" style={{ 'textAlign': 'center' }}>{this.props.userNotFound}</div>
+                <div className="p-5" style={{ textAlign: "center" }}>
+                  {this.props.userNotFound}
+                </div>
               ) : (
-                  <ChatUserList
-                    chatUsers={this.props.chatUsers}
-                    selectedSectionId={this.props.selectedSectionId}
-                    onSelectUser={this.onSelectUser.bind(this)}
-                  />
-                )}
+                <ChatUserList
+                  chatUsers={this.props.chatUsers}
+                  selectedSectionId={this.props.selectedSectionId}
+                  onSelectUser={this.onSelectUser.bind(this)}
+                />
+              )}
             </CustomScrollbars>
           </SwipeableViews>
         </div>
@@ -597,8 +618,10 @@ class ChatPanelWithRedux extends PureComponent {
     this.setState({ selectedTabIndex: index });
   };
 
-  onTryAgain = ()=>{
-    alert('No connection. You will be able to send messages as soon as you are back online.')
+  onTryAgain = () => {
+    alert(
+      "No connection. You will be able to send messages as soon as you are back online."
+    );
   };
 
   renderInit = selectedUser => {
@@ -617,7 +640,8 @@ class ChatPanelWithRedux extends PureComponent {
           >
             {<IntlMessages id="chat.selectContactChat" />}
           </Button>
-        </div>)
+        </div>
+      );
     }
     if (selectedUser !== null) {
       return (
@@ -625,7 +649,7 @@ class ChatPanelWithRedux extends PureComponent {
           {""}
           {this.Communication()}
         </>
-      )
+      );
     }
     if (selectedUser === null && !navigator.onLine) {
       return (
@@ -642,12 +666,13 @@ class ChatPanelWithRedux extends PureComponent {
             variant="contained"
             color="primary"
             onClick={this.onTryAgain.bind(this)}
-          >{<IntlMessages id="chat.tryAgain" />}
+          >
+            {<IntlMessages id="chat.tryAgain" />}
           </Button>
         </div>
-      )
+      );
     }
-  }
+  };
   showCommunication = () => {
     return (
       <div className="chat-box">
@@ -677,22 +702,38 @@ class ChatPanelWithRedux extends PureComponent {
   };
 
   loadSmsLink(nextProps) {
-    const { subScribeUSerData } = this.props
+    const { subScribeUSerData } = this.props;
     let location = window.location;
-    if (nextProps.chatUsers.length > 0 && subScribeUSerData && this.state.scrollFlg) {
+    if (
+      nextProps.chatUsers.length > 0 &&
+      subScribeUSerData &&
+      this.state.scrollFlg
+    ) {
       var chatUsers = JSON.parse(JSON.stringify(nextProps.chatUsers));
-      if (location && location.pathname.replace('/app/chat/', '') !== '' &&
-        location.pathname.replace('/app/chat', '') !== '') {
+      if (
+        location &&
+        location.pathname.replace("/app/chat/", "") !== "" &&
+        location.pathname.replace("/app/chat", "") !== ""
+      ) {
         var dataFlg = false;
         var returnData;
-        var user = chatUsers.find((item) =>
-          item.actualContactNo && item.actualContactNo.indexOf(location.pathname.replace("/app/chat/", "")) >= 0);
+        var user = chatUsers.find(
+          item =>
+            item.actualContactNo &&
+            item.actualContactNo.indexOf(
+              location.pathname.replace("/app/chat/", "")
+            ) >= 0
+        );
 
         if (user === null || user === undefined) {
-          user = nextProps.chatUsers.find((item) => item.id ===
-            location.pathname.replace('/app/chat/', ''))
+          user = nextProps.chatUsers.find(
+            item => item.id === location.pathname.replace("/app/chat/", "")
+          );
         }
-        if (user && (document.getElementById('selectedUser').innerText !== null)) {
+        if (
+          user &&
+          document.getElementById("selectedUser").innerText !== null
+        ) {
           this.onSelectUser(user);
         }
         //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
@@ -851,8 +892,8 @@ class ChatPanelWithRedux extends PureComponent {
                 <CircularProgress />
               </div>
             ) : (
-                this.showCommunication()
-              )}
+              this.showCommunication()
+            )}
           </div>
         </div>
       </div>
@@ -918,23 +959,20 @@ const mapStateToProps = ({ chatData, settings, auth }) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {
-    fetchChatUser,
-    fetchChatUserConversation,
-    filterContacts,
-    filterUsers,
-    onSelectUser,
-    hideLoader,
-    userInfoState,
-    submitComment,
-    sendSms,
-    updateMessageValue,
-    updateSearchChatUser,
-    onChatToggleDrawer,
-    readAlltheChatMessages,
-    setInitUrl,
-    updateConversation
-  }
-)(ChatPanelWithRedux);
+export default connect(mapStateToProps, {
+  fetchChatUser,
+  fetchChatUserConversation,
+  filterContacts,
+  filterUsers,
+  onSelectUser,
+  hideLoader,
+  userInfoState,
+  submitComment,
+  sendSms,
+  updateMessageValue,
+  updateSearchChatUser,
+  onChatToggleDrawer,
+  readAlltheChatMessages,
+  setInitUrl,
+  updateConversation
+})(ChatPanelWithRedux);

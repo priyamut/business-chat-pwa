@@ -138,23 +138,27 @@ class App extends Component {
         console.log("Error****:", { error });
       });
     //}
-    (function () {
-      var timestamp = moment().unix();
-      console.log(timestamp);
+
+    (function() {
+      var timestamp = new Date().getTime();
+      var connectionStatus = "Online";
       function checkResume() {
-        var current =  moment().unix();
-        if (current - timestamp > 5000 && navigator.onLine) {
-          var event = document.createEvent("Events");
-          event.initEvent("resume", true, true);
-          document.dispatchEvent(event);
-        }
         if (navigator.onLine) {
+          var current = new Date().getTime();
+          if (connectionStatus === "Offline") {
+            alert("inside if condition");
+            var event = document.createEvent("Events");
+            event.initEvent("resume", true, true);
+            document.dispatchEvent(event);
+            connectionStatus = "Online";
+          }
           timestamp = current;
+        } else {
+          connectionStatus = "Offline";
         }
       }
       window.setInterval(checkResume, 5000);
     })();
-
   }
 
   handleAddToHomescreen = () => {
@@ -405,16 +409,13 @@ const mapStateToProps = ({ settings, auth, chatData }) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {
-    setInitUrl,
-    getUser,
-    updateConversation,
-    fetchChatUser,
-    readAlltheChatMessages,
-    userSignOut,
-    stompClientSendMessage,
-    updateLiveSupportRequest
-  }
-)(App);
+export default connect(mapStateToProps, {
+  setInitUrl,
+  getUser,
+  updateConversation,
+  fetchChatUser,
+  readAlltheChatMessages,
+  userSignOut,
+  stompClientSendMessage,
+  updateLiveSupportRequest
+})(App);
