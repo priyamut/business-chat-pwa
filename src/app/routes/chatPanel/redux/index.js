@@ -167,14 +167,14 @@ class ChatPanelWithRedux extends PureComponent {
     window.addEventListener("offline", this.updateOnlineStatus);
     window.addEventListener("online", this.updateOnlineStatus);
 
-    // window.addEventListener(
-    //   "resume",
-    //   function() {
-    //     if (isIOS) {
-    //       this.updateOnlineStatus();
-    //     }
-    //   }.bind(this)
-    // );
+    window.addEventListener(
+      "resume",
+      function() {
+        if (isIOS) {
+          this.updateOnlineStatus();
+        }
+      }.bind(this)
+    );
   }
   componentWillUnmount() {
     window.removeEventListener("online", this.updateOnlineStatus);
