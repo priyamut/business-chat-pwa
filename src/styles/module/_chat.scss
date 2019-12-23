@@ -716,6 +716,7 @@ body {
 .no-internet-span{
   text-align: center;
     font-size: 13px;
+    padding: 0 32px;
   & span{
     background: pink;
     color: white;
@@ -727,4 +728,5 @@ body {
   font-size: 13px;
   padding-left: 18px;
   background: #fff;
+  
 }
