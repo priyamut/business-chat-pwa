@@ -64,15 +64,26 @@ class ChatPanelWithRedux extends PureComponent {
     this.setState({
       scrollFlg: true
     });
-    this.props.onSelectUser(
-      user,
-      subScribeUSerData.businessAgents["0"].id,
-      this.props.hideLoader
-    );
     this.changeContactDetails(user);
-
-    this.props.readAlltheChatMessages(user.id);
-    this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    if(navigator.onLine){
+      this.setState({
+        selectedFlg: false
+      })
+      this.props.onSelectUser(
+        user,
+        subScribeUSerData.businessAgents["0"].id,
+        this.props.hideLoader
+      );
+      
+      this.props.readAlltheChatMessages(user.id);
+      this.props.fetchChatUser(subScribeUSerData.businessAgents["0"].id);
+    }else{
+      this.setState({
+        selectedFlg: true
+      }, () => {
+        this.props.conversation.Sms = [];
+    });
+    }  
   };
 
   changeContactDetails(user) {
@@ -181,7 +192,6 @@ class ChatPanelWithRedux extends PureComponent {
           this.handleconversationSynconOffline();
         }, 6000);
       }
-
       if (
         this.props.contactList &&
         this.props.contactList.length === 0 &&
@@ -214,8 +224,7 @@ class ChatPanelWithRedux extends PureComponent {
       this.onSelectUser(this.props.conversation.user);
     } else if (
       conversation &&
-      conversation.Sms &&
-      conversation.Sms.length > 0
+      conversation.Sms
     ) {
       unsentMessages = conversation.Sms.filter(item => item.type === true);
       axios
@@ -408,11 +417,11 @@ class ChatPanelWithRedux extends PureComponent {
               />
             )}
           </Scrollbars>
-          {/* {!navigator.onLine && (
-            <span className="no-internet-span">
+          {!navigator.onLine && (
+            <div className="no-internet-span">
               {<IntlMessages id="chat.backtoOnline" />}
-            </span>
-          )} */}
+            </div>
+          )}
           {this.props.message.length > 500 && (
             <span className="message-exceed-length">
               {<IntlMessages id="chat.maxLimit" />}
@@ -430,7 +439,6 @@ class ChatPanelWithRedux extends PureComponent {
                     style={{ "-webkit-overflow-scrolling": "touch" }}
                     id="required"
                     className="border-0 form-control chat-textarea"
-                    onKeyUp={this._handleKeyPress.bind(this)}
                     onInput={this.handleOnInput.bind(this)}
                     //onChange={this.updateMessageValue.bind(this)}
                     onChange={this.handleCommentChange.bind(this)}
@@ -533,6 +541,7 @@ class ChatPanelWithRedux extends PureComponent {
     });
   };
   ChatUsers = () => {
+    var selectedContactId = this.props.conversation.user ? this.props.conversation.user.id : '';
     return (
       <div className="chat-sidenav-main">
         <div className="chat-sidenav-header">
@@ -600,7 +609,7 @@ class ChatPanelWithRedux extends PureComponent {
               ) : (
                 <ChatUserList
                   chatUsers={this.props.chatUsers}
-                  selectedSectionId={this.props.selectedSectionId}
+                  selectedSectionId={selectedContactId}
                   onSelectUser={this.onSelectUser.bind(this)}
                 />
               )}
@@ -639,6 +648,27 @@ class ChatPanelWithRedux extends PureComponent {
             onClick={this.onChatToggleDrawer.bind(this)}
           >
             {<IntlMessages id="chat.selectContactChat" />}
+          </Button>
+        </div>
+      );
+    }
+    if(this.state.selectedFlg && !navigator.onLine){
+      return (
+        <div
+          className="loader-view no-internet-tag"
+          style={{ "margin-top": isIOS ? "-40px" : "0px" }}
+        >
+          <CloudOffIcon className="s-128 text-muted" />
+          <h3 className="no-internet">
+            {<IntlMessages id="chat.noInternet" />}
+          </h3>
+          <Button
+            className="no-internet-button"
+            variant="contained"
+            color="primary"
+            onClick={this.onTryAgain.bind(this)}
+          >
+            {<IntlMessages id="chat.tryAgain" />}
           </Button>
         </div>
       );
@@ -790,7 +820,8 @@ class ChatPanelWithRedux extends PureComponent {
       disabled: false,
       scrollFlg: true,
       networkFlag: true,
-      resumeFlg: true
+      resumeFlg: true,
+      selectedFlg: false
     };
     this.scrollComponent = React.createRef();
   }
