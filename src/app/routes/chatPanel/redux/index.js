@@ -381,7 +381,7 @@ class ChatPanelWithRedux extends PureComponent {
               <div
                 className="loader-view"
                 style={{
-                  "margin-top": isIOS ? "-40px" : "0px",
+                  marginTop: isIOS ? "-40px" : "0px",
                   display: "flex",
                   flexDirection: "column",
                   flexWrap: "nowrap",
@@ -638,7 +638,7 @@ class ChatPanelWithRedux extends PureComponent {
       return (
         <div
           className="loader-view"
-          style={{ "margin-top": isIOS ? "-40px" : "0px" }}
+          style={{ marginTop : isIOS ? "-40px" : "0px" }}
         >
           <i className="zmdi zmdi-comment s-128 text-muted" />
 
@@ -656,7 +656,7 @@ class ChatPanelWithRedux extends PureComponent {
       return (
         <div
           className="loader-view no-internet-tag"
-          style={{ "margin-top": isIOS ? "-40px" : "0px" }}
+          style={{ marginTop : isIOS ? "-40px" : "0px" }}
         >
           <CloudOffIcon className="s-128 text-muted" />
           <h3 className="no-internet">
@@ -685,7 +685,7 @@ class ChatPanelWithRedux extends PureComponent {
       return (
         <div
           className="loader-view no-internet-tag"
-          style={{ "margin-top": isIOS ? "-40px" : "0px" }}
+          style={{ marginTop: isIOS ? "-40px" : "0px" }}
         >
           <CloudOffIcon className="s-128 text-muted" />
           <h3 className="no-internet">
@@ -766,26 +766,7 @@ class ChatPanelWithRedux extends PureComponent {
         ) {
           this.onSelectUser(user);
         }
-        //  if((user == undefined || user ==null) && subScribeUSerData && subScribeUSerData.businessAgents
-        //  && subScribeUSerData.businessAgents.length >0){
-        //   const config = {
-        //     headers: {
-        //       'Authorization': "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
-        //       "Content-Type":"application/json",
-        //       "Access-Control-Allow-Origin": "*",
-        //       "mode": "no-cors"
-        //     }
-        //   }
-        //    axios.get(`consumer/v1/contacts/hash?hashCode=${location.pathname.replace('/app/chat/','')}
-        //    &businessAgentId=${subScribeUSerData.businessAgents["0"].id}`
-        //    , config).then(({data}) => {
-        //     let userData = this.constructJson(data,0);
-        //     if(userData && document.getElementById('selectedUser').innerText !== userData.name){
-        //       this.onSelectUser(userData);
-        //     }
-        //   }).catch(function (error) {
-        //   });
-        //  }
+
       }
     }
   }

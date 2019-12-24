@@ -52,7 +52,12 @@ class StompClient extends React.Component {
   }
 
   componentWillUnmount() {
-    this.disconnect();
+    this.client.disconnect(() => {
+      this.props.onDisconnect();
+      this.retryCount = 0;
+      this.subscriptions.clear();
+      this._log('Stomp client is successfully disconnected!');
+    });
   }
 
   componentWillReceiveProps(nextProps) {
