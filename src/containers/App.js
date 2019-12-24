@@ -18,12 +18,10 @@ import RTL from "util/RTL";
 import axios from "util/Api";
 import AddToHomescreen from "react-add-to-homescreen";
 import StompClient from "./../custom-plugins/react-stomp-client";
-
 import { SocketConfig } from "./../helpers/AppConstant";
-import Conversation from "components/chatPanel/Conversation/index";
 import moment from "moment";
 import { isIOS, isMobile } from "react-device-detect";
-import { userSignOut } from "actions/Auth";
+import { userSignOut, awsUserSignOut } from "actions/Auth";
 
 import {
   updateConversation,
@@ -32,7 +30,17 @@ import {
   stompClientSendMessage,
   updateLiveSupportRequest
 } from "actions/Chat";
-import { uuid } from "uuidv4";
+import Amplify from "aws-amplify";
+
+Amplify.configure({
+  Auth: {
+    identityPoolId: "us-east-2:0143313e-92ed-4701-a8c8-efd1a267eee6", //REQUIRED - Amazon Cognito Identity Pool ID
+    region: "us-east-2", // REQUIRED - Amazon Cognito Region
+    userPoolId: "us-east-2_H29mzOAdN", //OPTIONAL - Amazon Cognito User Pool ID
+    userPoolWebClientId: "1gi6bifoq5p79gdg9mqjf8difd" //OPTIONAL - Amazon Cognito Web Client ID
+  }
+});
+
 const RestrictedRoute = ({ component: Component, token, ...rest }) => (
   <Route
     {...rest}
@@ -94,7 +102,7 @@ class App extends Component {
   }
 
   logout() {
-    this.props.userSignOut();
+    this.props.awsUserSignOut();
     this.destroy();
   }
 
@@ -138,7 +146,7 @@ class App extends Component {
         console.log("Error****:", { error });
       });
     //}
-    (function () {
+    (function() {
       var timestamp = new Date().getTime();
       function checkResume() {
         var current = new Date().getTime();
@@ -153,7 +161,6 @@ class App extends Component {
       }
       window.setInterval(checkResume, 5000);
     })();
-
   }
 
   handleAddToHomescreen = () => {
@@ -404,16 +411,14 @@ const mapStateToProps = ({ settings, auth, chatData }) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {
-    setInitUrl,
-    getUser,
-    updateConversation,
-    fetchChatUser,
-    readAlltheChatMessages,
-    userSignOut,
-    stompClientSendMessage,
-    updateLiveSupportRequest
-  }
-)(App);
+export default connect(mapStateToProps, {
+  setInitUrl,
+  getUser,
+  updateConversation,
+  fetchChatUser,
+  readAlltheChatMessages,
+  userSignOut,
+  awsUserSignOut,
+  stompClientSendMessage,
+  updateLiveSupportRequest
+})(App);
