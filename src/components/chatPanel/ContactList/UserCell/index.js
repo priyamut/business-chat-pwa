@@ -8,7 +8,7 @@ const UserCell = ({onSelectUser, selectedSectionId, user}) => {
       <div className="chat-user-row row">
 
         <div className="chat-contact-col col-xl-10 col-9">
-          <div className="h4 name"  style={{"font-weight":"500"}}>{user.name}</div>
+          <div className="h4 name"  style={{fontWeight:"500"}}>{user.name}</div>
           {/* <div className="chat-info-des">{user.mood.substring(0, 30) + "..."}</div> */}
         </div>
       </div>

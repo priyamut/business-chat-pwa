@@ -272,7 +272,7 @@ export const userSignOut = () => {
 export const awsUserSignOut = () => {
   return dispatch => {
     dispatch({ type: SIGNOUT_USER });
-    Auth.signOut({ global: true })
+    Auth.signOut()
       .then(data => {
         dispatch({ type: SIGNOUT_USER_SUCCESS });
         dispatch({ type: FETCH_SUCCESS });

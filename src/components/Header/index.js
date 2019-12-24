@@ -172,7 +172,7 @@ class Header extends React.Component {
               <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         onClick={this.onChatToggleDrawer}>
                                         <span className="menu-icon"/>
-                                        <span class="button__badge" style={{display: "none"}} id="button__badge"></span>
+                                        <span className="button__badge" style={{display: "none"}} id="button__badge"></span>
 
             </IconButton>
               </div>
@@ -197,7 +197,7 @@ class Header extends React.Component {
                <IconButton className={`jr-menu-icon mr-3 ${drawerStyle}`} aria-label="Menu"
                         >
                                  <div id="phone" style={{display:"none"}}>
-               <a id="phone-anchor"  itemprop="telephone" dir="ltr" style={{"color": "white"}}>{<PhoneIcon color={"white"} />}</a>
+               <a id="phone-anchor"  itemProp="telephone" dir="ltr" style={{"color": "white"}}>{<PhoneIcon color={"white"} />}</a>
                                  </div>
 
             </IconButton>
