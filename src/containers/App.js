@@ -148,15 +148,19 @@ class App extends Component {
     //}
     (function() {
       var timestamp = new Date().getTime();
+      var connectionStatus = "Online";
       function checkResume() {
-        var current = new Date().getTime();
-        if (current - timestamp > 5000 && navigator.onLine) {
-          var event = document.createEvent("Events");
-          event.initEvent("resume", true, true);
-          document.dispatchEvent(event);
-        }
         if (navigator.onLine) {
+          var current = new Date().getTime();
+          if (((current - timestamp) > 10000) || connectionStatus === "Offline") {
+            var event = document.createEvent("Events");
+            event.initEvent("resume", true, true);
+            document.dispatchEvent(event);
+            connectionStatus = "Online";
+          }
           timestamp = current;
+        } else {
+          connectionStatus = "Offline";
         }
       }
       window.setInterval(checkResume, 5000);

@@ -263,7 +263,7 @@ class ChatPanel extends Component {
     super();
     this.state = {
       loader: false,
-      userNotFound: 'Swipe down or pull to refresh the contacts.',
+      userNotFound: 'No user found.',
       drawerState: false,
       selectedSectionId: '',
       selectedTabIndex: 0,

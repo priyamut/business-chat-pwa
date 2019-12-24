@@ -25,7 +25,7 @@ import { createFilter } from "utils/utils.js";
 
 const INIT_STATE = {
   loader: false,
-  userNotFound: "Swipe down or pull to refresh the contacts.",
+  userNotFound: 'No user found.',
   drawerState: false,
   selectedSectionId: "",
   userState: 1,

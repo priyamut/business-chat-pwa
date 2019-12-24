@@ -49,7 +49,7 @@
 
   <script
     src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places,geometry,drawing&key=AIzaSyBgqAomc9Vukt12AV3tJLasBnNehSNKuOY"></script>
-  <script defer>
+  <!-- <script defer>
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
@@ -68,6 +68,21 @@
       console.log('service worker is not supported');
     }
     
+  </script> -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('service-worker.js').then(function (registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function (err) {
+          console.log('ServiceWorker registration failed: ', err);
+        }).catch(function (err) {
+          console.log(err)
+        });
+      });
+    } else {
+      console.log('service worker is not supported');
+    }
   </script>
 </head>
 
