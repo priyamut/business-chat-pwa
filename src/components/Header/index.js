@@ -25,7 +25,7 @@ import UserInfoPopup from 'components/UserInfo/UserInfoPopup';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {userSignOut} from 'actions/Auth';
+import {userSignOut,awsUserSignOut} from 'actions/Auth';
 import PhoneIcon from '@material-ui/icons/Phone';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -83,7 +83,7 @@ class Header extends React.Component {
   onToggleCollapsedNav = (e) => {
     // const val = !this.props.navCollapsed;
     // this.props.toggleCollapsedNav(val);
-    this.props.userSignOut();
+    this.props.awsUserSignOut();
   };
 
   constructor() {
@@ -116,7 +116,7 @@ class Header extends React.Component {
     this.setState({
       loader: true
     });
-    this.props.userSignOut();
+    this.props.awsUserSignOut();
   };
 
   onCancel =() =>{
@@ -230,4 +230,4 @@ const mapStateToProps = ({chatData,settings, auth}) => {
   return {drawerType, locale, navigationStyle, horizontalNavPosition,onChatToggleDrawer,authUser}
 };
 
-export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage,onChatToggleDrawer,userSignOut})(Header));
+export default withRouter(connect(mapStateToProps, {toggleCollapsedNav, switchLanguage,onChatToggleDrawer,userSignOut,awsUserSignOut})(Header));
