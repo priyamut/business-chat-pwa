@@ -276,6 +276,7 @@ export const awsUserSignOut = () => {
       .then(data => {
         dispatch({ type: SIGNOUT_USER_SUCCESS });
         dispatch({ type: FETCH_SUCCESS });
+        clearStorage();
       })
       .catch(err => {
         dispatch({ type: FETCH_ERROR, payload: err.message });
