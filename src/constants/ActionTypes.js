@@ -28,6 +28,7 @@ export const SHOW_MESSAGE = 'show_message';
 export const HIDE_MESSAGE = 'hide_message';
 export const USER_DATA = 'user_data';
 export const USER_TOKEN_SET = 'user_token_set';
+export const REFRESH_TOKEN = 'refresh_token';
 
 export const FETCH_ALL_CONTACT = 'fetch_all_contact';
 export const FETCH_ALL_CONTACT_SUCCESS = 'fetch_all_contact_success';

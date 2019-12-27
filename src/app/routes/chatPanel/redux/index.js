@@ -16,7 +16,7 @@ import ContactList from "components/chatPanel/ContactList/index";
 import SearchBox from "components/SearchBox";
 import IntlMessages from "util/IntlMessages";
 import MenuIcon from "@material-ui/icons/Menu";
-import { setInitUrl } from "./../../../../actions/Auth";
+import { setInitUrl,refreshToken } from "./../../../../actions/Auth";
 import { Scrollbars } from "react-custom-scrollbars";
 import SpeakerNotesOffIcon from "@material-ui/icons/SpeakerNotesOff";
 import axios from "util/Api";
@@ -180,7 +180,11 @@ class ChatPanelWithRedux extends PureComponent {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
   }
-
+  componentWillMount() {
+    setInterval(() =>
+      this.props.refreshToken(),
+      300000);
+  }
   updateOnlineStatus = event => {
     if (navigator.onLine) {
       if (
@@ -986,5 +990,6 @@ export default connect(mapStateToProps, {
   onChatToggleDrawer,
   readAlltheChatMessages,
   setInitUrl,
-  updateConversation
+  updateConversation,
+  refreshToken
 })(ChatPanelWithRedux);

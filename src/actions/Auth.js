@@ -7,7 +7,8 @@ import {
   USER_DATA,
   USER_TOKEN_SET,
   SUBSCRIBE_USER_DATA,
-  SIGNOUT_USER
+  SIGNOUT_USER,
+  REFRESH_TOKEN
 } from "../constants/ActionTypes";
 import axios from "util/Api";
 import { Auth } from "aws-amplify";
@@ -62,7 +63,7 @@ export const userSignUp = ({ name, email, password }) => {
   };
 };
 
-export const userSignIn = ({ email, password }) => {
+export const awsUserSignIn = ({ email, password }) => {
   const config = {
     headers: {
       Authorization: "b72cc0c9-c5a1-4aae-a3aa-e34ff7160feb",
@@ -113,7 +114,7 @@ export const userSignIn = ({ email, password }) => {
   };
 };
 
-export const awsUserSignIn = ({ email, password }) => {
+export const userSignIn = ({ email, password }) => {
   return dispatch => {
     dispatch({ type: FETCH_START });
     Auth.signIn({
@@ -155,6 +156,30 @@ export const awsUserSignIn = ({ email, password }) => {
       });
   };
 };
+
+
+export const refreshToken = () =>{
+  return dispatch => {
+    dispatch({ type: REFRESH_TOKEN });
+    axios
+    .post(
+      "iam/v1/newaccesstoken",
+      JSON.stringify({
+        refreshToken : JSON.parse(localStorage.getItem("refreshToken"))
+      }))
+    .then(({ data }) => {
+      if (data) {
+        localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
+        localStorage.setItem("idToken", JSON.stringify(data.idToken));
+      } else {
+        dispatch({ type: FETCH_ERROR, payload: data.error });
+      }
+    })
+    .catch(function (error) {
+      clearStorage();
+    });
+  }
+}
 
 function subScribeUser(dispatch, businessId) {
   dispatch({ type: FETCH_START });
